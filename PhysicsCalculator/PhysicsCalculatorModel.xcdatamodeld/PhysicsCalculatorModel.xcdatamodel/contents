@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="SavedCalculation" representedClassName="SavedCalculation" syncable="YES" codeGenerationType="class">
+        <attribute name="calculatedSymbol" attributeType="String"/>
+        <attribute name="calculatedValue" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="equationLatex" optional="YES" attributeType="String"/>
+        <attribute name="formulaId" attributeType="String"/>
+        <attribute name="formulaName" attributeType="String"/>
+        <attribute name="inputValuesData" optional="YES" attributeType="Binary"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="variablesData" optional="YES" attributeType="Binary"/>
+    </entity>
+</model>

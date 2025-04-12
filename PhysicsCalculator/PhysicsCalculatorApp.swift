@@ -1,17 +1,17 @@
-//
-//  PhysicsCalculatorApp.swift
-//  PhysicsCalculator
-//
-//  Created by rustam on 27.03.25.
-//
-
 import SwiftUI
+import CoreData
+import Combine
 
 @main
 struct PhysicsCalculatorApp: App {
+    @StateObject private var settings = AppSettings.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+                .environmentObject(settings)
+                .preferredColorScheme(settings.theme.colorScheme)
         }
     }
 }

@@ -1,0 +1,24 @@
+{
+  "originHash" : "83260ea84d8ef778b22df7267428db9debc41bca27c21141170f255c62ba6190",
+  "pins" : [
+    {
+      "identity" : "ddmathparser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/davedelong/DDMathParser.git",
+      "state" : {
+        "revision" : "0a159109e2393c3e1db4e2b638009c82e6650b4d",
+        "version" : "3.1.0"
+      }
+    },
+    {
+      "identity" : "swiftmath?utm_source=chatgpt.com",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/SwiftMath?utm_source=chatgpt.com",
+      "state" : {
+        "revision" : "606f9be66db6afe0c41c3b064723a57061723db7",
+        "version" : "1.7.1"
+      }
+    }
+  ],
+  "version" : 3
+}
