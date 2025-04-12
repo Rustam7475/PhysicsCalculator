@@ -1,0 +1,884 @@
+{
+    "sections": [
+        {
+            "id": "mech",
+            "name_ru": "Механика",
+            "name_en": "Mechanics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "thermo",
+            "name_ru": "Термодинамика",
+            "name_en": "Thermodynamics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "em",
+            "name_ru": "Электромагнетизм",
+            "name_en": "Electromagnetism",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "optics",
+            "name_ru": "Оптика",
+            "name_en": "Optics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        }
+    ],
+    "subsections": [
+        {
+            "id": "kinematics",
+            "sectionId": "mech",
+            "name_ru": "Кинематика",
+            "name_en": "Kinematics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "dynamics",
+            "sectionId": "mech",
+            "name_ru": "Динамика",
+            "name_en": "Dynamics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "work_energy_power",
+            "sectionId": "mech",
+            "name_ru": "Работа, Энергия, Мощность",
+            "name_en": "Work, Energy, Power",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "rotation",
+            "sectionId": "mech",
+            "name_ru": "Вращательное движение",
+            "name_en": "Rotational Motion",
+            "levels": [
+                "university"
+            ]
+        },
+        {
+            "id": "fluids",
+            "sectionId": "mech",
+            "name_ru": "Гидростатика/Аэростатика",
+            "name_en": "Fluid Statics",
+            "levels": [
+                "school"
+            ]
+        },
+        {
+            "id": "gravitation",
+            "sectionId": "mech",
+            "name_ru": "Гравитация",
+            "name_en": "Gravitation",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "ideal_gas",
+            "sectionId": "thermo",
+            "name_ru": "Идеальный газ",
+            "name_en": "Ideal Gas",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "thermo_laws",
+            "sectionId": "thermo",
+            "name_ru": "Законы термодинамики",
+            "name_en": "Laws of Thermodynamics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "heat_transfer",
+            "sectionId": "thermo",
+            "name_ru": "Теплопередача и Теплоемкость",
+            "name_en": "Heat Transfer & Capacity",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "phase_transitions",
+            "sectionId": "thermo",
+            "name_ru": "Фазовые переходы",
+            "name_en": "Phase Transitions",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "real_gas",
+            "sectionId": "thermo",
+            "name_ru": "Реальный газ",
+            "name_en": "Real Gas",
+            "levels": [
+                "university"
+            ]
+        },
+        {
+            "id": "electrostatics",
+            "sectionId": "em",
+            "name_ru": "Электростатика",
+            "name_en": "Electrostatics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "dcc",
+            "sectionId": "em",
+            "name_ru": "Постоянный ток",
+            "name_en": "DC Circuits",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "magnetism",
+            "sectionId": "em",
+            "name_ru": "Магнетизм",
+            "name_en": "Magnetism",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "em_induction",
+            "sectionId": "em",
+            "name_ru": "Электромагнитная индукция",
+            "name_en": "Electromagnetic Induction",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "maxwell",
+            "sectionId": "em",
+            "name_ru": "Уравнения Максвелла",
+            "name_en": "Maxwell's Equations",
+            "levels": [
+                "university"
+            ]
+        },
+        {
+            "id": "geometric_optics",
+            "sectionId": "optics",
+            "name_ru": "Геометрическая оптика",
+            "name_en": "Geometric Optics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "wave_optics",
+            "sectionId": "optics",
+            "name_ru": "Волновая оптика",
+            "name_en": "Wave Optics",
+            "levels": [
+                "school",
+                "university"
+            ]
+        },
+        {
+            "id": "quantum_optics",
+            "sectionId": "optics",
+            "name_ru": "Квантовая оптика",
+            "name_en": "Quantum Optics",
+            "levels": [
+                "university"
+            ]
+        }
+    ],
+    "formulas": [
+        {
+            "id": "mech_school_velocity",
+            "subsectionId": "kinematics",
+            "name_ru": "Средняя скорость",
+            "name_en": "Average Velocity",
+            "levels": [
+                "school"
+            ],
+            "equation_latex": "v = \frac{s}{t}",
+            "description_ru": "Средняя скорость при равномерном прямолинейном движении.",
+            "description_en": "Average velocity in uniform linear motion. ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность.***",
+            "variables": [
+                {
+                    "symbol": "v",
+                    "name_ru": "Скорость",
+                    "name_en": "Velocity",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "s",
+                    "name_ru": "Путь",
+                    "name_en": "Distance",
+                    "unit_si": "м"
+                },
+                {
+                    "symbol": "t",
+                    "name_ru": "Время",
+                    "name_en": "Time",
+                    "unit_si": "с"
+                }
+            ],
+            "calculation_rules": {
+                "v": "s / t",
+                "s": "v * t",
+                "t": "s / v"
+            }
+        },
+        {
+            "id": "mech_school_acceleration",
+            "subsectionId": "kinematics",
+            "name_ru": "Ускорение",
+            "name_en": "Acceleration",
+            "levels": [
+                "school"
+            ],
+            "equation_latex": "a = \frac{v - u}{t}",
+            "description_ru": "Ускорение при равноускоренном движении (v - конечная, u - начальная).",
+            "description_en": "Acceleration in uniformly accelerated motion. ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность.***",
+            "variables": [
+                {
+                    "symbol": "a",
+                    "name_ru": "Ускорение",
+                    "name_en": "Acceleration",
+                    "unit_si": "м/с²"
+                },
+                {
+                    "symbol": "v",
+                    "name_ru": "Конеч. скорость",
+                    "name_en": "Final Velocity",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "u",
+                    "name_ru": "Начал. скорость",
+                    "name_en": "Initial Velocity",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "t",
+                    "name_ru": "Время",
+                    "name_en": "Time",
+                    "unit_si": "с"
+                }
+            ],
+            "calculation_rules": {
+                "a": "(v - u) / t",
+                "v": "u + a * t",
+                "u": "v - a * t",
+                "t": "(v - u) / a"
+            }
+        },
+        {
+            "id": "mech_school_newton_second",
+            "subsectionId": "dynamics",
+            "name_ru": "Второй закон Ньютона",
+            "name_en": "Newton's Second Law",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "F = m a",
+            "description_ru": "Сила равна массе на ускорение.",
+            "description_en": "Force equals mass times acceleration. ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность. Замените name_en/description_en на реальный перевод.***",
+            "variables": [
+                {
+                    "symbol": "F",
+                    "name_ru": "Сила",
+                    "name_en": "Force",
+                    "unit_si": "Н"
+                },
+                {
+                    "symbol": "m",
+                    "name_ru": "Масса",
+                    "name_en": "Mass",
+                    "unit_si": "кг"
+                },
+                {
+                    "symbol": "a",
+                    "name_ru": "Ускорение",
+                    "name_en": "Acceleration",
+                    "unit_si": "м/с²"
+                }
+            ],
+            "calculation_rules": {
+                "F": "m * a",
+                "m": "F / a",
+                "a": "F / m"
+            }
+        },
+        {
+            "id": "mech_uni_momentum_conservation",
+            "subsectionId": "dynamics",
+            "name_ru": "Закон сохранения импульса (2 тела)",
+            "name_en": "Momentum Conservation (2 bodies)",
+            "levels": [
+                "university"
+            ],
+            "equation_latex": "m_1 v_1 + m_2 v_2 = m_1 v'_1 + m_2 v'_2",
+            "description_ru": "Суммарный импульс системы тел сохраняется при отсутствии внешних сил (столкновение). ***Важно: Не для прямого расчета одной переменной из всех остальных в простом калькуляторе. calculation_rules пуст. Проверьте LaTeX v'_1. Замените name_en/description_en на реальный перевод.***",
+            "description_en": "Total momentum of a system remains constant if no external forces act (collision). ***Important: Not for direct calculation of one variable from all others in a simple calculator. calculation_rules is empty. Check LaTeX v'_1. Replace name_en/description_en with actual translation.***",
+            "variables": [
+                {
+                    "symbol": "m1",
+                    "name_ru": "Масса 1",
+                    "name_en": "Mass 1",
+                    "unit_si": "кг"
+                },
+                {
+                    "symbol": "v1",
+                    "name_ru": "Скорость 1 (до)",
+                    "name_en": "Velocity 1 (before)",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "m2",
+                    "name_ru": "Масса 2",
+                    "name_en": "Mass 2",
+                    "unit_si": "кг"
+                },
+                {
+                    "symbol": "v2",
+                    "name_ru": "Скорость 2 (до)",
+                    "name_en": "Velocity 2 (before)",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "v1prime",
+                    "name_ru": "Скорость 1 (после)",
+                    "name_en": "Velocity 1 (after)",
+                    "unit_si": "м/с"
+                },
+                {
+                    "symbol": "v2prime",
+                    "name_ru": "Скорость 2 (после)",
+                    "name_en": "Velocity 2 (after)",
+                    "unit_si": "м/с"
+                }
+            ],
+            "calculation_rules": {}
+        },
+        {
+            "id": "mech_school_kinetic_energy",
+            "subsectionId": "work_energy_power",
+            "name_ru": "Кинетическая энергия",
+            "name_en": "Kinetic Energy",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "E_k = \frac{1}{2} m v^2",
+            "description_ru": "Энергия движения тела.",
+            "description_en": "Energy of a moving body. ***Примечание: Правила расчета добавлены для всех переменных. Проверьте корректность и синтаксис функций pow/sqrt для DDMathParser. Замените name_en/description_en на реальный перевод.***",
+            "variables": [
+                {
+                    "symbol": "Ek",
+                    "name_ru": "Кин. энергия",
+                    "name_en": "Kinetic Energy",
+                    "unit_si": "Дж"
+                },
+                {
+                    "symbol": "m",
+                    "name_ru": "Масса",
+                    "name_en": "Mass",
+                    "unit_si": "кг"
+                },
+                {
+                    "symbol": "v",
+                    "name_ru": "Скорость",
+                    "name_en": "Velocity",
+                    "unit_si": "м/с"
+                }
+            ],
+            "calculation_rules": {
+                "Ek": "0.5 * m * pow(v, 2)",
+                "m": "(2 * Ek) / pow(v, 2)",
+                "v": "sqrt((2 * Ek) / m)"
+            }
+        },
+        {
+            "id": "ideal_gas_law",
+            "subsectionId": "ideal_gas",
+            "name_ru": "Уравнение состояния идеального газа",
+            "name_en": "Ideal Gas Law",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "p V = \nu R T",
+            "description_ru": "Уравнение Менделеева-Клапейрона.",
+            "description_en": "Ideal gas equation (Clapeyron). ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность. Замените name_en/description_en на реальный перевод. Уточнены названия переменных.***",
+            "variables": [
+                {
+                    "symbol": "p",
+                    "name_ru": "Давление",
+                    "name_en": "Pressure",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "V",
+                    "name_ru": "Объем",
+                    "name_en": "Volume",
+                    "unit_si": "м³"
+                },
+                {
+                    "symbol": "nu",
+                    "name_ru": "Кол-во в-ва",
+                    "name_en": "Amount (moles)",
+                    "unit_si": "моль"
+                },
+                {
+                    "symbol": "R",
+                    "name_ru": "Газ. пост.",
+                    "name_en": "Gas Constant",
+                    "unit_si": "Дж/(моль·К)"
+                },
+                {
+                    "symbol": "T",
+                    "name_ru": "Температура (абс.)",
+                    "name_en": "Temperature (abs.)",
+                    "unit_si": "К"
+                }
+            ],
+            "calculation_rules": {
+                "p": "(nu * R * T) / V",
+                "V": "(nu * R * T) / p",
+                "nu": "(p * V) / (R * T)",
+                "R": "(p * V) / (nu * T)",
+                "T": "(p * V) / (nu * R)"
+            }
+        },
+        {
+            "id": "thermo_uni_second_law",
+            "subsectionId": "thermo_laws",
+            "name_ru": "Второе начало термодинамики (Энтропия)",
+            "name_en": "Second Law of Thermodynamics (Entropy)",
+            "levels": [
+                "university"
+            ],
+            "equation_latex": "\\Delta S \\ge 0",
+            "description_ru": "Изменение энтропии изолированной системы не отрицательно. ***Важно: Не для прямого расчета (неравенство). calculation_rules пуст. Замените name_en/description_en на реальный перевод.***",
+            "description_en": "The change in entropy of an isolated system is non-negative. ***Important: Not for direct calculation (inequality). calculation_rules is empty. Replace name_en/description_en with actual translation.***",
+            "variables": [
+                {
+                    "symbol": "DeltaS",
+                    "name_ru": "Изм. энтропии",
+                    "name_en": "Entropy Change",
+                    "unit_si": "Дж/К"
+                }
+            ],
+            "calculation_rules": {}
+        },
+        {
+            "id": "em_school_ohm_law",
+            "subsectionId": "dcc",
+            "name_ru": "Закон Ома (участок цепи)",
+            "name_en": "Ohm's Law (circuit section)",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "I = \frac{U}{R}",
+            "description_ru": "Сила тока на участке цепи.",
+            "description_en": "Current in a section of a circuit. ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность. Замените name_en/description_en на реальный перевод.***",
+            "variables": [
+                {
+                    "symbol": "I",
+                    "name_ru": "Сила тока",
+                    "name_en": "Current",
+                    "unit_si": "А"
+                },
+                {
+                    "symbol": "U",
+                    "name_ru": "Напряжение",
+                    "name_en": "Voltage",
+                    "unit_si": "В"
+                },
+                {
+                    "symbol": "R",
+                    "name_ru": "Сопротивление",
+                    "name_en": "Resistance",
+                    "unit_si": "Ом"
+                }
+            ],
+            "calculation_rules": {
+                "I": "U / R",
+                "U": "I * R",
+                "R": "U / I"
+            }
+        },
+        {
+            "id": "em_uni_faraday_law",
+            "subsectionId": "em_induction",
+            "name_ru": "Закон Фарадея (ЭДС индукции)",
+            "name_en": "Faraday's Law (Induced EMF)",
+            "levels": [
+                "university"
+            ],
+            "equation_latex": "\u000barepsilon = -\frac{d\\Phi_B}{dt}",
+            "description_ru": "ЭДС индукции пропорциональна скорости изменения магнитного потока. ***Важно: Не для прямого расчета (содержит производную). calculation_rules пуст. Возможно упрощение для средних значений, но требует других переменных (DeltaPhiB, DeltaT). Замените name_en/description_en на реальный перевод.***",
+            "description_en": "Induced EMF is proportional to the rate of change of magnetic flux. ***Important: Not for direct calculation (contains derivative). calculation_rules is empty. Simplification for average values is possible but requires different variables (DeltaPhiB, DeltaT). Replace name_en/description_en with actual translation.***",
+            "variables": [
+                {
+                    "symbol": "epsilon",
+                    "name_ru": "ЭДС индукции",
+                    "name_en": "Induced EMF",
+                    "unit_si": "В"
+                },
+                {
+                    "symbol": "dPhiB",
+                    "name_ru": "Изм. магн. потока",
+                    "name_en": "Magnetic Flux Change",
+                    "unit_si": "Вб"
+                },
+                {
+                    "symbol": "dt",
+                    "name_ru": "Интервал времени",
+                    "name_en": "Time Interval",
+                    "unit_si": "с"
+                }
+            ],
+            "calculation_rules": {}
+        },
+        {
+            "id": "optics_school_lens_formula",
+            "subsectionId": "geometric_optics",
+            "name_ru": "Формула тонкой линзы",
+            "name_en": "Thin Lens Formula",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "\frac{1}{f} = \frac{1}{d_o} + \frac{1}{d_i}",
+            "description_ru": "Связь фокусного расстояния с расстояниями до объекта и изображения.",
+            "description_en": "Relates focal length to object and image distances. ***Примечание: Правила расчета добавлены для всех переменных, проверьте их корректность. Важно учитывать правила знаков для f, do, di (мнимые/действительные). Замените name_en/description_en на реальный перевод.***",
+            "variables": [
+                {
+                    "symbol": "f",
+                    "name_ru": "Фокусное расст.",
+                    "name_en": "Focal Length",
+                    "unit_si": "м"
+                },
+                {
+                    "symbol": "do",
+                    "name_ru": "Расст. до объекта",
+                    "name_en": "Object Distance",
+                    "unit_si": "м"
+                },
+                {
+                    "symbol": "di",
+                    "name_ru": "Расст. до изображ.",
+                    "name_en": "Image Distance",
+                    "unit_si": "м"
+                }
+            ],
+            "calculation_rules": {
+                "f": "1 / (1/do + 1/di)",
+                "do": "1 / (1/f - 1/di)",
+                "di": "1 / (1/f - 1/do)"
+            }
+        },
+        {
+            "id": "optics_uni_malus_law",
+            "subsectionId": "wave_optics",
+            "name_ru": "Закон Малюса",
+            "name_en": "Malus's Law",
+            "levels": [
+                "university"
+            ],
+            "equation_latex": "I = I_0 \\cos^2(\theta)",
+            "description_ru": "Интенсивность света после прохождения идеального поляризатора.",
+            "description_en": "Intensity of light after passing through an ideal polarizer. ***Примечание: Правила расчета добавлены для всех переменных. Проверьте корректность и синтаксис функций pow, cos, acos, sqrt для DDMathParser. Учесть область определения (I <= I0). Замените name_en/description_en на реальный перевод.***",
+            "variables": [
+                {
+                    "symbol": "I",
+                    "name_ru": "Интенс. (после)",
+                    "name_en": "Intensity (after)",
+                    "unit_si": "Вт/м²"
+                },
+                {
+                    "symbol": "I0",
+                    "name_ru": "Интенс. (до)",
+                    "name_en": "Intensity (before)",
+                    "unit_si": "Вт/м²"
+                },
+                {
+                    "symbol": "theta",
+                    "name_ru": "Угол",
+                    "name_en": "Angle",
+                    "unit_si": "рад"
+                }
+            ],
+            "calculation_rules": {
+                "I": "I0 * pow(cos(theta), 2)",
+                "I0": "I / pow(cos(theta), 2)",
+                "theta": "acos(sqrt(I / I0))"
+            }
+        },
+        {
+            "id": "thermo_school_isothermal_process",
+            "subsectionId": "ideal_gas",
+            "name_ru": "Изотермический процесс (Закон Бойля-Мариотта)",
+            "name_en": "Isothermal Process (Boyle's Law)",
+            "levels": [
+                "school",
+                "university"
+            ],
+            "equation_latex": "P_1 V_1 = P_2 V_2",
+            "description_ru": "Для идеального газа при постоянной температуре произведение давления на объем постоянно. ***Примечание: Представлено как P1*V1 = P2*V2 для возможности расчета одной переменной при известных трех других. Проверьте правила. Замените name_en/description_en на реальный перевод.***",
+            "description_en": "For an ideal gas at constant temperature, the product of pressure and volume is constant. ***Note: Represented as P1*V1 = P2*V2 to allow calculation of one variable if the other three are known. Check the rules. Replace name_en/description_en with actual translation.***",
+            "variables": [
+                {
+                    "symbol": "P1",
+                    "name_ru": "Давление 1",
+                    "name_en": "Pressure 1",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "V1",
+                    "name_ru": "Объем 1",
+                    "name_en": "Volume 1",
+                    "unit_si": "м³"
+                },
+                {
+                    "symbol": "P2",
+                    "name_ru": "Давление 2",
+                    "name_en": "Pressure 2",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "V2",
+                    "name_ru": "Объем 2",
+                    "name_en": "Volume 2",
+                    "unit_si": "м³"
+                }
+            ],
+            "calculation_rules": {
+                "P1": "(P2 * V2) / V1",
+                "V1": "(P2 * V2) / P1",
+                "P2": "(P1 * V1) / V2",
+                "V2": "(P1 * V1) / P2"
+            }
+        },
+        {
+            "id": "archimedes_force",
+            "subsectionId": "fluids",
+            "name_ru": "Закон Архимеда",
+            "name_en": "Archimedes' Principle",
+            "description_ru": "Сила Архимеда равна весу жидкости в объеме погруженной части тела",
+            "description_en": "The buoyant force is equal to the weight of the fluid displaced by the immersed part of the body",
+            "equation_latex": "F_A = \\rho g V",
+            "levels": [
+                "school"
+            ],
+            "variables": [
+                {
+                    "symbol": "F_A",
+                    "name_ru": "Сила Архимеда",
+                    "name_en": "Buoyant force",
+                    "unit_si": "Н"
+                },
+                {
+                    "symbol": "ρ",
+                    "name_ru": "Плотность жидкости",
+                    "name_en": "Fluid density",
+                    "unit_si": "кг/м³"
+                },
+                {
+                    "symbol": "g",
+                    "name_ru": "Ускорение свободного падения",
+                    "name_en": "Gravitational acceleration",
+                    "unit_si": "м/с²"
+                },
+                {
+                    "symbol": "V",
+                    "name_ru": "Объем погруженной части",
+                    "name_en": "Volume of immersed part",
+                    "unit_si": "м³"
+                }
+            ],
+            "calculation_rules": {
+                "F_A": "ρ * g * V",
+                "ρ": "F_A / (g * V)",
+                "g": "F_A / (ρ * V)",
+                "V": "F_A / (ρ * g)"
+            }
+        },
+        {
+            "id": "hydrostatic_pressure",
+            "subsectionId": "fluids",
+            "name_ru": "Гидростатическое давление",
+            "name_en": "Hydrostatic Pressure",
+            "description_ru": "Давление жидкости на определенной глубине",
+            "description_en": "Fluid pressure at a specific depth",
+            "equation_latex": "p = \\rho g h",
+            "levels": [
+                "school"
+            ],
+            "variables": [
+                {
+                    "symbol": "p",
+                    "name_ru": "Давление",
+                    "name_en": "Pressure",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "ρ",
+                    "name_ru": "Плотность жидкости",
+                    "name_en": "Fluid density",
+                    "unit_si": "кг/м³"
+                },
+                {
+                    "symbol": "g",
+                    "name_ru": "Ускорение свободного падения",
+                    "name_en": "Gravitational acceleration",
+                    "unit_si": "м/с²"
+                },
+                {
+                    "symbol": "h",
+                    "name_ru": "Высота столба жидкости",
+                    "name_en": "Fluid column height",
+                    "unit_si": "м"
+                }
+            ],
+            "calculation_rules": {
+                "p": "ρ * g * h",
+                "ρ": "p / (g * h)",
+                "g": "p / (ρ * h)",
+                "h": "p / (ρ * g)"
+            }
+        },
+        {
+            "id": "total_pressure",
+            "subsectionId": "fluids",
+            "name_ru": "Давление на дне сосуда",
+            "name_en": "Total Pressure at Bottom",
+            "description_ru": "Полное давление на дне сосуда с учетом атмосферного давления",
+            "description_en": "Total pressure at the bottom including atmospheric pressure",
+            "equation_latex": "p = p_0 + \\rho g h",
+            "levels": [
+                "school"
+            ],
+            "variables": [
+                {
+                    "symbol": "p",
+                    "name_ru": "Полное давление",
+                    "name_en": "Total pressure",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "p_0",
+                    "name_ru": "Атмосферное давление",
+                    "name_en": "Atmospheric pressure",
+                    "unit_si": "Па"
+                },
+                {
+                    "symbol": "ρ",
+                    "name_ru": "Плотность жидкости",
+                    "name_en": "Fluid density",
+                    "unit_si": "кг/м³"
+                },
+                {
+                    "symbol": "g",
+                    "name_ru": "Ускорение свободного падения",
+                    "name_en": "Gravitational acceleration",
+                    "unit_si": "м/с²"
+                },
+                {
+                    "symbol": "h",
+                    "name_ru": "Высота столба жидкости",
+                    "name_en": "Fluid column height",
+                    "unit_si": "м"
+                }
+            ],
+            "calculation_rules": {
+                "p": "p_0 + ρ * g * h",
+                "p_0": "p - ρ * g * h",
+                "ρ": "(p - p_0) / (g * h)",
+                "g": "(p - p_0) / (ρ * h)",
+                "h": "(p - p_0) / (ρ * g)"
+            }
+        },
+        {
+            "id": "communicating_vessels",
+            "subsectionId": "fluids",
+            "name_ru": "Сообщающиеся сосуды",
+            "name_en": "Communicating Vessels",
+            "description_ru": "Соотношение высот столбов разных жидкостей в сообщающихся сосудах",
+            "description_en": "Relationship between heights of different fluids in communicating vessels",
+            "equation_latex": "\\mathbf{\\frac{h_1}{h_2} = \\frac{\\rho_2}{\\rho_1}}",
+            "levels": [
+                "school"
+            ],
+            "variables": [
+                {
+                    "symbol": "h_1",
+                    "name_ru": "Высота первой жидкости",
+                    "name_en": "Height of first fluid",
+                    "unit_si": "м"
+                },
+                {
+                    "symbol": "h_2",
+                    "name_ru": "Высота второй жидкости",
+                    "name_en": "Height of second fluid",
+                    "unit_si": "м"
+                },
+                {
+                    "symbol": "ρ_1",
+                    "name_ru": "Плотность первой жидкости",
+                    "name_en": "Density of first fluid",
+                    "unit_si": "кг/м³"
+                },
+                {
+                    "symbol": "ρ_2",
+                    "name_ru": "Плотность второй жидкости",
+                    "name_en": "Density of second fluid",
+                    "unit_si": "кг/м³"
+                }
+            ],
+            "calculation_rules": {
+                "h_1": "(ρ_2 * h_2) / ρ_1",
+                "h_2": "(ρ_1 * h_1) / ρ_2",
+                "ρ_1": "(ρ_2 * h_2) / h_1",
+                "ρ_2": "(ρ_1 * h_1) / h_2"
+            }
+        }
+    ]
+}
