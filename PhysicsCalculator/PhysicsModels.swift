@@ -130,6 +130,20 @@ public struct Formula: Codable, Identifiable, Hashable {
         default: return description_en
         }
     }
+
+    public func getRearrangedFormula(for unknownSymbol: String) -> String {
+        // Получаем правило расчета для неизвестной переменной
+        guard let rule = calculation_rules[unknownSymbol] else {
+            return equation_latex
+        }
+        
+        // Создаем новую формулу в формате "неизвестная = выражение"
+        // Добавляем пробелы вокруг операторов для лучшей читаемости
+        let formattedRule = rule.replacingOccurrences(of: "*", with: " \\cdot ")
+                              .replacingOccurrences(of: "/", with: " \\div ")
+        
+        return "\(unknownSymbol) = \(formattedRule)"
+    }
 }
 
 // Переменная в формуле
