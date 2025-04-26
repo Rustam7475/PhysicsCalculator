@@ -39,164 +39,207 @@ struct CalculationResultView: View {
         formula.variables.count >= 2
     }
     
+    // Вспомогательные функции
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: calculationDate)
+    }
+    
+    private func getFormulaWithValues() -> String {
+        // Формируем левую часть (символ вычисляемой переменной)
+        let leftSide = calculatedSymbol
+        
+        // Получаем правило расчета для вычисляемой переменной
+        guard let rule = formula.calculation_rules[calculatedSymbol] else {
+            return "\(leftSide) = ?"
+        }
+        
+        // Заменяем символы переменных их значениями
+        var rightSide = rule
+        for variable in formula.variables where variable.symbol != calculatedSymbol {
+            if let value = inputValues[variable.symbol] {
+                rightSide = rightSide.replacingOccurrences(of: variable.symbol, with: value)
+            }
+        }
+        
+        // Заменяем операторы на LaTeX-эквиваленты
+        rightSide = rightSide.replacingOccurrences(of: "*", with: " \\cdot ")
+                            .replacingOccurrences(of: "/", with: " \\div ")
+        
+        return "\(leftSide) = \(rightSide)"
+    }
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Верхняя панель с кнопками действий
-                HStack(spacing: 20) {
-                    Button(action: copyResult) {
-                        VStack {
-                            Image(systemName: copiedToClipboard ? "checkmark.circle.fill" : "doc.on.doc")
-                                .font(.system(size: 20))
-                            Text("Копировать")
-                                .font(.caption)
-                        }
-                        .frame(maxWidth: .infinity)
+        VStack(spacing: 20) {
+            // Верхняя панель с кнопками действий
+            HStack(spacing: 20) {
+                Button(action: copyResult) {
+                    VStack {
+                        Image(systemName: copiedToClipboard ? "checkmark.circle.fill" : "doc.on.doc")
+                            .font(.system(size: 20))
+                        Text("Копировать")
+                            .font(.caption)
                     }
-                    
-                    if canShowGraph {
-                        NavigationLink {
-                            FormulaGraphView(
-                                formula: formula,
-                                xVariable: formula.variables.first { $0.symbol != calculatedSymbol }!,
-                                yVariable: formula.variables.first { $0.symbol == calculatedSymbol }!,
-                                otherValues: formula.variables.reduce(into: [:]) { result, variable in
-                                    if variable.symbol != calculatedSymbol,
-                                       let value = inputValues[variable.symbol],
-                                       let doubleValue = Double(value.replacingOccurrences(of: ",", with: ".")) {
-                                        result[variable.symbol] = doubleValue
-                                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                if canShowGraph {
+                    NavigationLink {
+                        FormulaGraphView(
+                            formula: formula,
+                            xVariable: formula.variables.first { $0.symbol != calculatedSymbol }!,
+                            yVariable: formula.variables.first { $0.symbol == calculatedSymbol }!,
+                            otherValues: formula.variables.reduce(into: [:]) { result, variable in
+                                if variable.symbol != calculatedSymbol,
+                                   let value = inputValues[variable.symbol],
+                                   let doubleValue = Double(value.replacingOccurrences(of: ",", with: ".")) {
+                                    result[variable.symbol] = doubleValue
                                 }
-                            )
-                        } label: {
-                            VStack {
-                                Image(systemName: "chart.line.uptrend.xyaxis")
-                                    .font(.system(size: 20))
-                                Text("График")
-                                    .font(.caption)
                             }
-                            .frame(maxWidth: .infinity)
-                        }
-                    }
-                    
-                    Button(action: { showingPDFPreview = true }) {
+                        )
+                    } label: {
                         VStack {
-                            Image(systemName: "arrow.down.doc")
+                            Image(systemName: "chart.line.uptrend.xyaxis")
                                 .font(.system(size: 20))
-                            Text("PDF")
-                                .font(.caption)
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    
-                    Button(action: { showShareSheet = true }) {
-                        VStack {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.system(size: 20))
-                            Text("Поделиться")
-                                .font(.caption)
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    
-                    Button(action: toggleFavorite) {
-                        VStack {
-                            Image(systemName: isFavorite ? "star.fill" : "star")
-                                .font(.system(size: 20))
-                                .foregroundColor(isFavorite ? .yellow : .gray)
-                            Text("Избранное")
+                            Text("График")
                                 .font(.caption)
                         }
                         .frame(maxWidth: .infinity)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(Color(.systemBackground))
-                .cornerRadius(10)
-                .shadow(radius: 2)
                 
-                // Основная информация
-                VStack(alignment: .leading, spacing: 16) {
-                    Text(formula.localizedName)
-                        .font(.title)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                    
-                    // Формула LaTeX
-                    MathLabel(latex: formula.equation_latex, fontSize: 24)
-                        .frame(height: 60)
-                        .frame(maxWidth: .infinity)
-                    
-                    // Контейнер для обоих блоков
-                    VStack(spacing: 16) {
-                        // Введенные значения
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Введенные значения:")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            ForEach(formula.variables) { variable in
-                                if variable.symbol != calculatedSymbol {
-                                    HStack {
-                                        Text("\(variable.localizedName):")
-                                        Text("\(inputValues[variable.symbol, default: ""]) \(variable.unit_si)")
-                                            .bold()
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                        .frame(maxWidth: .infinity)
+                Button(action: { showingPDFPreview = true }) {
+                    VStack {
+                        Image(systemName: "arrow.down.doc")
+                            .font(.system(size: 20))
+                        Text("PDF")
+                            .font(.caption)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                Button(action: { showShareSheet = true }) {
+                    VStack {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 20))
+                        Text("Поделиться")
+                            .font(.caption)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                Button(action: toggleFavorite) {
+                    VStack {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.system(size: 20))
+                            .foregroundColor(isFavorite ? .yellow : .gray)
+                        Text("Избранное")
+                            .font(.caption)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground))
+            .cornerRadius(10)
+            .shadow(radius: 2)
+            
+            // Основной контент
+            VStack(alignment: .leading, spacing: 8) {
+                Text(formula.localizedName)
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                
+                // Формула в символах
+                GeometryReader { geometry in
+                    MathLabel(latex: formula.getRearrangedFormula(for: calculatedSymbol), 
+                            fontSize: min(geometry.size.width, geometry.size.height) * 0.5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .frame(height: 60)
+                .frame(maxWidth: .infinity)
+                
+                // Формула с подставленными значениями
+                GeometryReader { geometry in
+                    MathLabel(latex: getFormulaWithValues(), 
+                            fontSize: min(geometry.size.width, geometry.size.height) * 0.4)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .frame(height: 60)
+                .frame(maxWidth: .infinity)
+                
+                // Контейнер для значений
+                VStack(spacing: 16) {
+                    // Введенные значения
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Введенные значения:")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        // Результат
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Результат:")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
+                        ForEach(formula.variables) { variable in
+                            if variable.symbol != calculatedSymbol {
                                 HStack {
-                                    Text("\(resultVariable.localizedName):")
-                                    Text("\(String(format: "%.4g", calculatedValue)) \(resultVariable.unit_si)")
+                                    Text("\(variable.localizedName):")
+                                    Text("\(inputValues[variable.symbol, default: ""]) \(variable.unit_si)")
                                         .bold()
                                 }
                             }
                         }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                        .frame(maxWidth: .infinity)
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.9)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .frame(maxWidth: .infinity)
                     
-                    // Дата и время расчета
-                    Text("Расчет выполнен: \(formattedDate)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: UIScreen.main.bounds.width * 0.9, alignment: .leading)
-                        .padding(.horizontal)
+                    // Результат
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Результат:")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
+                            HStack {
+                                Text("\(resultVariable.localizedName):")
+                                Text("\(String(format: "%.4g", calculatedValue)) \(resultVariable.unit_si)")
+                                    .bold()
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .frame(maxWidth: .infinity)
                 }
-                .padding()
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.9)
                 
-                // Кнопки навигации
-                VStack(spacing: 12) {
-                    NavigationLink(destination: CalculationView(
-                        formula: formula
-                    )) {
-                        Text("Новый расчет")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Вернуться к расчету") {
-                        dismiss()
-                    }
-                    .buttonStyle(.bordered)
-                }
-                .padding()
+                // Дата и время расчета
+                Text("Расчет выполнен: \(formattedDate)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.9, alignment: .leading)
+                    .padding(.horizontal)
             }
+            .padding()
+            
+            // Кнопки навигации
+            VStack(spacing: 12) {
+                NavigationLink(destination: CalculationView(
+                    formula: formula
+                )) {
+                    Text("Новый расчет")
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Вернуться к расчету") {
+                    dismiss()
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding()
         }
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showShareSheet) {
@@ -211,14 +254,6 @@ struct CalculationResultView: View {
                 calculationDate: calculationDate
             )
         }
-    }
-    
-    // Вспомогательные функции
-    private var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: calculationDate)
     }
     
     private func copyResult() {

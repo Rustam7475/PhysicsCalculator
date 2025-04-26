@@ -147,10 +147,20 @@ struct CalculationView: View {
 
     // --- Вспомогательные функции ---
     private func selectUnknown(symbol: String) {
-        if selectedUnknownSymbol == symbol { selectedUnknownSymbol = nil }
-        else { selectedUnknownSymbol = symbol }
-        calculatedResult = nil; errorMessage = nil
-        if selectedUnknownSymbol == symbol { inputValues[symbol] = "" }
+        // Если нажали на уже выбранную переменную, снимаем выбор
+        if selectedUnknownSymbol == symbol {
+            selectedUnknownSymbol = nil
+            inputValues[symbol] = ""
+        } else {
+            // Иначе выбираем новую переменную
+            selectedUnknownSymbol = symbol
+            // Очищаем значение для выбранной переменной
+            inputValues[symbol] = ""
+        }
+        
+        // Сбрасываем результат и ошибку
+        calculatedResult = nil
+        errorMessage = nil
     }
 
     private func canCalculate() -> Bool {
@@ -262,28 +272,37 @@ struct VariableInputRow: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: isUnknown ? "largecircle.fill.circle" : "circle")
-                .foregroundColor(isUnknown ? .accentColor : .secondary)
-                .onTapGesture(perform: onSelectUnknown)
-            Text("\(variable.symbol) (\(variable.localizedName)):")
-                .frame(width: 90, alignment: .leading)
+            Button(action: onSelectUnknown) {
+                Image(systemName: isUnknown ? "largecircle.fill.circle" : "circle")
+                    .foregroundColor(isUnknown ? .accentColor : .secondary)
+            }
+            .buttonStyle(.plain)
+            
+            Text("\(variable.symbol):")
+                .frame(width: 40, alignment: .leading)
+            
             if isUnknown {
                 Text("Будет рассчитано")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.secondary)
                     .italic()
             } else {
-                TextField("введите значение", text: $inputValue)
+                TextField("Введите значение \(variable.localizedName.lowercased())", text: $inputValue)
                     .keyboardType(.decimalPad)
                     .frame(maxWidth: .infinity)
                     .textFieldStyle(.roundedBorder)
                     .frame(height: 32)
             }
+            
             Text(variable.unit_si)
                 .foregroundColor(.secondary)
                 .frame(width: 60, alignment: .trailing)
         }
         .frame(height: 40)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onSelectUnknown()
+        }
     }
 }
 
