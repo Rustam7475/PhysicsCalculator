@@ -35,7 +35,6 @@ public struct LanguageSetting: Identifiable, Hashable {
 }
 
 // Класс для управления настройками приложения
-// Используем ObservableObject, чтобы интерфейс мог реагировать на изменения
 public class AppSettings: ObservableObject {
     // Ключи для UserDefaults
     private enum Keys {
@@ -43,7 +42,6 @@ public class AppSettings: ObservableObject {
         static let languageCode = "languageCode"
     }
     
-    // --- Настройки Тема ---
     // Текущая тема (с сохранением в UserDefaults)
     @Published public var theme: AppTheme {
         didSet {
@@ -51,31 +49,36 @@ public class AppSettings: ObservableObject {
         }
     }
     
-    // --- Конец Настроек Тема ---
-    
-    // --- Настройки Языка ---
     // Код языка (с сохранением в UserDefaults)
     @Published public var languageCode: String {
         didSet {
             UserDefaults.standard.set(languageCode, forKey: Keys.languageCode)
+            currentLanguageCode = Self.resolveLanguageCode(languageCode)
         }
     }
     
-    // Вычисляемое свойство для получения текущего КОДА языка, который нужно использовать
-    // (учитывает "system")
-    @Published public var currentLanguageCode: String = "ru"
+    // Актуальный код языка ("system" преобразуется в реальный код)
+    @Published public var currentLanguageCode: String
     
-    // --- Конец Настроек Языка ---
-    
-    // Синглтон для глобального доступа к настройкам (для моделей данных)
-    // Убедитесь, что он инициализируется только один раз
+    // Синглтон для доступа из моделей данных
     public static let shared = AppSettings()
     
     public init() {
-        // Загружаем сохраненные настройки или используем значения по умолчанию
         let savedTheme = UserDefaults.standard.string(forKey: Keys.theme)
         theme = AppTheme(rawValue: savedTheme ?? AppTheme.system.rawValue) ?? .system
         
-        languageCode = UserDefaults.standard.string(forKey: Keys.languageCode) ?? "system"
+        let savedLang = UserDefaults.standard.string(forKey: Keys.languageCode) ?? "system"
+        languageCode = savedLang
+        currentLanguageCode = Self.resolveLanguageCode(savedLang)
+    }
+    
+    /// Преобразует выбор языка в реальный код ("system" → код системы)
+    private static func resolveLanguageCode(_ code: String) -> String {
+        if code == "system" {
+            let preferred = Locale.preferredLanguages.first ?? "en"
+            let langCode = Locale(identifier: preferred).language.languageCode?.identifier ?? "en"
+            return AppConfiguration.supportedLanguages.contains(langCode) ? langCode : "en"
+        }
+        return code
     }
 }

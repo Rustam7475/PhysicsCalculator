@@ -1,5 +1,5 @@
 import SwiftUI
-import UIKit
+// import UIKit // Удалено, не требуется
 import CoreData // Потребуется для ObservedObject
 import SwiftMath
 
@@ -26,17 +26,26 @@ struct CalculationDetailView: View {
               let formulaVars = savedCalculation.formulaVariables
         else { return savedCalculation.equationLatex ?? "Формула не найдена" }
 
-        // Для второго закона Ньютона и подобных формул, где есть равенство,
-        // нам нужно показать обе части уравнения с подставленными значениями
-        var leftSide = ""
+        // Формируем левую часть — символ вычисляемой переменной
+        let leftSide = calculatedSymbol
+        // Формируем правую часть — выражение с подставленными значениями
         var rightSide = ""
-        
-        // Находим переменную, которую рассчитали
-        if formulaVars.contains(where: { $0.symbol == calculatedSymbol }) {
-            // Формируем левую часть (рассчитанная переменная)
-            leftSide = "\(String(format: "%.4g", savedCalculation.calculatedValue))"
-            
-            // Формируем правую часть (введенные значения)
+        if let formulaId = savedCalculation.formulaId,
+           let physicsData = loadPhysicsData(),
+           let formula = physicsData.formulas.first(where: { $0.id == formulaId }),
+           let rule = formula.calculation_rules[calculatedSymbol] {
+            // Заменяем символы переменных их значениями
+            rightSide = rule
+            for variable in formulaVars where variable.symbol != calculatedSymbol {
+                if let value = inputs[variable.symbol] {
+                    rightSide = rightSide.replacingOccurrences(of: variable.symbol, with: value)
+                }
+            }
+            // Заменяем операторы на LaTeX-эквиваленты
+            rightSide = rightSide.replacingOccurrences(of: "*", with: " \\cdot ")
+                                 .replacingOccurrences(of: "/", with: " \\div ")
+        } else {
+            // Fallback: просто подставляем значения через умножение
             var expressionParts: [String] = []
             for variable in formulaVars where variable.symbol != calculatedSymbol {
                 if let value = inputs[variable.symbol] {
@@ -45,9 +54,7 @@ struct CalculationDetailView: View {
             }
             rightSide = expressionParts.joined(separator: " \\cdot ")
         }
-        
-        // Возвращаем формулу в формате LaTeX
-        return "\(leftSide) = \(rightSide)"
+        return "\\displaystyle " + leftSide + " = " + rightSide
     }
 
     // Список всех переменных (введенных и рассчитанной)
@@ -97,13 +104,28 @@ struct CalculationDetailView: View {
                 // 2. Формула с символами
                 Text("Формула:")
                     .font(.headline)
-                MathLabel(latex: savedCalculation.equationLatex ?? "")
-                    .font(.title2)
-                    .padding(.vertical, 5)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(8)
-                    .padding(.bottom, 8)
+                Group {
+                    if let formulaId = savedCalculation.formulaId,
+                       let calculatedSymbol = savedCalculation.calculatedSymbol,
+                       let physicsData = loadPhysicsData(),
+                       let formula = physicsData.formulas.first(where: { $0.id == formulaId }) {
+                        MathLabel(latex: formula.getRearrangedFormula(for: calculatedSymbol))
+                            .font(.title2)
+                            .padding(.vertical, 5)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(8)
+                            .padding(.bottom, 8)
+                    } else {
+                        MathLabel(latex: savedCalculation.equationLatex ?? "")
+                            .font(.title2)
+                            .padding(.vertical, 5)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(8)
+                            .padding(.bottom, 8)
+                    }
+                }
 
                 // 3. Формула с подставленными значениями
                 Text("Решение:")
