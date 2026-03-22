@@ -40,11 +40,15 @@ struct CalculationResultView: View {
     }
     
     // Вспомогательные функции
-    private var formattedDate: String {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        return formatter.string(from: calculationDate)
+        return formatter
+    }()
+    
+    private var formattedDate: String {
+        Self.dateFormatter.string(from: calculationDate)
     }
     
     private func getFormulaWithValues() -> String {
@@ -65,12 +69,14 @@ struct CalculationResultView: View {
                     .frame(maxWidth: .infinity)
                 }
                 
-                if canShowGraph {
+                if canShowGraph,
+                   let xVar = formula.variables.first(where: { $0.symbol != calculatedSymbol }),
+                   let yVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
                     NavigationLink {
                         FormulaGraphView(
                             formula: formula,
-                            xVariable: formula.variables.first { $0.symbol != calculatedSymbol }!,
-                            yVariable: formula.variables.first { $0.symbol == calculatedSymbol }!,
+                            xVariable: xVar,
+                            yVariable: yVar,
                             otherValues: formula.variables.reduce(into: [:]) { result, variable in
                                 if variable.symbol != calculatedSymbol,
                                    let value = inputValues[variable.symbol],
@@ -194,14 +200,13 @@ struct CalculationResultView: View {
                     .cornerRadius(10)
                     .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.9)
+                .frame(maxWidth: .infinity)
                 
                 // Дата и время расчета
                 Text("Расчет выполнен: \(formattedDate)")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.9, alignment: .leading)
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding()
             
