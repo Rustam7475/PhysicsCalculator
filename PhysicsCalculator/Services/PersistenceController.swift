@@ -1,26 +1,24 @@
 import CoreData
 
 struct PersistenceController {
-    static let shared = PersistenceController() // Синглтон для доступа
+    static let shared = PersistenceController()
 
     let container: NSPersistentContainer
 
-    // Инициализатор загружает модель данных и настраивает стек Core Data
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "PhysicsCalculatorModel") // Имя вашего .xcdatamodeld файла
+        container = NSPersistentContainer(name: AppConfiguration.databaseName)
 
         if inMemory {
-            // Для тестов или превью можно использовать хранилище в памяти
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+            if let description = container.persistentStoreDescriptions.first {
+                description.url = URL(fileURLWithPath: "/dev/null")
+            }
         }
 
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                // В реальном приложении здесь нужна серьезная обработка ошибок
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                print("Core Data ошибка загрузки: \(error), \(error.userInfo)")
             }
-        })
-        // Автоматически объединять изменения, если модель менялась
+        }
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 
@@ -36,10 +34,7 @@ struct PersistenceController {
             do {
                 try context.save()
             } catch {
-                let nserror = error as NSError
-                // В реальном приложении обработать ошибку
-                print("Unresolved error \(nserror), \(nserror.userInfo)")
-                // fatalError("Unresolved error \(nserror), \(nserror.userInfo)") // Лучше не падать в релизе
+                print("Core Data ошибка сохранения: \(error)")
             }
         }
     }

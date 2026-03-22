@@ -48,27 +48,7 @@ struct CalculationResultView: View {
     }
     
     private func getFormulaWithValues() -> String {
-        // Формируем левую часть (символ вычисляемой переменной)
-        let leftSide = calculatedSymbol
-        
-        // Получаем правило расчета для вычисляемой переменной
-        guard let rule = formula.calculation_rules[calculatedSymbol] else {
-            return "\(leftSide) = ?"
-        }
-        
-        // Заменяем символы переменных их значениями
-        var rightSide = rule
-        for variable in formula.variables where variable.symbol != calculatedSymbol {
-            if let value = inputValues[variable.symbol] {
-                rightSide = rightSide.replacingOccurrences(of: variable.symbol, with: value)
-            }
-        }
-        
-        // Заменяем операторы на LaTeX-эквиваленты
-        rightSide = rightSide.replacingOccurrences(of: "*", with: " \\cdot ")
-                            .replacingOccurrences(of: "/", with: " \\div ")
-        
-        return "\(leftSide) = \(rightSide)"
+        formula.getFormulaWithValues(calculatedSymbol: calculatedSymbol, inputValues: inputValues)
     }
     
     var body: some View {
