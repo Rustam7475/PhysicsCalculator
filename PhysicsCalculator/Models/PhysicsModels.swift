@@ -136,17 +136,30 @@ public struct Formula: Codable, Identifiable, Hashable {
     }
 
     public func getRearrangedFormula(for unknownSymbol: String) -> String {
-        // Получаем правило расчета для неизвестной переменной
         guard let rule = calculation_rules[unknownSymbol] else {
             return equation_latex
         }
-        
-        // Создаем новую формулу в формате "неизвестная = выражение"
-        // Добавляем пробелы вокруг операторов для лучшей читаемости
-        let formattedRule = rule.replacingOccurrences(of: "*", with: " \\cdot ")
-                              .replacingOccurrences(of: "/", with: " \\div ")
-        
-        return "\(unknownSymbol) = \(formattedRule)"
+        return "\(unknownSymbol) = \(Self.formatRuleAsLatex(rule))"
+    }
+    
+    /// Формула с подставленными числовыми значениями
+    public func getFormulaWithValues(calculatedSymbol: String, inputValues: [String: String]) -> String {
+        guard let rule = calculation_rules[calculatedSymbol] else {
+            return "\(calculatedSymbol) = ?"
+        }
+        var rightSide = rule
+        for variable in variables where variable.symbol != calculatedSymbol {
+            if let value = inputValues[variable.symbol] {
+                rightSide = rightSide.replacingOccurrences(of: variable.symbol, with: value)
+            }
+        }
+        return "\(calculatedSymbol) = \(Self.formatRuleAsLatex(rightSide))"
+    }
+    
+    /// Форматирует арифметическое выражение в LaTeX
+    private static func formatRuleAsLatex(_ rule: String) -> String {
+        rule.replacingOccurrences(of: "*", with: " \\cdot ")
+            .replacingOccurrences(of: "/", with: " \\div ")
     }
 }
 

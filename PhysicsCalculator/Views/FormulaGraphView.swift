@@ -157,19 +157,22 @@ struct FormulaGraphView: View {
         }
     }
     
+    private let calculationService = CalculationService()
+    
     private func calculatePoints() {
+        guard let rule = formula.calculation_rules[yVariable.symbol], stepX > 0 else {
+            points = []
+            return
+        }
+        
         var newPoints: [GraphPoint] = []
-        let evaluator = NSExpression(format: formula.calculation_rules[yVariable.symbol] ?? "")
         
         for x in stride(from: minX, through: maxX, by: stepX) {
             var variables = otherValues
             variables[xVariable.symbol] = x
             
-            if let result = evaluator.expressionValue(with: variables, context: nil) as? NSNumber {
-                let y = result.doubleValue
-                if !y.isNaN && !y.isInfinite {
-                    newPoints.append(GraphPoint(x: x, y: y))
-                }
+            if let y = try? calculationService.calculate(rule: rule, variables: variables) {
+                newPoints.append(GraphPoint(x: x, y: y))
             }
         }
         

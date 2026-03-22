@@ -20,41 +20,27 @@ struct CalculationDetailView: View {
 
     // Формула с подставленными значениями
     private var solvedEquationString: String {
-        guard let _ = savedCalculation.equationLatex,
-              let inputs = savedCalculation.inputValues,
-              let calculatedSymbol = savedCalculation.calculatedSymbol,
-              let formulaVars = savedCalculation.formulaVariables
+        guard let inputs = savedCalculation.inputValues,
+              let calculatedSymbol = savedCalculation.calculatedSymbol
         else { return savedCalculation.equationLatex ?? "Формула не найдена" }
 
-        // Формируем левую часть — символ вычисляемой переменной
-        let leftSide = calculatedSymbol
-        // Формируем правую часть — выражение с подставленными значениями
-        var rightSide = ""
         if let formulaId = savedCalculation.formulaId,
            let physicsData = loadPhysicsData(),
-           let formula = physicsData.formulas.first(where: { $0.id == formulaId }),
-           let rule = formula.calculation_rules[calculatedSymbol] {
-            // Заменяем символы переменных их значениями
-            rightSide = rule
-            for variable in formulaVars where variable.symbol != calculatedSymbol {
-                if let value = inputs[variable.symbol] {
-                    rightSide = rightSide.replacingOccurrences(of: variable.symbol, with: value)
-                }
-            }
-            // Заменяем операторы на LaTeX-эквиваленты
-            rightSide = rightSide.replacingOccurrences(of: "*", with: " \\cdot ")
-                                 .replacingOccurrences(of: "/", with: " \\div ")
-        } else {
-            // Fallback: просто подставляем значения через умножение
-            var expressionParts: [String] = []
-            for variable in formulaVars where variable.symbol != calculatedSymbol {
-                if let value = inputs[variable.symbol] {
-                    expressionParts.append(value)
-                }
-            }
-            rightSide = expressionParts.joined(separator: " \\cdot ")
+           let formula = physicsData.formulas.first(where: { $0.id == formulaId }) {
+            return "\\displaystyle " + formula.getFormulaWithValues(
+                calculatedSymbol: calculatedSymbol,
+                inputValues: inputs
+            )
         }
-        return "\\displaystyle " + leftSide + " = " + rightSide
+        
+        // Fallback
+        guard let formulaVars = savedCalculation.formulaVariables else {
+            return savedCalculation.equationLatex ?? "Формула не найдена"
+        }
+        let parts = formulaVars
+            .filter { $0.symbol != calculatedSymbol }
+            .compactMap { inputs[$0.symbol] }
+        return "\\displaystyle " + calculatedSymbol + " = " + parts.joined(separator: " \\cdot ")
     }
 
     // Список всех переменных (введенных и рассчитанной)
