@@ -1,5 +1,4 @@
 import SwiftUI
-import CoreData
 
 // MARK: - ViewModel для экрана вычислений
 @MainActor
@@ -103,28 +102,4 @@ final class CalculationViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Избранное
-    
-    func saveFavorite() {
-        guard let unknown = selectedUnknownSymbol, let result = calculatedResult else {
-            errorMessage = "Сначала выполните расчет, чтобы сохранить в избранное."
-            return
-        }
-        var currentInputs: [String: String] = [:]
-        for variable in formula.variables where variable.symbol != unknown {
-            currentInputs[variable.symbol] = inputValues[variable.symbol, default: ""]
-        }
-        PersistenceController.shared.saveCalculation(
-            formula: formula,
-            calculatedSymbol: unknown,
-            calculatedValue: result,
-            inputValues: currentInputs
-        )
-    }
-    
-    func removeFavorites(_ items: FetchedResults<SavedCalculation>) {
-        for item in items {
-            PersistenceController.shared.deleteCalculation(item)
-        }
-    }
 }

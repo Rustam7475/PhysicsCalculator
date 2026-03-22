@@ -194,11 +194,18 @@ public struct Variable: Codable, Identifiable, Hashable {
 
 // MARK: - Загрузка данных
 
-/// Загрузка данных из JSON (для превью и обратной совместимости)
+/// Загрузка данных из JSON (с кешированием, для превью и обратной совместимости)
+private var _cachedPhysicsData: PhysicsData?
+private var _physicsDataLoaded = false
+
 func loadPhysicsData() -> PhysicsData? {
+    if _physicsDataLoaded { return _cachedPhysicsData }
     guard let url = Bundle.main.url(forResource: "formulas_data", withExtension: "json"),
           let data = try? Data(contentsOf: url) else {
+        _physicsDataLoaded = true
         return nil
     }
-    return try? JSONDecoder().decode(PhysicsData.self, from: data)
+    _cachedPhysicsData = try? JSONDecoder().decode(PhysicsData.self, from: data)
+    _physicsDataLoaded = true
+    return _cachedPhysicsData
 }

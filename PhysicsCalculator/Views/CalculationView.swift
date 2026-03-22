@@ -1,30 +1,12 @@
 import SwiftUI
-import CoreData
 import SwiftMath
 
 
 struct CalculationView: View {
     @StateObject private var viewModel: CalculationViewModel
 
-    // Доступ к контексту Core Data
-    @Environment(\.managedObjectContext) private var viewContext
-
-    // FetchRequest для поиска сохраненных расчетов ЭТОЙ формулы
-    @FetchRequest private var savedItems: FetchedResults<SavedCalculation>
-
-    // Вычисляемое свойство, чтобы определить, сохранена ли эта формула
-    private var isFavorite: Bool {
-        !savedItems.isEmpty
-    }
-
     // Инициализатор
     init(formula: Formula) {
-        let predicate = NSPredicate(format: "formulaId == %@", formula.id)
-        _savedItems = FetchRequest<SavedCalculation>(
-            sortDescriptors: [NSSortDescriptor(keyPath: \SavedCalculation.timestamp, ascending: true)],
-            predicate: predicate,
-            animation: .default
-        )
         _viewModel = StateObject(wrappedValue: CalculationViewModel(formula: formula))
     }
 

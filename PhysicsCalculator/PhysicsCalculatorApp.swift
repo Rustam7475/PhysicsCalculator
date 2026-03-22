@@ -1,6 +1,5 @@
 import SwiftUI
 import CoreData
-import Combine
 
 @main
 struct PhysicsCalculatorApp: App {

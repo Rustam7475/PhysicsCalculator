@@ -1,6 +1,4 @@
 import SwiftUI
-import Combine // Для ObservableObject
-import Foundation
 
 // Определяем возможные темы
 public enum AppTheme: String, CaseIterable, Identifiable {
@@ -25,13 +23,6 @@ public enum AppTheme: String, CaseIterable, Identifiable {
         case .system: return "Системная"
         }
     }
-}
-
-// Структура для представления языка
-public struct LanguageSetting: Identifiable, Hashable {
-    public let code: String // "en", "ru", "de", "system"
-    public let name: String // "English", "Русский", "Deutsch", "Как в системе"
-    public var id: String { code }
 }
 
 // Класс для управления настройками приложения

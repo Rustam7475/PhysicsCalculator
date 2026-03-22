@@ -2,27 +2,6 @@ import SwiftUI
 import Charts
 import Foundation
 
-let previewFormula = Formula(
-    id: "test",
-    subsectionId: "test",
-    name_ru: "Тест",
-    name_en: "Test",
-    levels: ["test"],
-    equation_latex: "y = kx",
-    description_ru: "Тест",
-    description_en: "Test",
-    variables: [
-        Variable(symbol: "y", name_ru: "Y", name_en: "Y", unit_si: "м"),
-        Variable(symbol: "k", name_ru: "K", name_en: "K", unit_si: "1"),
-        Variable(symbol: "x", name_ru: "X", name_en: "X", unit_si: "м")
-    ],
-    calculation_rules: [
-        "y": "k * x",
-        "k": "y / x",
-        "x": "y / k"
-    ]
-)
-
 struct FormulaGraphView: View {
     let formula: Formula
     let xVariable: Variable
@@ -181,10 +160,30 @@ struct FormulaGraphView: View {
 }
 
 #Preview {
+    let formula = Formula(
+        id: "test",
+        subsectionId: "test",
+        name_ru: "Тест",
+        name_en: "Test",
+        levels: ["test"],
+        equation_latex: "y = kx",
+        description_ru: "Тест",
+        description_en: "Test",
+        variables: [
+            Variable(symbol: "y", name_ru: "Y", name_en: "Y", unit_si: "м"),
+            Variable(symbol: "k", name_ru: "K", name_en: "K", unit_si: "1"),
+            Variable(symbol: "x", name_ru: "X", name_en: "X", unit_si: "м")
+        ],
+        calculation_rules: [
+            "y": "k * x",
+            "k": "y / x",
+            "x": "y / k"
+        ]
+    )
     FormulaGraphView(
-        formula: previewFormula,
-        xVariable: previewFormula.variables[2], // x
-        yVariable: previewFormula.variables[0], // y
+        formula: formula,
+        xVariable: formula.variables[2],
+        yVariable: formula.variables[0],
         otherValues: ["k": 2]
     )
 } 
