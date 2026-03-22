@@ -1,21 +1,10 @@
 import SwiftUI
-import MathParser
 import CoreData
 import SwiftMath
 
 
-
 struct CalculationView: View {
-    let formula: Formula
-
-    // Состояния
-    @State private var inputValues: [String: String]
-    @State private var selectedUnknownSymbol: String?
-    @State private var calculatedResult: Double?
-    @State private var errorMessage: String?
-    @State private var showingResult = false
-    @State private var calculationDate = Date()
-    // isFavorite определяется через FetchRequest
+    @StateObject private var viewModel: CalculationViewModel
 
     // Доступ к контексту Core Data
     @Environment(\.managedObjectContext) private var viewContext
@@ -28,22 +17,15 @@ struct CalculationView: View {
         !savedItems.isEmpty
     }
 
-    // Инициализатор для настройки FetchRequest
-    init(formula: Formula, initialInputValues: [String: String] = [:], initialUnknownSymbol: String? = nil) {
-        self.formula = formula
+    // Инициализатор
+    init(formula: Formula) {
         let predicate = NSPredicate(format: "formulaId == %@", formula.id)
         _savedItems = FetchRequest<SavedCalculation>(
             sortDescriptors: [NSSortDescriptor(keyPath: \SavedCalculation.timestamp, ascending: true)],
             predicate: predicate,
             animation: .default
         )
-        // Инициализация состояний
-        _inputValues = State(initialValue: initialInputValues)
-        _selectedUnknownSymbol = State(initialValue: initialUnknownSymbol)
-        _calculatedResult = State(initialValue: nil)
-        _errorMessage = State(initialValue: nil)
-        _showingResult = State(initialValue: false)
-        _calculationDate = State(initialValue: Date())
+        _viewModel = StateObject(wrappedValue: CalculationViewModel(formula: formula))
     }
 
     // Основное тело View
@@ -51,7 +33,7 @@ struct CalculationView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 // Заголовок формулы
-                Text(formula.localizedName)
+                Text(viewModel.formula.localizedName)
                     .font(.title)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .multilineTextAlignment(.center)
@@ -59,7 +41,7 @@ struct CalculationView: View {
                 
                 // Отображение формулы
                 GeometryReader { geometry in
-                    MathLabel(latex: formula.equation_latex, 
+                    MathLabel(latex: viewModel.formula.equation_latex, 
                             fontSize: min(geometry.size.width, geometry.size.height) * 0.5)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -67,28 +49,28 @@ struct CalculationView: View {
                 .frame(maxWidth: .infinity)
                 
                 // Описание
-                Text(formula.localizedDescription)
+                Text(viewModel.formula.localizedDescription)
                     .font(.footnote)
                     .foregroundColor(.secondary)
                     .padding(.bottom, 4)
 
                 // Список переменных
-                ForEach(formula.variables) { variable in
+                ForEach(viewModel.formula.variables) { variable in
                     VariableInputRow(
                         variable: variable,
                         inputValue: Binding(
-                            get: { inputValues[variable.symbol, default: ""] },
-                            set: { inputValues[variable.symbol] = $0 }
+                            get: { viewModel.inputValues[variable.symbol, default: ""] },
+                            set: { viewModel.inputValues[variable.symbol] = $0 }
                         ),
-                        isUnknown: selectedUnknownSymbol == variable.symbol,
-                        calculatedValue: (selectedUnknownSymbol == variable.symbol) ? calculatedResult : nil,
-                        onSelectUnknown: { selectUnknown(symbol: variable.symbol) }
+                        isUnknown: viewModel.selectedUnknownSymbol == variable.symbol,
+                        calculatedValue: (viewModel.selectedUnknownSymbol == variable.symbol) ? viewModel.calculatedResult : nil,
+                        onSelectUnknown: { viewModel.selectUnknown(symbol: variable.symbol) }
                     )
                     Divider()
                 }
 
                 // Отображение ошибки
-                if let error = errorMessage {
+                if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundColor(.red)
                         .font(.callout)
@@ -96,10 +78,10 @@ struct CalculationView: View {
 
                 // Кнопки действий
                 HStack(spacing: 20) {
-                    Button("Рассчитать") { calculate() }
+                    Button("Рассчитать") { viewModel.calculate() }
                         .buttonStyle(.borderedProminent)
-                        .disabled(!canCalculate())
-                    Button("Сбросить") { reset() }
+                        .disabled(!viewModel.canCalculate)
+                    Button("Сбросить") { viewModel.reset() }
                         .buttonStyle(.bordered)
                 }
                 .frame(maxWidth: .infinity)
@@ -111,154 +93,23 @@ struct CalculationView: View {
             .padding(.vertical, 8)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                favoriteButtonView
-            }
-        }
         .onAppear {
-            // Убираем сброс значений при возврате
-            if inputValues.isEmpty {
-                reset()
+            if viewModel.inputValues.isEmpty {
+                viewModel.reset()
             }
         }
-        .navigationDestination(isPresented: $showingResult) {
-            if let result = calculatedResult, let symbol = selectedUnknownSymbol {
+        .navigationDestination(isPresented: $viewModel.showingResult) {
+            if let result = viewModel.calculatedResult, let symbol = viewModel.selectedUnknownSymbol {
                 CalculationResultView(
-                    formula: formula,
+                    formula: viewModel.formula,
                     calculatedSymbol: symbol,
                     calculatedValue: result,
-                    inputValues: inputValues,
-                    calculationDate: calculationDate
+                    inputValues: viewModel.inputValues,
+                    calculationDate: viewModel.calculationDate
                 )
             }
         }
     }
-
-    // Кнопка Избранного
-    private var favoriteButtonView: some View {
-        Button {
-            toggleFavorite()
-        } label: {
-            Image(systemName: isFavorite ? "star.fill" : "star")
-                .foregroundColor(isFavorite ? .yellow : .gray)
-        }
-    }
-
-    // --- Вспомогательные функции ---
-    private func selectUnknown(symbol: String) {
-        // Если нажали на уже выбранную переменную, снимаем выбор
-        if selectedUnknownSymbol == symbol {
-            selectedUnknownSymbol = nil
-            inputValues[symbol] = ""
-        } else {
-            // Иначе выбираем новую переменную
-            selectedUnknownSymbol = symbol
-            // Очищаем значение для выбранной переменной
-            inputValues[symbol] = ""
-        }
-        
-        // Сбрасываем результат и ошибку
-        calculatedResult = nil
-        errorMessage = nil
-    }
-
-    private func canCalculate() -> Bool {
-        guard let unknownSymbol = selectedUnknownSymbol else { return false }
-        for variable in formula.variables where variable.symbol != unknownSymbol {
-            if inputValues[variable.symbol, default: ""].trimmingCharacters(in: .whitespaces).isEmpty { return false }
-        }
-        return true
-    }
-
-    private func reset() {
-        inputValues = [:]
-        selectedUnknownSymbol = nil
-        calculatedResult = nil
-        errorMessage = nil
-        showingResult = false
-    }
-
-    // --- Функция расчета (ИСПОЛЬЗУЯ DDMathParser - Попытка 8 + Отладка результата) ---
-    private func calculate() {
-        print("Начало расчета")
-        
-        guard let unknown = selectedUnknownSymbol else {
-            errorMessage = "Выберите неизвестную величину"
-            print("Ошибка: не выбрана неизвестная величина")
-            return
-        }
-        
-        print("Выбранная неизвестная величина: \(unknown)")
-        calculatedResult = nil
-        errorMessage = nil
-        
-        // Собираем словарь подстановок
-        var substitutionDictionary: [String: NSNumber] = [:]
-        for variable in formula.variables where variable.symbol != unknown {
-            guard let valueString = inputValues[variable.symbol]?.replacingOccurrences(of: ",", with: "."),
-                  let value = Double(valueString) else {
-                errorMessage = "Введите корректное значение для \(variable.localizedName)"
-                print("Ошибка: некорректное значение для \(variable.localizedName)")
-                return
-            }
-            substitutionDictionary[variable.symbol] = NSNumber(value: value)
-            print("Добавлено значение для \(variable.symbol): \(value)")
-        }
-        
-        guard let ruleString = formula.calculation_rules[unknown] else {
-            errorMessage = "Не найдено правило расчета для \(unknown)"
-            print("Ошибка: не найдено правило расчета")
-            return
-        }
-        
-        print("Правило расчета: \(ruleString)")
-        print("Подстановки: \(substitutionDictionary)")
-        
-        let expression = NSExpression(format: ruleString)
-        if let result = expression.expressionValue(with: substitutionDictionary, context: nil) as? NSNumber {
-            let resultValue = result.doubleValue
-            
-            print("Получен результат: \(resultValue)")
-            
-            if resultValue.isNaN || resultValue.isInfinite {
-                errorMessage = "Результат не определен (NaN или бесконечность)"
-                print("Ошибка: результат не определен")
-            } else {
-                calculatedResult = resultValue
-                calculationDate = Date()
-                print("Устанавливаем showingResult в true")
-                DispatchQueue.main.async {
-                    showingResult = true
-                }
-                print("Навигация должна быть активирована")
-            }
-        } else {
-            errorMessage = "Ошибка при вычислении выражения"
-            print("Ошибка: не удалось вычислить выражение")
-        }
-    }
-    // --- Конец функции calculate ---
-
-    // --- Функция для переключения статуса "Избранное" ---
-    private func toggleFavorite() {
-        withAnimation {
-            if isFavorite {
-                for item in savedItems { PersistenceController.shared.deleteCalculation(item) }
-            } else {
-                guard let unknown = selectedUnknownSymbol, let result = calculatedResult else {
-                    errorMessage = "Сначала выполните расчет, чтобы сохранить в избранное."
-                    return
-                }
-                var currentInputs: [String: String] = [:]
-                 for variable in formula.variables where variable.symbol != unknown {
-                     currentInputs[variable.symbol] = inputValues[variable.symbol, default: ""]
-                 }
-                PersistenceController.shared.saveCalculation( formula: formula, calculatedSymbol: unknown, calculatedValue: result, inputValues: currentInputs)
-            }
-        }
-    }
-
 } // Конец struct CalculationView
 
 

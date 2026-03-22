@@ -1,10 +1,7 @@
 import Foundation
 
-// --- Доступ к настройкам через синглтон AppSettings.shared ---
-// (Убедитесь, что AppSettings определен ДО этого файла или импортирован)
-// Если вы создали @StateObject в App, используйте другой механизм доступа (например, передачу)
+// MARK: - PhysicsData
 
-// Структура для хранения всех данных
 public struct PhysicsData: Codable {
     public let sections: [PhysicsSection]
     public let subsections: [PhysicsSubsection]
@@ -17,13 +14,12 @@ public struct PhysicsData: Codable {
     }
 }
 
-// Раздел физики
+// MARK: - PhysicsSection
+
 public struct PhysicsSection: Codable, Identifiable, Hashable {
     public let id: String
     public let name_ru: String
     public let name_en: String
-    // Добавьте name_de, name_es и т.д., если они есть в JSON
-    // let name_de: String? // Опционально, если не для всех есть перевод
     public let levels: [String]
     
     public init(id: String, name_ru: String, name_en: String, levels: [String]) {
@@ -33,26 +29,27 @@ public struct PhysicsSection: Codable, Identifiable, Hashable {
         self.levels = levels
     }
 
-    // Используем AppSettings.shared для выбора языка
-    public var localizedName: String {
-        let langCode = AppSettings.shared.currentLanguageCode
-        switch langCode {
+    /// Локализованное имя для заданного кода языка (для тестирования)
+    public func localizedName(for languageCode: String) -> String {
+        switch languageCode {
         case "ru": return name_ru
         case "en": return name_en
-        // Добавьте другие языки
-        // case "de": return name_de ?? name_en // Фоллбэк на английский, если нет перевода
-        default: return name_en // Язык по умолчанию, если выбранный не найден
+        default: return name_en
         }
+    }
+
+    public var localizedName: String {
+        localizedName(for: AppSettings.shared.currentLanguageCode)
     }
 }
 
-// Подраздел физики
+// MARK: - PhysicsSubsection
+
 public struct PhysicsSubsection: Codable, Identifiable, Hashable {
     public let id: String
-    public let sectionId: String // К какому разделу относится
+    public let sectionId: String
     public let name_ru: String
     public let name_en: String
-    // Добавьте name_de, name_es и т.д.
     public let levels: [String]
     
     public init(id: String, sectionId: String, name_ru: String, name_en: String, levels: [String]) {
@@ -63,30 +60,32 @@ public struct PhysicsSubsection: Codable, Identifiable, Hashable {
         self.levels = levels
     }
 
-    public var localizedName: String {
-        let langCode = AppSettings.shared.currentLanguageCode
-        switch langCode {
+    public func localizedName(for languageCode: String) -> String {
+        switch languageCode {
         case "ru": return name_ru
         case "en": return name_en
-        // ... другие языки ...
         default: return name_en
         }
     }
+
+    public var localizedName: String {
+        localizedName(for: AppSettings.shared.currentLanguageCode)
+    }
 }
 
-// Формула
+// MARK: - Formula
+
 public struct Formula: Codable, Identifiable, Hashable {
     public let id: String
-    public let subsectionId: String // К какому подразделу относится
+    public let subsectionId: String
     public let name_ru: String
     public let name_en: String
     public let levels: [String]
     public let equation_latex: String
     public let description_ru: String
     public let description_en: String
-    // Добавьте description_de, name_de и т.д.
     public let variables: [Variable]
-    public let calculation_rules: [String: String] // Словарь [СимволНеизвестной : ПравилоРасчета]
+    public let calculation_rules: [String: String]
     
     public init(
         id: String,
@@ -112,23 +111,28 @@ public struct Formula: Codable, Identifiable, Hashable {
         self.calculation_rules = calculation_rules
     }
 
-    public var localizedName: String {
-        let langCode = AppSettings.shared.currentLanguageCode
-        switch langCode {
+    public func localizedName(for languageCode: String) -> String {
+        switch languageCode {
         case "ru": return name_ru
         case "en": return name_en
-        // ... другие языки ...
         default: return name_en
         }
     }
-    public var localizedDescription: String {
-         let langCode = AppSettings.shared.currentLanguageCode
-        switch langCode {
+
+    public var localizedName: String {
+        localizedName(for: AppSettings.shared.currentLanguageCode)
+    }
+
+    public func localizedDescription(for languageCode: String) -> String {
+        switch languageCode {
         case "ru": return description_ru
         case "en": return description_en
-         // ... другие языки ...
         default: return description_en
         }
+    }
+
+    public var localizedDescription: String {
+        localizedDescription(for: AppSettings.shared.currentLanguageCode)
     }
 
     public func getRearrangedFormula(for unknownSymbol: String) -> String {
@@ -146,14 +150,13 @@ public struct Formula: Codable, Identifiable, Hashable {
     }
 }
 
-// Переменная в формуле
+// MARK: - Variable
+
 public struct Variable: Codable, Identifiable, Hashable {
-    // Сделаем symbol идентификатором, т.к. он уникален в рамках формулы
     public var id: String { symbol }
     public let symbol: String
     public let name_ru: String
     public let name_en: String
-    // Добавьте name_de и т.д.
     public let unit_si: String
     
     public init(symbol: String, name_ru: String, name_en: String, unit_si: String) {
@@ -163,30 +166,26 @@ public struct Variable: Codable, Identifiable, Hashable {
         self.unit_si = unit_si
     }
 
-    public var localizedName: String {
-        let langCode = AppSettings.shared.currentLanguageCode
-        switch langCode {
+    public func localizedName(for languageCode: String) -> String {
+        switch languageCode {
         case "ru": return name_ru
         case "en": return name_en
-        // ... другие языки ...
         default: return name_en
         }
     }
+
+    public var localizedName: String {
+        localizedName(for: AppSettings.shared.currentLanguageCode)
+    }
 }
 
-// Функция-загрузчик JSON (без изменений)
+// MARK: - Загрузка данных
+
+/// Загрузка данных из JSON (для превью и обратной совместимости)
 func loadPhysicsData() -> PhysicsData? {
     guard let url = Bundle.main.url(forResource: "formulas_data", withExtension: "json"),
           let data = try? Data(contentsOf: url) else {
-        print("Error: Could not find or load formulas_data.json")
         return nil
     }
-    do {
-        let decoder = JSONDecoder()
-        let jsonData = try decoder.decode(PhysicsData.self, from: data)
-        return jsonData
-    } catch {
-        print("Error decoding JSON: \(error)")
-        return nil
-    }
+    return try? JSONDecoder().decode(PhysicsData.self, from: data)
 }
