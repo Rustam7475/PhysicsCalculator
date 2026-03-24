@@ -7,6 +7,10 @@ import SwiftMath
 struct CalculationDetailView: View {
     // Получаем сохраненный объект из FavoritesView
     @ObservedObject var savedCalculation: SavedCalculation
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteConfirmation = false
+    @State private var copiedToClipboard = false
 
     // Форматтер для даты
     private static var dateFormatter: DateFormatter = {
@@ -22,7 +26,7 @@ struct CalculationDetailView: View {
     private var solvedEquationString: String {
         guard let inputs = savedCalculation.inputValues,
               let calculatedSymbol = savedCalculation.calculatedSymbol
-        else { return savedCalculation.equationLatex ?? "Формула не найдена" }
+        else { return savedCalculation.equationLatex ?? L10n.formulaNotFound }
 
         if let formulaId = savedCalculation.formulaId,
            let physicsData = loadPhysicsData(),
@@ -35,7 +39,7 @@ struct CalculationDetailView: View {
         
         // Fallback
         guard let formulaVars = savedCalculation.formulaVariables else {
-            return savedCalculation.equationLatex ?? "Формула не найдена"
+            return savedCalculation.equationLatex ?? L10n.formulaNotFound
         }
         let parts = formulaVars
             .filter { $0.symbol != calculatedSymbol }
@@ -78,17 +82,34 @@ struct CalculationDetailView: View {
     }
 
 
+    private func generateDetailShareText() -> String {
+        var text = "📐 \(savedCalculation.formulaName ?? "")\n\n"
+        
+        for item in allVariablesList {
+            let prefix = item.isCalculated ? "▸ " : "  • "
+            text += "\(prefix)\(item.name) = \(item.value) \(item.unit)"
+            if item.isCalculated { text += " (\(L10n.calculated))" }
+            text += "\n"
+        }
+        
+        if let date = savedCalculation.timestamp {
+            text += "\n📅 \(Self.dateFormatter.string(from: date))"
+        }
+        return text
+    }
+
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
 
                 // 1. Название формулы
-                Text(savedCalculation.formulaName ?? "Детали расчета")
+                Text(savedCalculation.formulaName ?? L10n.detailsTitle)
                     .font(.largeTitle)
                     .padding(.bottom)
 
                 // 2. Формула с символами
-                Text("Формула:")
+                Text(L10n.formulaLabel)
                     .font(.headline)
                 Group {
                     if let formulaId = savedCalculation.formulaId,
@@ -114,7 +135,7 @@ struct CalculationDetailView: View {
                 }
 
                 // 3. Формула с подставленными значениями
-                Text("Решение:")
+                Text(L10n.solutionLabel)
                     .font(.headline)
                 MathLabel(latex: solvedEquationString)
                     .font(.title2)
@@ -124,7 +145,7 @@ struct CalculationDetailView: View {
                     .cornerRadius(8)
 
                 // 4. Список всех переменных
-                Text("Значения:")
+                Text(L10n.valuesLabel)
                     .font(.headline)
                 ForEach(allVariablesList, id: \.symbol) { item in
                     HStack {
@@ -136,7 +157,7 @@ struct CalculationDetailView: View {
                         Text(item.unit)
                             .foregroundColor(.secondary)
                         if item.isCalculated {
-                            Text("(Рассчитано)")
+                            Text("(\(L10n.calculated))")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -147,19 +168,68 @@ struct CalculationDetailView: View {
                 // 5. Дата сохранения
                 HStack {
                      Spacer()
-                     Text("Сохранено: \(savedCalculation.timestamp ?? Date(), formatter: Self.dateFormatter)")
+                     Text("\(L10n.savedAt) \(savedCalculation.timestamp ?? Date(), formatter: Self.dateFormatter)")
                          .font(.caption)
                          .foregroundColor(.secondary)
                      Spacer()
                  }
                  .padding(.top)
 
+                // 6. Кнопки действий
+                HStack(spacing: 12) {
+                    Button {
+                        UIPasteboard.general.string = generateDetailShareText()
+                        withAnimation { copiedToClipboard = true }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedToClipboard = false }
+                    } label: {
+                        ActionButtonLabel(
+                            icon: copiedToClipboard ? "checkmark.circle.fill" : "doc.on.doc",
+                            label: L10n.copy,
+                            color: copiedToClipboard ? .green : .accentColor
+                        )
+                    }
+                    
+                    ShareLink(item: generateDetailShareText()) {
+                        ActionButtonLabel(icon: "square.and.arrow.up", label: L10n.share, color: .accentColor)
+                    }
+                    
+                    if let formulaId = savedCalculation.formulaId,
+                       let physicsData = loadPhysicsData(),
+                       let formula = physicsData.formulas.first(where: { $0.id == formulaId }) {
+                        NavigationLink {
+                            CalculationView(formula: formula)
+                        } label: {
+                            ActionButtonLabel(icon: "arrow.counterclockwise", label: L10n.newCalculation, color: .accentColor)
+                        }
+                    }
+                }
+                .padding(.top, 4)
+
             } // Конец VStack
             .padding() // Отступы для VStack
         } // Конец ScrollView
-        // Устанавливаем заголовок NavigationBar (но можно и не дублировать)
-        // .navigationTitle("Детали расчета")
-        // .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(L10n.detailTitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .oledBackground()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(role: .destructive) {
+                    showDeleteConfirmation = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .alert(L10n.deleteCalcTitle, isPresented: $showDeleteConfirmation) {
+            Button(L10n.delete, role: .destructive) {
+                PersistenceController.shared.deleteCalculation(savedCalculation)
+                dismiss()
+            }
+            Button(L10n.cancel, role: .cancel) {}
+        } message: {
+            Text(L10n.deleteCalcMessage)
+        }
     } // Конец body
 } // Конец CalculationDetailView
 

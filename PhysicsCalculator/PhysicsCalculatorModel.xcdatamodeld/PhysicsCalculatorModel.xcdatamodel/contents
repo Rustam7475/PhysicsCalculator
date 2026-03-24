@@ -7,6 +7,7 @@
         <attribute name="formulaId" attributeType="String"/>
         <attribute name="formulaName" attributeType="String"/>
         <attribute name="inputValuesData" optional="YES" attributeType="Binary"/>
+        <attribute name="isFavorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="variablesData" optional="YES" attributeType="Binary"/>
     </entity>

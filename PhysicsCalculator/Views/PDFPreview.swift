@@ -25,12 +25,12 @@ struct PDFPreview: View {
                 if let url = pdfURL {
                     PDFKitView(url: url)
                 } else {
-                    ProgressView("Генерация PDF...")
+                    ProgressView(L10n.generatingPDF)
                 }
             }
-            .navigationBarTitle("Предпросмотр PDF", displayMode: .inline)
+            .navigationBarTitle(L10n.pdfPreviewTitle, displayMode: .inline)
             .navigationBarItems(
-                leading: Button("Закрыть") { dismiss() },
+                leading: Button(L10n.close) { dismiss() },
                 trailing: Button(action: { showShareSheet = true }) {
                     Image(systemName: "square.and.arrow.up")
                 }
@@ -41,7 +41,7 @@ struct PDFPreview: View {
         }
         .sheet(isPresented: $showShareSheet) {
             if let url = pdfURL {
-                ShareSheet(items: [url])
+                ActivityView(items: [url])
             }
         }
     }
@@ -134,7 +134,7 @@ struct PDFPreview: View {
                 yPosition += 60
                 
                 // Введенные значения
-                let inputTitle = "Введенные значения:" as NSString
+                let inputTitle = L10n.pdfInputValues as NSString
                 let inputTitleAttributes: [NSAttributedString.Key: Any] = [
                     .font: subtitleFont,
                     .foregroundColor: darkTextColor
@@ -162,7 +162,7 @@ struct PDFPreview: View {
                 yPosition += 30
                 
                 // Результат
-                let resultTitle = "Результат:" as NSString
+                let resultTitle = L10n.pdfResult as NSString
                 let resultTitleAttributes: [NSAttributedString.Key: Any] = [
                     .font: subtitleFont,
                     .foregroundColor: darkTextColor
@@ -190,7 +190,7 @@ struct PDFPreview: View {
                 let formatter = DateFormatter()
                 formatter.dateStyle = .medium
                 formatter.timeStyle = .short
-                let dateText = "Дата расчета: \(formatter.string(from: calculationDate))" as NSString
+                let dateText = "\(L10n.pdfDate) \(formatter.string(from: calculationDate))" as NSString
                 let dateAttributes: [NSAttributedString.Key: Any] = [
                     .font: captionFont,
                     .foregroundColor: lightTextColor
@@ -237,4 +237,15 @@ struct PDFKitView: UIViewRepresentable {
             pdfView.document = document
         }
     }
-} 
+}
+
+// MARK: - UIActivityViewController wrapper (for sharing files)
+struct ActivityView: UIViewControllerRepresentable {
+    let items: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}

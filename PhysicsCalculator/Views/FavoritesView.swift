@@ -10,32 +10,47 @@ struct FavoritesView: View {
     // отсортированных по убыванию даты (сначала новые)
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \SavedCalculation.timestamp, ascending: false)],
-        animation: .default) // Используем анимацию по умолчанию для добавления/удаления
+        predicate: NSPredicate(format: "isFavorite == YES"),
+        animation: .default)
     private var savedItems: FetchedResults<SavedCalculation>
 
     var body: some View {
         VStack {
             if savedItems.isEmpty {
-                // Отображаем сообщение, если избранного нет
-                Text("Нет сохраненных расчетов.")
-                    .foregroundColor(.secondary)
-                    .padding()
-                Spacer() // Занимает оставшееся место
+                VStack(spacing: 16) {
+                    Spacer()
+                    Image(systemName: "star")
+                        .font(.system(size: 48))
+                        .foregroundColor(.secondary)
+                    Text(L10n.noFavorites)
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                    Text(L10n.addToFavoritesHint)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                    Spacer()
+                }
+                .padding()
             } else {
-                // Список сохраненных расчетов
                 List {
                     ForEach(savedItems) { item in
-                        // Оборачиваем в NavigationLink для перехода к деталям
                         NavigationLink(destination: CalculationDetailView(savedCalculation: item)) {
-                            FavoriteRow(item: item) // Используем вспомогательное View для строки
+                            FavoriteRow(item: item)
                         }
                     }
-                    .onDelete(perform: deleteItems) // Добавляем возможность удаления свайпом
+                    .onDelete(perform: deleteItems)
                 }
-                .listStyle(.plain) // Убираем стиль по умолчанию для List
+                .listStyle(.plain)
+                .toolbar {
+                    if !savedItems.isEmpty {
+                        EditButton()
+                    }
+                }
             }
         }
-        .navigationTitle("Избранное")
+        .navigationTitle(L10n.favoritesTitle)
+        .oledBackground()
     }
 
     // Функция для удаления элементов
@@ -50,9 +65,8 @@ struct FavoritesView: View {
 
 // --- Вспомогательное View для отображения одной строки в списке избранного ---
 struct FavoriteRow: View {
-    @ObservedObject var item: SavedCalculation // Используем @ObservedObject для обновления
+    @ObservedObject var item: SavedCalculation
 
-    // Форматтер для даты
     private static var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -61,23 +75,29 @@ struct FavoriteRow: View {
     }()
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(item.formulaName ?? "Без имени") // Название формулы
-                    .font(.headline)
-                // Отображаем основной результат
-                // Убедимся, что calculatedSymbol не nil перед использованием
-                Text("\(item.calculatedSymbol ?? "?") = \(String(format: "%.4g", item.calculatedValue))")
-                    .font(.subheadline)
+        HStack(spacing: 12) {
+            Image(systemName: "function")
+                .font(.system(size: 14))
+                .foregroundColor(.accentColor)
+                .frame(width: 32, height: 32)
+                .background(Color.accentColor.opacity(0.12))
+                .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 3) {
+                Text(item.formulaName ?? L10n.noName)
+                    .font(.body.weight(.medium))
+                HStack(spacing: 4) {
+                    Text("\(item.calculatedSymbol ?? "?") = \(String(format: "%.4g", item.calculatedValue))")
+                        .font(.subheadline)
+                        .foregroundColor(.accentColor)
+                }
             }
-            Spacer() // Отодвигает дату вправо
-            // Отображаем дату сохранения
-            // Убедимся, что timestamp не nil перед использованием
+            Spacer()
             Text(item.timestamp ?? Date(), formatter: Self.dateFormatter)
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
-        .padding(.vertical, 4) // Небольшой вертикальный отступ
+        .padding(.vertical, 4)
     }
 } // Конец struct FavoriteRow
 

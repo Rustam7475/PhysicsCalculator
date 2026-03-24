@@ -1,4 +1,5 @@
 import Foundation
+import JavaScriptCore
 
 // MARK: - Ошибки вычислений
 enum CalculationError: LocalizedError {
@@ -10,13 +11,13 @@ enum CalculationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noRuleFound(let symbol):
-            return "Не найдено правило расчета для \(symbol)"
+            return L10n.noRuleFor(symbol)
         case .invalidInput(let variable):
-            return "Введите корректное значение для \(variable)"
+            return L10n.enterCorrectValue(variable)
         case .invalidResult:
-            return "Результат не определен (деление на ноль или переполнение)"
+            return L10n.invalidResult
         case .evaluationFailed(let message):
-            return "Ошибка при вычислении: \(message)"
+            return L10n.evaluationError(message)
         }
     }
 }
@@ -31,26 +32,33 @@ protocol CalculationServiceProtocol {
 // MARK: - Реализация сервиса вычислений
 final class CalculationService: CalculationServiceProtocol {
     
-    /// Вычисляет результат по правилу с подстановкой переменных.
-    /// - Parameters:
-    ///   - rule: Строка-выражение (например, "m * a")
-    ///   - variables: Словарь значений переменных
-    /// - Returns: Результат вычисления
+    private let jsContext: JSContext = {
+        let ctx = JSContext()!
+        ctx.evaluateScript("""
+            var sin = Math.sin; var cos = Math.cos; var tan = Math.tan;
+            var asin = Math.asin; var acos = Math.acos; var atan = Math.atan;
+            var sqrt = Math.sqrt; var pow = Math.pow;
+            var log = Math.log; var exp = Math.exp; var abs = Math.abs;
+            var PI = Math.PI;
+        """)
+        return ctx
+    }()
+    
     func calculate(rule: String, variables: [String: Double]) throws -> Double {
-        let nsVariables = variables.mapValues { NSNumber(value: $0) }
+        for (key, value) in variables {
+            jsContext.setObject(value, forKeyedSubscript: key as NSString)
+        }
         
-        let expression: NSExpression
-        do {
-            expression = NSExpression(format: rule)
-        } catch {
+        guard let result = jsContext.evaluateScript(rule) else {
             throw CalculationError.evaluationFailed(rule)
         }
         
-        guard let result = expression.expressionValue(with: nsVariables, context: nil) as? NSNumber else {
-            throw CalculationError.evaluationFailed(rule)
+        if let exception = jsContext.exception {
+            jsContext.exception = nil
+            throw CalculationError.evaluationFailed(exception.toString() ?? rule)
         }
         
-        let doubleResult = result.doubleValue
+        let doubleResult = result.toDouble()
         
         guard !doubleResult.isNaN && !doubleResult.isInfinite else {
             throw CalculationError.invalidResult

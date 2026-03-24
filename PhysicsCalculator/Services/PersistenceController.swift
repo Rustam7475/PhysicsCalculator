@@ -41,19 +41,19 @@ struct PersistenceController {
 
     // --- Добавим методы для работы с SavedCalculation ---
 
-    // Сохранение нового расчета
+    // Сохранение нового расчета (в избранное)
     func saveCalculation(formula: Formula, calculatedSymbol: String, calculatedValue: Double, inputValues: [String: String]) {
         let context = viewContext
-        let newCalculation = SavedCalculation(context: context) // Создаем новый объект
+        let newCalculation = SavedCalculation(context: context)
 
         newCalculation.formulaId = formula.id
-        newCalculation.formulaName = formula.localizedName // Сохраняем текущее локализованное имя
+        newCalculation.formulaName = formula.localizedName
         newCalculation.equationLatex = formula.equation_latex
         newCalculation.calculatedSymbol = calculatedSymbol
         newCalculation.calculatedValue = calculatedValue
-        newCalculation.timestamp = Date() // Текущее время
+        newCalculation.timestamp = Date()
+        newCalculation.isFavorite = true
 
-        // Кодируем словари/массивы в Data
         if let inputData = try? JSONEncoder().encode(inputValues) {
             newCalculation.inputValuesData = inputData
         }
@@ -61,7 +61,55 @@ struct PersistenceController {
             newCalculation.variablesData = variablesData
         }
 
-        saveContext() // Сохраняем изменения
+        saveContext()
+    }
+
+    // Сохранение в историю (автоматически при каждом расчёте)
+    func saveToHistory(formula: Formula, calculatedSymbol: String, calculatedValue: Double, inputValues: [String: String]) {
+        let context = viewContext
+        let newCalculation = SavedCalculation(context: context)
+
+        newCalculation.formulaId = formula.id
+        newCalculation.formulaName = formula.localizedName
+        newCalculation.equationLatex = formula.equation_latex
+        newCalculation.calculatedSymbol = calculatedSymbol
+        newCalculation.calculatedValue = calculatedValue
+        newCalculation.timestamp = Date()
+        newCalculation.isFavorite = false
+
+        if let inputData = try? JSONEncoder().encode(inputValues) {
+            newCalculation.inputValuesData = inputData
+        }
+        if let variablesData = try? JSONEncoder().encode(formula.variables) {
+            newCalculation.variablesData = variablesData
+        }
+
+        saveContext()
+        trimHistory()
+    }
+
+    // Оставляем только последние 50 записей истории
+    private func trimHistory() {
+        let request: NSFetchRequest<SavedCalculation> = SavedCalculation.fetchRequest()
+        request.predicate = NSPredicate(format: "isFavorite == NO")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \SavedCalculation.timestamp, ascending: false)]
+        
+        guard let all = try? viewContext.fetch(request), all.count > 50 else { return }
+        for item in all.dropFirst(50) {
+            viewContext.delete(item)
+        }
+        saveContext()
+    }
+
+    // Очистка всей истории
+    func clearHistory() {
+        let request: NSFetchRequest<SavedCalculation> = SavedCalculation.fetchRequest()
+        request.predicate = NSPredicate(format: "isFavorite == NO")
+        guard let items = try? viewContext.fetch(request) else { return }
+        for item in items {
+            viewContext.delete(item)
+        }
+        saveContext()
     }
 
     // Удаление расчета

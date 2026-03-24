@@ -21,17 +21,40 @@ final class CalculationViewModel: ObservableObject {
          initialUnknownSymbol: String? = nil) {
         self.formula = formula
         self.calculationService = calculationService
-        self.inputValues = initialInputValues
         self.selectedUnknownSymbol = initialUnknownSymbol
+        
+        // Предзаполнение физических констант, затем поверх — переданные значения
+        var values: [String: String] = [:]
+        for variable in formula.variables {
+            if let constant = PhysicalConstants.match(for: variable) {
+                values[variable.symbol] = PhysicalConstants.formattedValue(constant)
+            }
+        }
+        for (k, v) in initialInputValues {
+            values[k] = v
+        }
+        self.inputValues = values
     }
     
     // MARK: - Выбор неизвестной переменной
     
     func selectUnknown(symbol: String) {
         if selectedUnknownSymbol == symbol {
+            // Снимаем выбор — восстанавливаем значение константы если есть
             selectedUnknownSymbol = nil
-            inputValues[symbol] = ""
+            if let variable = formula.variables.first(where: { $0.symbol == symbol }),
+               let constant = PhysicalConstants.match(for: variable) {
+                inputValues[symbol] = PhysicalConstants.formattedValue(constant)
+            } else {
+                inputValues[symbol] = ""
+            }
         } else {
+            // Восстанавливаем значение предыдущей неизвестной, если это константа
+            if let prev = selectedUnknownSymbol,
+               let prevVar = formula.variables.first(where: { $0.symbol == prev }),
+               let constant = PhysicalConstants.match(for: prevVar) {
+                inputValues[prev] = PhysicalConstants.formattedValue(constant)
+            }
             selectedUnknownSymbol = symbol
             inputValues[symbol] = ""
         }
@@ -56,6 +79,12 @@ final class CalculationViewModel: ObservableObject {
     
     func reset() {
         inputValues = [:]
+        // Предзаполнение физических констант
+        for variable in formula.variables {
+            if let constant = PhysicalConstants.match(for: variable) {
+                inputValues[variable.symbol] = PhysicalConstants.formattedValue(constant)
+            }
+        }
         selectedUnknownSymbol = nil
         calculatedResult = nil
         errorMessage = nil
@@ -64,30 +93,38 @@ final class CalculationViewModel: ObservableObject {
     
     // MARK: - Вычисление
     
-    func calculate() {
+    func calculate(unitSelections: [String: String] = [:]) {
         guard let unknown = selectedUnknownSymbol else {
-            errorMessage = "Выберите неизвестную величину"
+            errorMessage = L10n.selectUnknownVariable
             return
         }
         
         calculatedResult = nil
         errorMessage = nil
         
-        // Собираем значения переменных
+        // Собираем значения переменных с конвертацией единиц
         var variables: [String: Double] = [:]
         for variable in formula.variables where variable.symbol != unknown {
             guard let valueString = inputValues[variable.symbol]?
                     .replacingOccurrences(of: ",", with: "."),
                   let value = Double(valueString) else {
-                errorMessage = "Введите корректное значение для \(variable.localizedName)"
+                errorMessage = L10n.enterCorrectValue(variable.localizedName)
                 return
             }
-            variables[variable.symbol] = value
+            
+            // Конвертируем в СИ если выбрана нестандартная единица
+            var siValue = value
+            if let unitId = unitSelections[variable.symbol],
+               let units = UnitConverter.units(forSI: variable.unit_si),
+               let selectedUnit = units.first(where: { $0.id == unitId }) {
+                siValue = selectedUnit.toSI(value)
+            }
+            variables[variable.symbol] = siValue
         }
         
         // Получаем правило расчёта
         guard let rule = formula.calculation_rules[unknown] else {
-            errorMessage = "Не найдено правило расчета для \(unknown)"
+            errorMessage = L10n.noRuleFor(unknown)
             return
         }
         
@@ -97,6 +134,18 @@ final class CalculationViewModel: ObservableObject {
             calculatedResult = result
             calculationDate = Date()
             showingResult = true
+            
+            // Автосохранение в историю
+            var currentInputs: [String: String] = [:]
+            for variable in formula.variables where variable.symbol != unknown {
+                currentInputs[variable.symbol] = inputValues[variable.symbol, default: ""]
+            }
+            PersistenceController.shared.saveToHistory(
+                formula: formula,
+                calculatedSymbol: unknown,
+                calculatedValue: result,
+                inputValues: currentInputs
+            )
         } catch {
             errorMessage = error.localizedDescription
         }

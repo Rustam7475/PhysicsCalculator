@@ -14,26 +14,50 @@ struct ContentView: View {
                         SectionsView(allData: data)
                     }
                     .tabItem {
-                        Label("Разделы", systemImage: "list.bullet")
+                        Label(L10n.tabSections, systemImage: "list.bullet")
                     }
                     
                     NavigationStack {
                         FavoritesView()
                     }
                     .tabItem {
-                        Label("Избранное", systemImage: "star")
+                        Label(L10n.tabFavorites, systemImage: "star")
+                    }
+                    
+                    NavigationStack {
+                        HistoryView()
+                    }
+                    .tabItem {
+                        Label(L10n.tabHistory, systemImage: "clock.arrow.circlepath")
                     }
                     
                     NavigationStack {
                         SettingsView()
                     }
                     .tabItem {
-                        Label("Настройки", systemImage: "gear")
+                        Label(L10n.tabSettings, systemImage: "gear")
+                    }
+                    
+                    NavigationStack {
+                        UnitConverterView()
+                    }
+                    .tabItem {
+                        Label(L10n.tabConverter, systemImage: "arrow.left.arrow.right")
+                    }
+                    
+                    NavigationStack {
+                        ConstantsView()
+                    }
+                    .tabItem {
+                        Label(L10n.tabConstants, systemImage: "textformat.123")
                     }
                 }
+                .id(settings.currentLanguageCode)
+                .tint(.accentColor)
                 .preferredColorScheme(settings.theme.colorScheme)
+                .environment(\.oledBackground, settings.theme.isOLED)
             } else if viewModel.isLoading {
-                ProgressView("Загрузка данных...")
+                ProgressView(L10n.loading)
             } else if let error = viewModel.errorMessage {
                 VStack(spacing: 16) {
                     Image(systemName: "exclamationmark.triangle")
@@ -42,7 +66,7 @@ struct ContentView: View {
                     Text(error)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
-                    Button("Повторить") {
+                    Button(L10n.retry) {
                         Task { await viewModel.loadData() }
                     }
                     .buttonStyle(.borderedProminent)

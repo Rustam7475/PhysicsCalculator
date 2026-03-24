@@ -3,7 +3,7 @@ import Foundation
 /// Конфигурация приложения. Заменяет .env файлы.
 enum AppConfiguration {
     static let appName = "PhysicsCalculator"
-    static let appVersion = "1.0.0"
+    static let appVersion = "1.0"
     
     static let defaultLanguage = "ru"
     static let supportedLanguages = ["ru", "en", "de", "es", "fr", "zh"]
