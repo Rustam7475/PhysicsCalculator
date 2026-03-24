@@ -8,9 +8,9 @@ enum DataServiceError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .fileNotFound:
-            return "Файл с данными не найден"
+            return L10n.fileNotFound
         case .decodingError(let error):
-            return "Ошибка декодирования: \(error.localizedDescription)"
+            return L10n.decodingError(error.localizedDescription)
         }
     }
 }

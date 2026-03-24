@@ -1,15 +1,6 @@
 {
-  "originHash" : "046d370b5f367e73115ca4030bc1c65a9635efd6980ebd89b19a3e9b21caecd6",
+  "originHash" : "dbeb2e9a90112f72ebf7025151062d45297be380e911cbb21ccdba2fcda2e536",
   "pins" : [
-    {
-      "identity" : "ddmathparser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/davedelong/DDMathParser",
-      "state" : {
-        "revision" : "0a159109e2393c3e1db4e2b638009c82e6650b4d",
-        "version" : "3.1.0"
-      }
-    },
     {
       "identity" : "swiftmath?utm_source=chatgpt.com",
       "kind" : "remoteSourceControl",

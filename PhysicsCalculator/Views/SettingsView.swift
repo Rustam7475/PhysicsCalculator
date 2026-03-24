@@ -5,9 +5,8 @@ struct SettingsView: View {
     
     var body: some View {
         Form {
-            // Секция "Внешний вид"
-            Section(header: Text("Внешний вид")) {
-                Picker("Тема", selection: $settings.theme) {
+            Section(header: Text(L10n.appearance)) {
+                Picker(L10n.themeLabel, selection: $settings.theme) {
                     ForEach(AppTheme.allCases) { theme in
                         Text(theme.localizedName)
                             .tag(theme)
@@ -15,10 +14,9 @@ struct SettingsView: View {
                 }
             }
             
-            // Секция "Язык"
-            Section(header: Text("Язык")) {
-                Picker("Язык", selection: $settings.languageCode) {
-                    Text("Как в системе").tag("system")
+            Section(header: Text(L10n.languageLabel)) {
+                Picker(L10n.languageLabel, selection: $settings.languageCode) {
+                    Text(L10n.langSystem).tag("system")
                     Text("Русский").tag("ru")
                     Text("English").tag("en")
                     Text("Deutsch").tag("de")
@@ -28,22 +26,25 @@ struct SettingsView: View {
                 }
             }
             
-            // Секция "О приложении"
-            Section(header: Text("О приложении")) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("PhysicsCalculator")
-                        .font(.headline)
-                    Text("Версия 1.0.0")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Text("© 2024 Your Company")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            Section(header: Text(L10n.aboutApp)) {
+                HStack(spacing: 14) {
+                    Image(systemName: "atom")
+                        .font(.system(size: 32))
+                        .foregroundColor(.accentColor)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("PhysicsCalculator")
+                            .font(.headline)
+                        Text("\(L10n.version) 1.0.0")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .padding(.vertical, 8)
             }
         }
-        .navigationTitle("Настройки")
+        .id(settings.currentLanguageCode)
+        .navigationTitle(L10n.settingsTitle)
+        .oledBackground()
     }
 }
 
