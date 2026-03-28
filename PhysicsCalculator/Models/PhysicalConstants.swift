@@ -52,7 +52,7 @@ struct PhysicalConstants {
     
     /// Форматирование значения константы для отображения в текстовом поле
     static func formattedValue(_ constant: Constant) -> String {
-        if constant.value == Double(Int(constant.value)) && constant.value < 1e6 {
+        if constant.value < 1e6 && constant.value > -1e6 && constant.value == Double(Int(constant.value)) {
             return String(format: "%.0f", constant.value)
         }
         if constant.value >= 0.001 && constant.value < 1e6 {

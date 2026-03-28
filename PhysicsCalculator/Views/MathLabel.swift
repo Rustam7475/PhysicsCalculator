@@ -21,13 +21,17 @@ struct MathLabel: UIViewRepresentable {
         // Устанавливаем устойчивость к сжатию, чтобы текст не обрезался легко
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        label.isAccessibilityElement = true
+        label.accessibilityLabel = latex
         return label
     }
 
     // Обновляет существующий UIKit View при изменении данных в SwiftUI
     func updateUIView(_ uiView: MTMathUILabel, context: Context) {
-        // Обновляем только те свойства, которые могли измениться
-        if uiView.latex != latex { uiView.latex = latex }
+        if uiView.latex != latex {
+            uiView.latex = latex
+            uiView.accessibilityLabel = latex
+        }
         if uiView.fontSize != fontSize { uiView.fontSize = fontSize }
         if uiView.textColor != textColor { uiView.textColor = textColor }
         if uiView.textAlignment != textAlignment { uiView.textAlignment = textAlignment }

@@ -287,8 +287,65 @@ public struct Formula: Codable, Identifiable, Hashable {
     
     /// Форматирует арифметическое выражение в LaTeX
     private static func formatRuleAsLatex(_ rule: String) -> String {
-        rule.replacingOccurrences(of: "*", with: " \\cdot ")
+        var result = rule
+        // Убираем префикс function.
+        result = result.replacingOccurrences(of: "function.", with: "")
+        // Конвертируем sqrt(...) в \sqrt{...}
+        result = convertFunctionToLatex(result, function: "sqrt", latex: "\\sqrt")
+        // Конвертируем тригонометрические функции
+        for fn in ["sin", "cos", "tan", "asin", "acos", "atan"] {
+            result = convertFunctionToLatex(result, function: fn, latex: "\\\(fn)")
+        }
+        // Конвертируем pow(base, exp) в {base}^{exp}
+        result = convertPowToLatex(result)
+        // Базовые замены
+        result = result
+            .replacingOccurrences(of: "*", with: " \\cdot ")
             .replacingOccurrences(of: "/", with: " \\div ")
+        return result
+    }
+    
+    /// Конвертирует func(...) в \func{...} (для sqrt) или \func(...) (для триг.)
+    private static func convertFunctionToLatex(_ input: String, function: String, latex: String) -> String {
+        var result = input
+        while let range = result.range(of: "\(function)(") {
+            guard let closing = findMatchingParen(in: result, from: range.upperBound) else { break }
+            let content = String(result[range.upperBound..<closing])
+            let isSqrt = function == "sqrt"
+            let replacement = isSqrt ? "\(latex){\(content)}" : "\(latex)(\(content))"
+            result = result.replacingCharacters(in: range.lowerBound..<result.index(after: closing), with: replacement)
+        }
+        return result
+    }
+    
+    /// Конвертирует pow(base, exp) в {base}^{exp}
+    private static func convertPowToLatex(_ input: String) -> String {
+        var result = input
+        while let range = result.range(of: "pow(") {
+            guard let closing = findMatchingParen(in: result, from: range.upperBound) else { break }
+            let content = String(result[range.upperBound..<closing])
+            let parts = content.split(separator: ",", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
+            if parts.count == 2 {
+                let replacement = "{\(parts[0])}^{\(parts[1])}"
+                result = result.replacingCharacters(in: range.lowerBound..<result.index(after: closing), with: replacement)
+            } else {
+                break
+            }
+        }
+        return result
+    }
+    
+    /// Находит закрывающую скобку, учитывая вложенность
+    private static func findMatchingParen(in str: String, from start: String.Index) -> String.Index? {
+        var depth = 1
+        var idx = start
+        while idx < str.endIndex {
+            let ch = str[idx]
+            if ch == "(" { depth += 1 }
+            else if ch == ")" { depth -= 1; if depth == 0 { return idx } }
+            idx = str.index(after: idx)
+        }
+        return nil
     }
 }
 
@@ -312,15 +369,41 @@ public struct Variable: Codable, Identifiable, Hashable {
     public var localizedName: String {
         localizedName(for: AppSettings.shared.currentLanguageCode)
     }
+
+    // MARK: - Отображение символа (греческие/специальные)
+    private static let greekMap: [String: String] = [
+        "nu": "ν", "alpha": "α", "beta": "β", "gamma": "γ",
+        "delta": "δ", "epsilon": "ε", "theta": "θ", "lambda": "λ",
+        "mu": "μ", "rho": "ρ", "sigma": "σ", "tau": "τ",
+        "phi": "φ", "omega": "ω", "eta": "η", "Phi": "Φ",
+        "DeltaS": "ΔS", "DeltaU": "ΔU", "DeltaT": "ΔT",
+        "dPhi": "ΔΦ", "dphi": "Δφ", "dPhiB": "dΦ_B", "dPhiE": "dΦ_E",
+        "alpha1": "α₁", "alpha2": "α₂",
+        "v1prime": "v'₁", "v2prime": "v'₂",
+        "n_ord": "n", "Avyh": "A_вых", "Eup": "E_уп", "Ep": "E_p",
+        "eps0": "ε₀", "mu0": "μ₀", "Z0": "Z₀", "Id": "I_d"
+    ]
+
+    public var displaySymbol: String {
+        Self.greekMap[symbol] ?? symbol
+    }
+
+    public static func displaySymbol(for symbol: String) -> String {
+        greekMap[symbol] ?? symbol
+    }
 }
 
 // MARK: - Загрузка данных
 
-/// Загрузка данных из JSON (с кешированием, для превью и обратной совместимости)
+/// Загрузка данных из JSON (с потокобезопасным кешированием)
+private let _physicsDataLock = NSLock()
 private var _cachedPhysicsData: PhysicsData?
 private var _physicsDataLoaded = false
 
 func loadPhysicsData() -> PhysicsData? {
+    _physicsDataLock.lock()
+    defer { _physicsDataLock.unlock() }
+    
     if _physicsDataLoaded { return _cachedPhysicsData }
     guard let url = Bundle.main.url(forResource: "formulas_data", withExtension: "json"),
           let data = try? Data(contentsOf: url) else {

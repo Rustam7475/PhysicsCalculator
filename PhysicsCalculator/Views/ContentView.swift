@@ -63,6 +63,7 @@ struct ContentView: View {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 40))
                         .foregroundColor(.orange)
+                        .accessibilityHidden(true)
                     Text(error)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)

@@ -1,6 +1,6 @@
 import SwiftUI
 import Charts
-import Foundation
+import Photos
 
 struct FormulaGraphView: View {
     let formula: Formula
@@ -108,8 +108,17 @@ struct FormulaGraphView: View {
             .padding(.horizontal)
             .padding(.vertical, 8)
         }
+        .scrollDismissesKeyboard(.interactively)
         .navigationTitle(L10n.graphTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+        }
         .oledBackground()
         .onAppear {
             calculatePoints()
@@ -217,16 +226,29 @@ struct FormulaGraphView: View {
         let renderer = ImageRenderer(content: exportView)
         renderer.scale = displayScale
         
-        if let image = renderer.uiImage {
+        guard let image = renderer.uiImage else { return }
+        
+        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        switch status {
+        case .authorized, .limited:
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-            withAnimation {
-                showingSaveConfirmation = true
+            withAnimation { showingSaveConfirmation = true }
+            Task {
+                try? await Task.sleep(for: .seconds(2.5))
+                withAnimation { showingSaveConfirmation = false }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                withAnimation {
-                    showingSaveConfirmation = false
+        case .notDetermined:
+            Task {
+                let newStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+                if newStatus == .authorized || newStatus == .limited {
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    withAnimation { showingSaveConfirmation = true }
+                    try? await Task.sleep(for: .seconds(2.5))
+                    withAnimation { showingSaveConfirmation = false }
                 }
             }
+        default:
+            break
         }
     }
 }

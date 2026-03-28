@@ -65,8 +65,15 @@ struct HistoryView: View {
             }
         }
         .navigationTitle(L10n.historyTitle)
+        .scrollDismissesKeyboard(.interactively)
         .oledBackground()
         .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
             if !historyItems.isEmpty {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(role: .destructive) {
