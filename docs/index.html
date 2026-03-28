@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhysicsCalculator Pages</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #182033;
+      --muted: #4b5873;
+      --line: #dde4f0;
+      --accent: #0f62fe;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(150deg, #eaf2ff 0%, var(--bg) 55%);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    main {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 26px rgba(20, 42, 90, 0.08);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.9rem;
+    }
+    p {
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+    .links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+      background: var(--accent);
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .secondary {
+      background: #2c3e63;
+    }
+    .hint {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>PhysicsCalculator Public Pages</h1>
+    <p>Public links for App Store Connect metadata.</p>
+    <div class="links">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a class="secondary" href="support.html">Support</a>
+    </div>
+    <p class="hint">Before publishing, replace placeholder email in both pages.</p>
+  </main>
+</body>
+</html>

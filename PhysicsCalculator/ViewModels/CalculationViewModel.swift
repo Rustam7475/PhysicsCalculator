@@ -14,13 +14,16 @@ final class CalculationViewModel: ObservableObject {
     @Published var calculationDate = Date()
     
     private let calculationService: CalculationServiceProtocol
+    private let persistenceController: PersistenceControllerProtocol
     
     init(formula: Formula,
          calculationService: CalculationServiceProtocol = CalculationService(),
+         persistenceController: PersistenceControllerProtocol = PersistenceController.shared,
          initialInputValues: [String: String] = [:],
          initialUnknownSymbol: String? = nil) {
         self.formula = formula
         self.calculationService = calculationService
+        self.persistenceController = persistenceController
         self.selectedUnknownSymbol = initialUnknownSymbol
         
         // Предзаполнение физических констант, затем поверх — переданные значения
@@ -140,7 +143,7 @@ final class CalculationViewModel: ObservableObject {
             for variable in formula.variables where variable.symbol != unknown {
                 currentInputs[variable.symbol] = inputValues[variable.symbol, default: ""]
             }
-            PersistenceController.shared.saveToHistory(
+            persistenceController.saveToHistory(
                 formula: formula,
                 calculatedSymbol: unknown,
                 calculatedValue: result,

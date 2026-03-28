@@ -147,9 +147,9 @@ struct FavoriteRow: View {
     do {
         try context.save()
     } catch {
-        // Обработка ошибки сохранения для превью
+        // Не падаем в превью: выводим ошибку и продолжаем с текущим состоянием контекста.
         let nsError = error as NSError
-        fatalError("Unresolved error \(nsError), \(nsError.userInfo)") // Прерываем выполнение превью при ошибке
+        print("Preview save error: \(nsError), \(nsError.userInfo)")
     }
 
     // Возвращаем FavoritesView с предзаполненным контекстом

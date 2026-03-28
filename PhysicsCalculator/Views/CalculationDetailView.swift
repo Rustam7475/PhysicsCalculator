@@ -180,7 +180,10 @@ struct CalculationDetailView: View {
                     Button {
                         UIPasteboard.general.string = generateDetailShareText()
                         withAnimation { copiedToClipboard = true }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedToClipboard = false }
+                        Task {
+                            try? await Task.sleep(for: .seconds(2))
+                            copiedToClipboard = false
+                        }
                     } label: {
                         ActionButtonLabel(
                             icon: copiedToClipboard ? "checkmark.circle.fill" : "doc.on.doc",

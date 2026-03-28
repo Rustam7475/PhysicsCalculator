@@ -73,6 +73,7 @@ struct CalculationView: View {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.red)
+                            .accessibilityHidden(true)
                         Text(error)
                             .foregroundColor(.red)
                             .font(.callout)
@@ -112,7 +113,24 @@ struct CalculationView: View {
             .padding(.horizontal)
             .padding(.vertical, 8)
         }
+        .scrollDismissesKeyboard(.interactively)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showingInfo = true
+                } label: {
+                    Image(systemName: "info.circle")
+                }
+                .accessibilityLabel(L10n.infoTitle)
+            }
+        }
         .onAppear {
             if viewModel.inputValues.isEmpty {
                 viewModel.reset()
@@ -125,17 +143,9 @@ struct CalculationView: View {
                     calculatedSymbol: symbol,
                     calculatedValue: result,
                     inputValues: viewModel.inputValues,
+                    unitSelections: selectedUnits,
                     calculationDate: viewModel.calculationDate
                 )
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showingInfo = true
-                } label: {
-                    Image(systemName: "info.circle")
-                }
             }
         }
         .sheet(isPresented: $showingInfo) {
@@ -161,19 +171,7 @@ struct VariableInputRow: View {
     }
 
     private var displaySymbol: String {
-        let greekMap: [String: String] = [
-            "nu": "ν", "alpha": "α", "beta": "β", "gamma": "γ",
-            "delta": "δ", "epsilon": "ε", "theta": "θ", "lambda": "λ",
-            "mu": "μ", "rho": "ρ", "sigma": "σ", "tau": "τ",
-            "phi": "φ", "omega": "ω", "eta": "η", "Phi": "Φ",
-            "DeltaS": "ΔS", "DeltaU": "ΔU", "DeltaT": "ΔT",
-            "dPhi": "ΔΦ", "dphi": "Δφ", "dPhiB": "dΦ_B", "dPhiE": "dΦ_E",
-            "alpha1": "α₁", "alpha2": "α₂",
-            "v1prime": "v'₁", "v2prime": "v'₂",
-            "n_ord": "n", "Avyh": "A_вых", "Eup": "E_уп", "Ep": "E_p",
-            "eps0": "ε₀", "mu0": "μ₀", "Z0": "Z₀", "Id": "I_d"
-        ]
-        return greekMap[variable.symbol] ?? variable.symbol
+        variable.displaySymbol
     }
 
     var body: some View {
@@ -211,7 +209,7 @@ struct VariableInputRow: View {
                 }
             }
             
-            if let units = availableUnits, units.count > 1, !isUnknown {
+            if let units = availableUnits, units.count > 1 {
                 Menu {
                     ForEach(units) { unit in
                         Button(unit.name) {

@@ -50,9 +50,17 @@ struct UnitConverterView: View {
             }
             .padding(.vertical)
         }
+        .scrollDismissesKeyboard(.interactively)
         .navigationTitle(L10n.converterTitle)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+        }
         .oledBackground()
-        .onTapGesture { isInputFocused = false }
     }
     
     // MARK: - Category Picker

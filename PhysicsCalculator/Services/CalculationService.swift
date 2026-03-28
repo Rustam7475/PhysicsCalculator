@@ -38,18 +38,52 @@ final class CalculationService: CalculationServiceProtocol {
             var sin = Math.sin; var cos = Math.cos; var tan = Math.tan;
             var asin = Math.asin; var acos = Math.acos; var atan = Math.atan;
             var sqrt = Math.sqrt; var pow = Math.pow;
-            var log = Math.log; var exp = Math.exp; var abs = Math.abs;
+            var log = Math.log; var log10 = Math.log10; var exp = Math.exp; var abs = Math.abs;
             var PI = Math.PI;
         """)
         return ctx
     }()
     
+    /// Зарезервированные слова JavaScript, которые нельзя использовать как имена переменных
+    private static let jsReservedWords: Set<String> = [
+        "do", "in", "if", "for", "new", "try", "var", "let", "case", "else",
+        "this", "void", "with", "enum", "while", "break", "catch", "throw",
+        "const", "class", "super", "return", "typeof", "delete", "switch",
+        "export", "import", "default", "finally", "extends", "function", "continue"
+    ]
+    
     func calculate(rule: String, variables: [String: Double]) throws -> Double {
+        var cleanedRule = rule.replacingOccurrences(of: "function.", with: "")
+        
+        // Заменяем переменные, чьи имена совпадают с зарезервированными словами JS
+        var safeVariables: [String: Double] = [:]
         for (key, value) in variables {
+            if Self.jsReservedWords.contains(key) {
+                let safeKey = "_\(key)"
+                // Заменяем в правиле целые слова
+                cleanedRule = cleanedRule.replacingOccurrences(
+                    of: "\\b\(key)\\b",
+                    with: safeKey,
+                    options: .regularExpression
+                )
+                safeVariables[safeKey] = value
+            } else {
+                safeVariables[key] = value
+            }
+        }
+        
+        for (key, value) in safeVariables {
             jsContext.setObject(value, forKeyedSubscript: key as NSString)
         }
         
-        guard let result = jsContext.evaluateScript(rule) else {
+        defer {
+            // Очищаем переменные, чтобы не загрязнять контекст для следующих вычислений
+            for key in safeVariables.keys {
+                jsContext.setObject(nil, forKeyedSubscript: key as NSString)
+            }
+        }
+        
+        guard let result = jsContext.evaluateScript(cleanedRule) else {
             throw CalculationError.evaluationFailed(rule)
         }
         

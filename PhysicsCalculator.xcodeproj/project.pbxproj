@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CE34D60A2D981F8100C16497 /* SwiftMath in Frameworks */ = {isa = PBXBuildFile; productRef = CE34D6092D981F8100C16497 /* SwiftMath */; };
-		CEC1AE702DA125C500430F41 /* MathParser in Frameworks */ = {isa = PBXBuildFile; productRef = CEC1AE6F2DA125C500430F41 /* MathParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -22,37 +21,36 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CE6BC3122D95ADF30002A3BD /* PhysicsCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicsCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AABB00012DA5000100C1AA01 /* PhysicsCalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhysicsCalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6BC3122D95ADF30002A3BD /* PhysicsCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicsCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CE6BC3142D95ADF30002A3BD /* PhysicsCalculator */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PhysicsCalculator;
-			sourceTree = "<group>";
-		};
 		AABB00022DA5000100C1AA02 /* PhysicsCalculatorTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PhysicsCalculatorTests;
 			sourceTree = "<group>";
 		};
+		CE6BC3142D95ADF30002A3BD /* PhysicsCalculator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PhysicsCalculator;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AABB00042DA5000100C1AA04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE6BC30F2D95ADF30002A3BD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CE34D60A2D981F8100C16497 /* SwiftMath in Frameworks */,
-				CEC1AE702DA125C500430F41 /* MathParser in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AABB00042DA5000100C1AA04 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,30 +78,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CE6BC3112D95ADF30002A3BD /* PhysicsCalculator */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE6BC3202D95ADF60002A3BD /* Build configuration list for PBXNativeTarget "PhysicsCalculator" */;
-			buildPhases = (
-				CE6BC30E2D95ADF30002A3BD /* Sources */,
-				CE6BC30F2D95ADF30002A3BD /* Frameworks */,
-				CE6BC3102D95ADF30002A3BD /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				CE6BC3142D95ADF30002A3BD /* PhysicsCalculator */,
-			);
-			name = PhysicsCalculator;
-			packageProductDependencies = (
-				CE34D6092D981F8100C16497 /* SwiftMath */,
-				CEC1AE6F2DA125C500430F41 /* MathParser */,
-			);
-			productName = PhysicsCalculator;
-			productReference = CE6BC3122D95ADF30002A3BD /* PhysicsCalculator.app */;
-			productType = "com.apple.product-type.application";
-		};
 		AABB00062DA5000100C1AA06 /* PhysicsCalculatorTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AABB000B2DA5000100C1AA0B /* Build configuration list for PBXNativeTarget "PhysicsCalculatorTests" */;
@@ -125,6 +99,29 @@
 			productReference = AABB00012DA5000100C1AA01 /* PhysicsCalculatorTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		CE6BC3112D95ADF30002A3BD /* PhysicsCalculator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE6BC3202D95ADF60002A3BD /* Build configuration list for PBXNativeTarget "PhysicsCalculator" */;
+			buildPhases = (
+				CE6BC30E2D95ADF30002A3BD /* Sources */,
+				CE6BC30F2D95ADF30002A3BD /* Frameworks */,
+				CE6BC3102D95ADF30002A3BD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CE6BC3142D95ADF30002A3BD /* PhysicsCalculator */,
+			);
+			name = PhysicsCalculator;
+			packageProductDependencies = (
+				CE34D6092D981F8100C16497 /* SwiftMath */,
+			);
+			productName = PhysicsCalculator;
+			productReference = CE6BC3122D95ADF30002A3BD /* PhysicsCalculator.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -133,14 +130,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
-					CE6BC3112D95ADF30002A3BD = {
-						CreatedOnToolsVersion = 16.2;
-					};
 					AABB00062DA5000100C1AA06 = {
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = CE6BC3112D95ADF30002A3BD;
+					};
+					CE6BC3112D95ADF30002A3BD = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -168,14 +165,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CE6BC3102D95ADF30002A3BD /* Resources */ = {
+		AABB00052DA5000100C1AA05 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AABB00052DA5000100C1AA05 /* Resources */ = {
+		CE6BC3102D95ADF30002A3BD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -185,14 +182,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CE6BC30E2D95ADF30002A3BD /* Sources */ = {
+		AABB00032DA5000100C1AA03 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AABB00032DA5000100C1AA03 /* Sources */ = {
+		CE6BC30E2D95ADF30002A3BD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -210,6 +207,42 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AABB00092DA5000100C1AA09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.elmuradov.physicscalculator.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhysicsCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhysicsCalculator";
+			};
+			name = Debug;
+		};
+		AABB000A2DA5000100C1AA0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.elmuradov.physicscalculator.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhysicsCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhysicsCalculator";
+			};
+			name = Release;
+		};
 		CE6BC31E2D95ADF60002A3BD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -269,6 +302,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -326,6 +360,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -339,6 +374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PhysicsCalculator/Preview Content\"";
+				DEVELOPMENT_TEAM = 6523ZY5CM4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save graphs to Photos";
@@ -353,7 +389,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.physicscalculator.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.elmuradov.physicscalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -369,6 +405,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PhysicsCalculator/Preview Content\"";
+				DEVELOPMENT_TEAM = 6523ZY5CM4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save graphs to Photos";
@@ -383,7 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.physicscalculator.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.elmuradov.physicscalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -391,45 +428,18 @@
 			};
 			name = Release;
 		};
-		AABB00092DA5000100C1AA09 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.physicscalculator.app.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhysicsCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhysicsCalculator";
-			};
-			name = Debug;
-		};
-		AABB000A2DA5000100C1AA0A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.physicscalculator.app.tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhysicsCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhysicsCalculator";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AABB000B2DA5000100C1AA0B /* Build configuration list for PBXNativeTarget "PhysicsCalculatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AABB00092DA5000100C1AA09 /* Debug */,
+				AABB000A2DA5000100C1AA0A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE6BC30D2D95ADF30002A3BD /* Build configuration list for PBXProject "PhysicsCalculator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -448,21 +458,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AABB000B2DA5000100C1AA0B /* Build configuration list for PBXNativeTarget "PhysicsCalculatorTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AABB00092DA5000100C1AA09 /* Debug */,
-				AABB000A2DA5000100C1AA0A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		CE34D6082D981F8100C16497 /* XCRemoteSwiftPackageReference "SwiftMath" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mgriebling/SwiftMath?utm_source=chatgpt.com";
+			repositoryURL = "https://github.com/mgriebling/SwiftMath";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.7.1;

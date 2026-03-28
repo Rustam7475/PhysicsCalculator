@@ -7,22 +7,24 @@ struct CalculationResultView: View {
     let calculatedSymbol: String
     let calculatedValue: Double
     let inputValues: [String: String]
+    let unitSelections: [String: String]
     let calculationDate: Date
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var showingPDFPreview = false
     @State private var copiedToClipboard = false
-    @State private var showSteps = true
+    @State private var showSteps = false
     
     // FetchRequest для проверки избранного
     @FetchRequest private var savedItems: FetchedResults<SavedCalculation>
     
-    init(formula: Formula, calculatedSymbol: String, calculatedValue: Double, inputValues: [String: String], calculationDate: Date) {
+    init(formula: Formula, calculatedSymbol: String, calculatedValue: Double, inputValues: [String: String], unitSelections: [String: String] = [:], calculationDate: Date) {
         self.formula = formula
         self.calculatedSymbol = calculatedSymbol
         self.calculatedValue = calculatedValue
         self.inputValues = inputValues
+        self.unitSelections = unitSelections
         self.calculationDate = calculationDate
         
         // Инициализация FetchRequest — только избранное для этой формулы
@@ -41,34 +43,60 @@ struct CalculationResultView: View {
     
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: AppSettings.shared.currentLanguageCode == "ru" ? "ru_RU" : "en_US")
         formatter.dateStyle = .long
         formatter.timeStyle = .short
         return formatter
     }()
     
     private var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: AppSettings.shared.currentLanguageCode == "ru" ? "ru_RU" : "en_US")
-        formatter.dateStyle = .long
-        formatter.timeStyle = .short
-        return formatter.string(from: calculationDate)
+        let lang = AppSettings.shared.currentLanguageCode
+        Self.dateFormatter.locale = Locale(identifier: lang == "ru" ? "ru_RU" : "en_US")
+        return Self.dateFormatter.string(from: calculationDate)
     }
     
     private var displaySymbol: String {
-        let greekMap: [String: String] = [
-            "nu": "ν", "alpha": "α", "beta": "β", "gamma": "γ",
-            "delta": "δ", "epsilon": "ε", "theta": "θ", "lambda": "λ",
-            "mu": "μ", "rho": "ρ", "sigma": "σ", "tau": "τ",
-            "phi": "φ", "omega": "ω", "eta": "η", "Phi": "Φ",
-            "DeltaS": "ΔS", "DeltaU": "ΔU", "DeltaT": "ΔT",
-            "dPhi": "ΔΦ", "dphi": "Δφ", "dPhiB": "dΦ_B", "dPhiE": "dΦ_E",
-            "alpha1": "α₁", "alpha2": "α₂",
-            "v1prime": "v'₁", "v2prime": "v'₂",
-            "n_ord": "n", "Avyh": "A_вых", "Eup": "E_уп", "Ep": "E_p",
-            "eps0": "ε₀", "mu0": "μ₀", "Z0": "Z₀", "Id": "I_d"
-        ]
-        return greekMap[calculatedSymbol] ?? calculatedSymbol
+        Variable.displaySymbol(for: calculatedSymbol)
+    }
+    
+    /// Возвращает символ единицы измерения с учётом выбора пользователя
+    private func displayUnit(for variable: Variable) -> String {
+        if let unitId = unitSelections[variable.symbol],
+           let units = UnitConverter.units(forSI: variable.unit_si),
+           let selectedUnit = units.first(where: { $0.id == unitId }) {
+            return selectedUnit.symbol
+        }
+        return variable.unit_si
+    }
+    
+    /// Конвертирует введённое значение в СИ с учётом выбранных единиц
+    private func siValue(for variable: Variable) -> Double? {
+        guard let raw = inputValues[variable.symbol],
+              let value = Double(raw.replacingOccurrences(of: ",", with: ".")) else { return nil }
+        if let unitId = unitSelections[variable.symbol],
+           let units = UnitConverter.units(forSI: variable.unit_si),
+           let selectedUnit = units.first(where: { $0.id == unitId }) {
+            return selectedUnit.toSI(value)
+        }
+        return value
+    }
+    
+    /// Конвертирует результат из СИ в выбранную пользователем единицу
+    private var displayResult: Double {
+        guard let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }),
+              let unitId = unitSelections[calculatedSymbol],
+              let units = UnitConverter.units(forSI: resultVar.unit_si),
+              let selectedUnit = units.first(where: { $0.id == unitId }) else {
+            return calculatedValue
+        }
+        return selectedUnit.fromSI(calculatedValue)
+    }
+    
+    /// Единица результата с учётом выбора пользователя
+    private var resultUnit: String {
+        guard let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) else {
+            return ""
+        }
+        return displayUnit(for: resultVar)
     }
     
     private func getFormulaWithValues() -> String {
@@ -113,6 +141,7 @@ struct CalculationResultView: View {
                     calculatedSymbol: calculatedSymbol,
                     calculatedValue: calculatedValue,
                     inputValues: inputValues,
+                    unitSelections: unitSelections,
                     isExpanded: $showSteps
                 )
                 
@@ -128,10 +157,10 @@ struct CalculationResultView: View {
                                 .font(.title3)
                             Text("=")
                                 .font(.title3)
-                            Text(String(format: "%.4g", calculatedValue))
+                            Text(String(format: "%.4g", displayResult))
                                 .font(.title.weight(.bold))
                                 .foregroundColor(.accentColor)
-                            Text(resultVariable.unit_si)
+                            Text(resultUnit)
                                 .font(.title3)
                                 .foregroundColor(.secondary)
                         }
@@ -154,7 +183,7 @@ struct CalculationResultView: View {
                                 Text(variable.localizedName)
                                     .foregroundColor(.primary)
                                 Spacer()
-                                Text("\(inputValues[variable.symbol, default: ""]) \(variable.unit_si)")
+                                Text("\(inputValues[variable.symbol, default: ""]) \(displayUnit(for: variable))")
                                     .fontWeight(.medium)
                             }
                             if variable.id != formula.variables.filter({ $0.symbol != calculatedSymbol }).last?.id {
@@ -194,9 +223,8 @@ struct CalculationResultView: View {
                                 yVariable: yVar,
                                 otherValues: formula.variables.reduce(into: [:]) { result, variable in
                                     if variable.symbol != calculatedSymbol,
-                                       let value = inputValues[variable.symbol],
-                                       let doubleValue = Double(value.replacingOccurrences(of: ",", with: ".")) {
-                                        result[variable.symbol] = doubleValue
+                                       let converted = siValue(for: variable) {
+                                        result[variable.symbol] = converted
                                     }
                                 }
                             )
@@ -279,7 +307,8 @@ struct CalculationResultView: View {
         withAnimation {
             copiedToClipboard = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        Task {
+            try? await Task.sleep(for: .seconds(2))
             copiedToClipboard = false
         }
     }
@@ -291,12 +320,12 @@ struct CalculationResultView: View {
         text += L10n.shareInputValues + "\n"
         for variable in formula.variables where variable.symbol != calculatedSymbol {
             let value = inputValues[variable.symbol, default: ""]
-            text += "  • \(variable.localizedName) = \(value) \(variable.unit_si)\n"
+            text += "  • \(variable.localizedName) = \(value) \(displayUnit(for: variable))\n"
         }
         
         if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
             text += "\n" + L10n.shareResult + "\n"
-            text += "  ▸ \(resultVariable.localizedName) = \(String(format: "%.4g", calculatedValue)) \(resultVariable.unit_si)\n"
+            text += "  ▸ \(resultVariable.localizedName) = \(String(format: "%.4g", displayResult)) \(resultUnit)\n"
         }
         
         text += "\n📅 \(formattedDate)"
@@ -378,7 +407,26 @@ struct StepByStepSection: View {
     let calculatedSymbol: String
     let calculatedValue: Double
     let inputValues: [String: String]
+    let unitSelections: [String: String]
     @Binding var isExpanded: Bool
+    
+    private func displayUnit(for variable: Variable) -> String {
+        if let unitId = unitSelections[variable.symbol],
+           let units = UnitConverter.units(forSI: variable.unit_si),
+           let selectedUnit = units.first(where: { $0.id == unitId }) {
+            return selectedUnit.symbol
+        }
+        return variable.unit_si
+    }
+    
+    private func displayResultValue(for variable: Variable) -> Double {
+        if let unitId = unitSelections[variable.symbol],
+           let units = UnitConverter.units(forSI: variable.unit_si),
+           let selectedUnit = units.first(where: { $0.id == unitId }) {
+            return selectedUnit.fromSI(calculatedValue)
+        }
+        return calculatedValue
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -443,7 +491,7 @@ struct StepByStepSection: View {
                                     Text("=")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
-                                    Text("\(inputValues[variable.symbol, default: ""]) \(variable.unit_si)")
+                                    Text("\(inputValues[variable.symbol, default: ""]) \(displayUnit(for: variable))")
                                         .font(.subheadline.weight(.medium))
                                 }
                             }
@@ -460,15 +508,16 @@ struct StepByStepSection: View {
                     // Step 4: Result
                     StepRow(number: stepNumber + 1, title: L10n.stepCalculate) {
                         if let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
+                            let resultDisplay = displayResultValue(for: resultVar)
                             HStack(spacing: 4) {
                                 Text(resultVar.localizedName)
                                     .font(.headline)
                                 Text("=")
                                     .font(.headline)
-                                Text(String(format: "%.4g", calculatedValue))
+                                Text(String(format: "%.4g", resultDisplay))
                                     .font(.headline.weight(.bold))
                                     .foregroundColor(.accentColor)
-                                Text(resultVar.unit_si)
+                                Text(displayUnit(for: resultVar))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }

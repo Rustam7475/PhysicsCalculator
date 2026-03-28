@@ -24,21 +24,8 @@ struct ErrorCalculatorView: View {
         formula.variables.filter { $0.symbol != calculatedSymbol }
     }
     
-    private static let greekMap: [String: String] = [
-        "nu": "ν", "alpha": "α", "beta": "β", "gamma": "γ",
-        "delta": "δ", "epsilon": "ε", "theta": "θ", "lambda": "λ",
-        "mu": "μ", "rho": "ρ", "sigma": "σ", "tau": "τ",
-        "phi": "φ", "omega": "ω", "eta": "η", "Phi": "Φ",
-        "DeltaS": "ΔS", "DeltaU": "ΔU", "DeltaT": "ΔT",
-        "dPhi": "ΔΦ", "dphi": "Δφ", "dPhiB": "dΦ_B", "dPhiE": "dΦ_E",
-        "alpha1": "α₁", "alpha2": "α₂",
-        "v1prime": "v'₁", "v2prime": "v'₂",
-        "n_ord": "n", "Avyh": "A_вых", "Eup": "E_уп", "Ep": "E_p",
-        "eps0": "ε₀", "mu0": "μ₀", "Z0": "Z₀", "Id": "I_d"
-    ]
-    
     private func displaySymbol(_ symbol: String) -> String {
-        Self.greekMap[symbol] ?? symbol
+        Variable.displaySymbol(for: symbol)
     }
     
     var body: some View {
@@ -195,7 +182,10 @@ struct ErrorCalculatorView: View {
                         Button {
                             UIPasteboard.general.string = generateErrorShareText()
                             withAnimation { copiedToClipboard = true }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { copiedToClipboard = false }
+                            Task {
+                                try? await Task.sleep(for: .seconds(2))
+                                copiedToClipboard = false
+                            }
                         } label: {
                             ActionButtonLabel(
                                 icon: copiedToClipboard ? "checkmark.circle.fill" : "doc.on.doc",
@@ -213,7 +203,16 @@ struct ErrorCalculatorView: View {
             .padding(.horizontal)
             .padding(.bottom, 20)
         }
+        .scrollDismissesKeyboard(.interactively)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
+            }
+        }
         .oledBackground()
         .onAppear {
             // Предзаполнить 0 для констант

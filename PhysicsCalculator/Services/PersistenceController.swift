@@ -1,6 +1,14 @@
 import CoreData
+import os
 
-struct PersistenceController {
+private let logger = Logger(subsystem: AppConfiguration.appName, category: "CoreData")
+
+// MARK: - Протокол для тестируемости
+protocol PersistenceControllerProtocol {
+    func saveToHistory(formula: Formula, calculatedSymbol: String, calculatedValue: Double, inputValues: [String: String])
+}
+
+struct PersistenceController: PersistenceControllerProtocol {
     static let shared = PersistenceController()
 
     let container: NSPersistentContainer
@@ -16,7 +24,7 @@ struct PersistenceController {
 
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                print("Core Data ошибка загрузки: \(error), \(error.userInfo)")
+                logger.error("Core Data ошибка загрузки: \(error.localizedDescription)")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -34,7 +42,7 @@ struct PersistenceController {
             do {
                 try context.save()
             } catch {
-                print("Core Data ошибка сохранения: \(error)")
+                logger.error("Core Data ошибка сохранения: \(error.localizedDescription)")
             }
         }
     }

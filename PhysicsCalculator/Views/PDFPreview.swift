@@ -2,6 +2,9 @@ import SwiftUI
 import PDFKit
 import UIKit
 import SwiftMath
+import os
+
+private let logger = Logger(subsystem: AppConfiguration.appName, category: "PDF")
 
 struct PDFPreview: View {
     let formula: Formula
@@ -29,12 +32,16 @@ struct PDFPreview: View {
                 }
             }
             .navigationBarTitle(L10n.pdfPreviewTitle, displayMode: .inline)
-            .navigationBarItems(
-                leading: Button(L10n.close) { dismiss() },
-                trailing: Button(action: { showShareSheet = true }) {
-                    Image(systemName: "square.and.arrow.up")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L10n.close) { dismiss() }
                 }
-            )
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: { showShareSheet = true }) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
+            }
         }
         .onAppear {
             generatePDF()
@@ -102,8 +109,9 @@ struct PDFPreview: View {
                     context.scaleBy(x: 1.0, y: -1.0)
                     mathLabel1.layer.render(in: context)
                 }
-                if let mathImage1 = UIGraphicsGetImageFromCurrentImageContext() {
-                    UIGraphicsEndImageContext()
+                let mathImage1 = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                if let mathImage1 {
                     let mathX1 = padding + (mathWidth - mathImage1.size.width) / 2
                     mathImage1.draw(at: CGPoint(x: mathX1, y: yPosition))
                 }
@@ -126,8 +134,9 @@ struct PDFPreview: View {
                     context.scaleBy(x: 1.0, y: -1.0)
                     mathLabel2.layer.render(in: context)
                 }
-                if let mathImage2 = UIGraphicsGetImageFromCurrentImageContext() {
-                    UIGraphicsEndImageContext()
+                let mathImage2 = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                if let mathImage2 {
                     let mathX2 = padding + (mathWidth - mathImage2.size.width) / 2
                     mathImage2.draw(at: CGPoint(x: mathX2, y: yPosition))
                 }
@@ -200,7 +209,7 @@ struct PDFPreview: View {
             
             self.pdfURL = pdfPath
         } catch {
-            print("Ошибка при создании PDF: \(error)")
+            logger.error("Ошибка при создании PDF: \(error.localizedDescription)")
         }
     }
     
