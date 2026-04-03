@@ -56,11 +56,10 @@ struct PhysicalConstants {
             return String(format: "%.0f", constant.value)
         }
         if constant.value >= 0.001 && constant.value < 1e6 {
-            // Убираем лишние нули
             let s = String(constant.value)
             return s
         }
-        // Научная нотация для очень больших/маленьких
-        return String(format: "%g", constant.value)
+        // Научная нотация — формат совместимый с полем ввода (точка, без локализации)
+        return String(format: "%.6g", constant.value)
     }
 }

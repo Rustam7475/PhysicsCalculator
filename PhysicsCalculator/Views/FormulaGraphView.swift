@@ -83,7 +83,7 @@ struct FormulaGraphView: View {
                         if variable.symbol != xVariable.symbol && variable.symbol != yVariable.symbol {
                             HStack {
                                 Text("\(variable.localizedName):")
-                                Text("\(otherValues[variable.symbol, default: 0]) \(variable.unit_si)")
+                                Text("\(otherValues[variable.symbol, default: 0]) \(CalculationService.displayUnit(variable.unit_si))")
                                     .bold()
                             }
                         }
@@ -166,10 +166,10 @@ struct FormulaGraphView: View {
             }
         }
         .chartXAxisLabel(position: .bottom) {
-            Text("\(xVariable.localizedName), \(xVariable.unit_si)")
+            Text(xVariable.unit_si == "—" ? xVariable.localizedName : "\(xVariable.localizedName), \(xVariable.unit_si)")
         }
         .chartYAxisLabel(position: .leading) {
-            Text("\(yVariable.localizedName), \(yVariable.unit_si)")
+            Text(yVariable.unit_si == "—" ? yVariable.localizedName : "\(yVariable.localizedName), \(yVariable.unit_si)")
         }
         .frame(height: 300)
     }
@@ -213,7 +213,7 @@ struct FormulaGraphView: View {
             HStack {
                 ForEach(formula.variables) { variable in
                     if variable.symbol != xVariable.symbol && variable.symbol != yVariable.symbol {
-                        Text("\(variable.localizedName) = \(otherValues[variable.symbol, default: 0]) \(variable.unit_si)")
+                        Text("\(variable.localizedName) = \(otherValues[variable.symbol, default: 0]) \(CalculationService.displayUnit(variable.unit_si))")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

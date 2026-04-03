@@ -1,5 +1,5 @@
 import SwiftUI
-// import UIKit // Удалено, не требуется
+import UIKit
 import CoreData // Потребуется для ObservedObject
 import SwiftMath
 
@@ -61,12 +61,12 @@ struct CalculationDetailView: View {
             var valueString: String
 
             if isCalculated {
-                valueString = String(format: "%.4g", savedCalculation.calculatedValue)
+                valueString = CalculationService.formatNumber(savedCalculation.calculatedValue)
             } else {
                 // Ищем введенное значение, форматируем если это число
                  if let inputValue = inputs[variable.symbol] {
                      if let doubleVal = Double(inputValue) {
-                         valueString = String(format: "%.4g", doubleVal)
+                         valueString = CalculationService.formatNumber(doubleVal)
                      } else {
                          valueString = inputValue // Если не число
                      }
@@ -74,7 +74,7 @@ struct CalculationDetailView: View {
                      valueString = "???" // Если значение не найдено
                  }
             }
-            list.append((symbol: variable.symbol, name: variable.localizedName, value: valueString, unit: variable.unit_si, isCalculated: isCalculated))
+            list.append((symbol: variable.symbol, name: variable.localizedName, value: valueString, unit: CalculationService.displayUnit(variable.unit_si), isCalculated: isCalculated))
         }
         // Сортируем, чтобы рассчитанная была последней (или первой)
         list.sort { !$0.isCalculated && $1.isCalculated }
@@ -96,6 +96,100 @@ struct CalculationDetailView: View {
             text += "\n📅 \(Self.dateFormatter.string(from: date))"
         }
         return text
+    }
+    
+    /// Рендерит карточку результата как UIImage
+    private func renderShareCard() -> UIImage {
+        let width: CGFloat = 600
+        let padding: CGFloat = 30
+        let contentWidth = width - 2 * padding
+        
+        let titleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+        let labelFont = UIFont.systemFont(ofSize: 14)
+        let valueFont = UIFont.systemFont(ofSize: 18, weight: .medium)
+        let resultFont = UIFont.systemFont(ofSize: 22, weight: .bold)
+        let captionFont = UIFont.systemFont(ofSize: 13)
+        
+        let bgColor = UIColor(red: 28/255, green: 28/255, blue: 30/255, alpha: 1)
+        let cardColor = UIColor(red: 44/255, green: 44/255, blue: 46/255, alpha: 1)
+        let textColor = UIColor.white
+        let secondaryText = UIColor(white: 0.6, alpha: 1)
+        let accentColor = UIColor(red: 52/255, green: 120/255, blue: 246/255, alpha: 1)
+        
+        let items = allVariablesList
+        let inputItems = items.filter { !$0.isCalculated }
+        let calculatedItem = items.first(where: { $0.isCalculated })
+        
+        var totalHeight: CGFloat = padding
+        totalHeight += 34 // заголовок
+        totalHeight += 20
+        totalHeight += CGFloat(inputItems.count) * 50
+        totalHeight += 20
+        totalHeight += 70 // результат
+        totalHeight += 20
+        totalHeight += 20 // дата
+        totalHeight += padding
+        
+        let size = CGSize(width: width, height: totalHeight)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        
+        return renderer.image { ctx in
+            bgColor.setFill()
+            ctx.fill(CGRect(origin: .zero, size: size))
+            
+            var y: CGFloat = padding
+            
+            // Заголовок
+            let titleStr = (savedCalculation.formulaName ?? "") as NSString
+            let titleRect = titleStr.boundingRect(with: CGSize(width: contentWidth, height: 100),
+                                                    options: .usesLineFragmentOrigin,
+                                                    attributes: [.font: titleFont, .foregroundColor: textColor], context: nil)
+            titleStr.draw(in: CGRect(x: padding, y: y, width: contentWidth, height: titleRect.height),
+                         withAttributes: [.font: titleFont, .foregroundColor: textColor])
+            y += titleRect.height + 20
+            
+            // Введённые значения
+            let inputCardHeight = CGFloat(inputItems.count) * 48 + 16
+            let inputCardRect = CGRect(x: padding, y: y, width: contentWidth, height: inputCardHeight)
+            UIBezierPath(roundedRect: inputCardRect, cornerRadius: 12).fill(with: .normal, alpha: 1)
+            cardColor.setFill()
+            UIBezierPath(roundedRect: inputCardRect, cornerRadius: 12).fill()
+            
+            var innerY = y + 8
+            for item in inputItems {
+                let nameLbl = item.name as NSString
+                nameLbl.draw(at: CGPoint(x: padding + 16, y: innerY),
+                            withAttributes: [.font: labelFont, .foregroundColor: secondaryText])
+                innerY += 18
+                let valLbl = "\(item.value) \(item.unit)".trimmingCharacters(in: .whitespaces) as NSString
+                valLbl.draw(at: CGPoint(x: padding + 16, y: innerY),
+                           withAttributes: [.font: valueFont, .foregroundColor: textColor])
+                innerY += 30
+            }
+            y += inputCardHeight + 16
+            
+            // Результат
+            if let calc = calculatedItem {
+                let resultCardRect = CGRect(x: padding, y: y, width: contentWidth, height: 64)
+                UIColor(red: 30/255, green: 60/255, blue: 120/255, alpha: 1).setFill()
+                UIBezierPath(roundedRect: resultCardRect, cornerRadius: 12).fill()
+                
+                let nameLbl = calc.name as NSString
+                nameLbl.draw(at: CGPoint(x: padding + 16, y: y + 8),
+                            withAttributes: [.font: labelFont, .foregroundColor: secondaryText])
+                let valLbl = "= \(calc.value) \(calc.unit)".trimmingCharacters(in: .whitespaces) as NSString
+                valLbl.draw(at: CGPoint(x: padding + 16, y: y + 30),
+                           withAttributes: [.font: resultFont, .foregroundColor: accentColor])
+                y += 64 + 16
+            }
+            
+            // Дата
+            if let date = savedCalculation.timestamp {
+                let dateLbl = Self.dateFormatter.string(from: date) as NSString
+                dateLbl.draw(at: CGPoint(x: padding, y: y),
+                            withAttributes: [.font: captionFont, .foregroundColor: secondaryText])
+            }
+        }
     }
 
 
@@ -148,18 +242,19 @@ struct CalculationDetailView: View {
                 Text(L10n.valuesLabel)
                     .font(.headline)
                 ForEach(allVariablesList, id: \.symbol) { item in
-                    HStack {
-                        Text("\(item.symbol) (\(item.name)):")
-                            .frame(width: 130, alignment: .leading) // Ширина для выравнивания
-                        Spacer()
-                        Text(item.value)
-                            .fontWeight(item.isCalculated ? .bold : .regular) // Выделяем результат
-                        Text(item.unit)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(item.name) (\(item.symbol))")
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
-                        if item.isCalculated {
-                            Text("(\(L10n.calculated))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        HStack(spacing: 4) {
+                            Text("\(item.value) \(item.unit)")
+                                .font(.body.weight(item.isCalculated ? .bold : .medium))
+                                .foregroundColor(item.isCalculated ? .accentColor : .primary)
+                            if item.isCalculated {
+                                Text("(\(L10n.calculated))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                     Divider()
@@ -192,7 +287,11 @@ struct CalculationDetailView: View {
                         )
                     }
                     
-                    ShareLink(item: generateDetailShareText()) {
+                    Button {
+                        let image = renderShareCard()
+                        let text = generateDetailShareText()
+                        ShareHelper.share(items: [image, text])
+                    } label: {
                         ActionButtonLabel(icon: "square.and.arrow.up", label: L10n.share, color: .accentColor)
                     }
                     

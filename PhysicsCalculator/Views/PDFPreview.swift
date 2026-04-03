@@ -53,6 +53,8 @@ struct PDFPreview: View {
         }
     }
     
+    // MARK: - PDF Generation
+    
     private func generatePDF() {
         let pageRect = CGRect(x: 0, y: 0, width: 595.2, height: 841.8) // A4
         let renderer = UIGraphicsPDFRenderer(bounds: pageRect)
@@ -64,147 +66,122 @@ struct PDFPreview: View {
             try renderer.writePDF(to: pdfPath) { context in
                 context.beginPage()
                 
-                // Настройка шрифтов и стилей
                 let titleFont = UIFont.systemFont(ofSize: 26, weight: .bold)
-                let subtitleFont = UIFont.systemFont(ofSize: 18, weight: .semibold)
-                let regularFont = UIFont.systemFont(ofSize: 16)
-                let captionFont = UIFont.systemFont(ofSize: 14)
+                let sectionFont = UIFont.systemFont(ofSize: 18, weight: .semibold)
+                let labelFont = UIFont.systemFont(ofSize: 13)
+                let valueFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+                let valueBoldFont = UIFont.systemFont(ofSize: 18, weight: .bold)
+                let captionFont = UIFont.systemFont(ofSize: 13)
                 let padding: CGFloat = 40
-                var yPosition: CGFloat = padding
+                let contentWidth = pageRect.width - 2 * padding
+                var y: CGFloat = padding
                 
-                // Заголовок
-                let title = formula.localizedName as NSString
-                let titleAttributes: [NSAttributedString.Key: Any] = [
-                    .font: titleFont,
-                    .foregroundColor: darkTextColor
-                ]
-                title.draw(at: CGPoint(x: padding, y: yPosition), withAttributes: titleAttributes)
-                yPosition += 40
+                // ── Заголовок ──
+                let titleStr = formula.localizedName as NSString
+                let titleRect = titleStr.boundingRect(
+                    with: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: titleFont, .foregroundColor: darkTextColor],
+                    context: nil
+                )
+                titleStr.draw(in: CGRect(x: padding, y: y, width: contentWidth, height: titleRect.height),
+                              withAttributes: [.font: titleFont, .foregroundColor: darkTextColor])
+                y += titleRect.height + 6
                 
                 // Описание
-                let description = formula.localizedDescription as NSString
-                let descriptionAttributes: [NSAttributedString.Key: Any] = [
-                    .font: regularFont,
-                    .foregroundColor: lightTextColor
-                ]
-                let descriptionRect = CGRect(x: padding, y: yPosition, width: pageRect.width - 2 * padding, height: 60)
-                description.draw(in: descriptionRect, withAttributes: descriptionAttributes)
-                yPosition += 80
+                let descStr = formula.localizedDescription as NSString
+                let descRect = descStr.boundingRect(
+                    with: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: captionFont, .foregroundColor: lightTextColor],
+                    context: nil
+                )
+                descStr.draw(in: CGRect(x: padding, y: y, width: contentWidth, height: descRect.height),
+                             withAttributes: [.font: captionFont, .foregroundColor: lightTextColor])
+                y += descRect.height + 24
                 
-                // Формула с символами
-                let symbolFormula = formula.getRearrangedFormula(for: calculatedSymbol)
-                let mathLabel1 = MTMathUILabel()
-                mathLabel1.latex = symbolFormula
-                mathLabel1.fontSize = 24
-                mathLabel1.textColor = primaryColor
-                mathLabel1.textAlignment = .center
-                let mathWidth = pageRect.width - 2 * padding
-                mathLabel1.frame = CGRect(x: padding, y: yPosition, width: mathWidth, height: 40)
-                mathLabel1.sizeToFit()
+                // ── 1. Исходная формула ──
+                y = drawSectionTitle("1. \(L10n.stepOriginalFormula)", font: sectionFont, x: padding, y: y, width: contentWidth)
+                y = drawLatex(formula.equation_latex, x: padding, y: y, width: contentWidth, fontSize: 22)
+                y += 16
                 
-                // Создаем контекст для рендеринга
-                UIGraphicsBeginImageContextWithOptions(mathLabel1.bounds.size, false, 0.0)
-                if let context = UIGraphicsGetCurrentContext() {
-                    context.translateBy(x: 0, y: mathLabel1.bounds.size.height)
-                    context.scaleBy(x: 1.0, y: -1.0)
-                    mathLabel1.layer.render(in: context)
+                // ── 2. Формула для неизвестной (если перестроена) ──
+                let rearranged = formula.getRearrangedFormula(for: calculatedSymbol)
+                var stepNum = 2
+                if rearranged != formula.equation_latex {
+                    y = drawSectionTitle("\(stepNum). \(L10n.stepRearrange)", font: sectionFont, x: padding, y: y, width: contentWidth)
+                    y = drawLatex(rearranged, x: padding, y: y, width: contentWidth, fontSize: 22)
+                    y += 16
+                    stepNum += 1
                 }
-                let mathImage1 = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                if let mathImage1 {
-                    let mathX1 = padding + (mathWidth - mathImage1.size.width) / 2
-                    mathImage1.draw(at: CGPoint(x: mathX1, y: yPosition))
-                }
-                yPosition += 30
                 
-                // Формула с подставленными значениями
-                let valueFormula = getFormulaWithValues()
-                let mathLabel2 = MTMathUILabel()
-                mathLabel2.latex = valueFormula
-                mathLabel2.fontSize = 24
-                mathLabel2.textColor = darkTextColor
-                mathLabel2.textAlignment = .center
-                mathLabel2.frame = CGRect(x: padding, y: yPosition, width: mathWidth, height: 40)
-                mathLabel2.sizeToFit()
+                // ── 3. Подставляем значения ──
+                y = drawSectionTitle("\(stepNum). \(L10n.stepSubstitute)", font: sectionFont, x: padding, y: y, width: contentWidth)
                 
-                // Создаем контекст для рендеринга
-                UIGraphicsBeginImageContextWithOptions(mathLabel2.bounds.size, false, 0.0)
-                if let context = UIGraphicsGetCurrentContext() {
-                    context.translateBy(x: 0, y: mathLabel2.bounds.size.height)
-                    context.scaleBy(x: 1.0, y: -1.0)
-                    mathLabel2.layer.render(in: context)
-                }
-                let mathImage2 = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                if let mathImage2 {
-                    let mathX2 = padding + (mathWidth - mathImage2.size.width) / 2
-                    mathImage2.draw(at: CGPoint(x: mathX2, y: yPosition))
-                }
-                yPosition += 60
-                
-                // Введенные значения
-                let inputTitle = L10n.pdfInputValues as NSString
-                let inputTitleAttributes: [NSAttributedString.Key: Any] = [
-                    .font: subtitleFont,
-                    .foregroundColor: darkTextColor
-                ]
-                inputTitle.draw(at: CGPoint(x: padding, y: yPosition), withAttributes: inputTitleAttributes)
-                yPosition += 30
-                
-                // Фон для введенных значений
-                let inputBackgroundRect = CGRect(x: padding, y: yPosition, width: pageRect.width - 2 * padding, height: CGFloat(formula.variables.count - 1) * 30 + 20)
-                let inputBackgroundPath = UIBezierPath(roundedRect: inputBackgroundRect, cornerRadius: 10)
-                secondaryColor.setFill()
-                inputBackgroundPath.fill()
-                
-                // Значения
+                // Введённые значения: название сверху, значение снизу
                 for variable in formula.variables where variable.symbol != calculatedSymbol {
-                    let value = inputValues[variable.symbol, default: ""]
-                    let text = "\(variable.localizedName): \(value) \(variable.unit_si)" as NSString
-                    let valueAttributes: [NSAttributedString.Key: Any] = [
-                        .font: regularFont,
-                        .foregroundColor: darkTextColor
-                    ]
-                    text.draw(at: CGPoint(x: padding + 20, y: yPosition + 10), withAttributes: valueAttributes)
-                    yPosition += 30
-                }
-                yPosition += 30
-                
-                // Результат
-                let resultTitle = L10n.pdfResult as NSString
-                let resultTitleAttributes: [NSAttributedString.Key: Any] = [
-                    .font: subtitleFont,
-                    .foregroundColor: darkTextColor
-                ]
-                resultTitle.draw(at: CGPoint(x: padding, y: yPosition), withAttributes: resultTitleAttributes)
-                yPosition += 30
-                
-                // Фон для результата
-                if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
-                    let resultBackgroundRect = CGRect(x: padding, y: yPosition, width: pageRect.width - 2 * padding, height: 50)
-                    let resultBackgroundPath = UIBezierPath(roundedRect: resultBackgroundRect, cornerRadius: 10)
-                    secondaryColor.setFill()
-                    resultBackgroundPath.fill()
+                    let rawValue = inputValues[variable.symbol, default: ""]
+                    let formattedVal = CalculationService.formatInputValue(rawValue)
+                    let unit = CalculationService.displayUnit(variable.unit_si)
                     
-                    let resultText = "\(resultVariable.localizedName): \(String(format: "%.4g", calculatedValue)) \(resultVariable.unit_si)" as NSString
-                    let resultAttributes: [NSAttributedString.Key: Any] = [
-                        .font: regularFont,
-                        .foregroundColor: primaryColor
-                    ]
-                    resultText.draw(at: CGPoint(x: padding + 20, y: yPosition + 15), withAttributes: resultAttributes)
+                    // Название переменной
+                    let nameStr = variable.localizedName as NSString
+                    nameStr.draw(at: CGPoint(x: padding + 16, y: y),
+                                 withAttributes: [.font: labelFont, .foregroundColor: lightTextColor])
+                    y += 18
+                    // Значение + единица
+                    let valStr = "\(formattedVal) \(unit)".trimmingCharacters(in: .whitespaces) as NSString
+                    valStr.draw(at: CGPoint(x: padding + 16, y: y),
+                                withAttributes: [.font: valueFont, .foregroundColor: darkTextColor])
+                    y += 28
                 }
-                yPosition += 80
                 
-                // Дата и время
+                // Формула с подставленными числами
+                let valueFormula = formula.getFormulaWithValues(calculatedSymbol: calculatedSymbol, inputValues: inputValues)
+                y = drawLatex(valueFormula, x: padding, y: y, width: contentWidth, fontSize: 20)
+                y += 20
+                stepNum += 1
+                
+                // ── 4. Вычисляем результат ──
+                y = drawSectionTitle("\(stepNum). \(L10n.stepCalculate)", font: sectionFont, x: padding, y: y, width: contentWidth)
+                
+                if let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
+                    let unit = CalculationService.displayUnit(resultVar.unit_si)
+                    
+                    // Фон для результата
+                    let resultBoxHeight: CGFloat = 60
+                    let resultBgRect = CGRect(x: padding, y: y, width: contentWidth, height: resultBoxHeight)
+                    let resultBgPath = UIBezierPath(roundedRect: resultBgRect, cornerRadius: 10)
+                    UIColor(red: 230/255, green: 240/255, blue: 255/255, alpha: 1).setFill()
+                    resultBgPath.fill()
+                    
+                    // Название
+                    let nameStr = resultVar.localizedName as NSString
+                    nameStr.draw(at: CGPoint(x: padding + 16, y: y + 8),
+                                 withAttributes: [.font: labelFont, .foregroundColor: lightTextColor])
+                    // = значение единица
+                    let resultStr = "= \(CalculationService.formatNumber(calculatedValue)) \(unit)".trimmingCharacters(in: .whitespaces) as NSString
+                    resultStr.draw(at: CGPoint(x: padding + 16, y: y + 28),
+                                   withAttributes: [.font: valueBoldFont, .foregroundColor: primaryColor])
+                    y += resultBoxHeight + 24
+                }
+                
+                // ── Разделитель ──
+                let separatorPath = UIBezierPath()
+                separatorPath.move(to: CGPoint(x: padding, y: y))
+                separatorPath.addLine(to: CGPoint(x: padding + contentWidth, y: y))
+                UIColor(white: 0.85, alpha: 1).setStroke()
+                separatorPath.lineWidth = 0.5
+                separatorPath.stroke()
+                y += 16
+                
+                // ── Дата ──
                 let formatter = DateFormatter()
                 formatter.dateStyle = .medium
                 formatter.timeStyle = .short
                 let dateText = "\(L10n.pdfDate) \(formatter.string(from: calculationDate))" as NSString
-                let dateAttributes: [NSAttributedString.Key: Any] = [
-                    .font: captionFont,
-                    .foregroundColor: lightTextColor
-                ]
-                dateText.draw(at: CGPoint(x: padding, y: yPosition), withAttributes: dateAttributes)
+                dateText.draw(at: CGPoint(x: padding, y: y),
+                              withAttributes: [.font: captionFont, .foregroundColor: lightTextColor])
             }
             
             self.pdfURL = pdfPath
@@ -213,8 +190,46 @@ struct PDFPreview: View {
         }
     }
     
-    private func getFormulaWithValues() -> String {
-        formula.getFormulaWithValues(calculatedSymbol: calculatedSymbol, inputValues: inputValues)
+    /// Рисует заголовок секции и возвращает новую y-позицию
+    private func drawSectionTitle(_ text: String, font: UIFont, x: CGFloat, y: CGFloat, width: CGFloat) -> CGFloat {
+        let nsText = text as NSString
+        nsText.draw(at: CGPoint(x: x, y: y),
+                    withAttributes: [.font: font, .foregroundColor: darkTextColor])
+        return y + font.lineHeight + 10
+    }
+    
+    /// Рендерит LaTeX через MTMathUILabel в PDF и возвращает новую y-позицию
+    private func drawLatex(_ latex: String, x: CGFloat, y: CGFloat, width: CGFloat, fontSize: CGFloat) -> CGFloat {
+        let mathLabel = MTMathUILabel()
+        mathLabel.latex = latex
+        mathLabel.fontSize = fontSize
+        mathLabel.textColor = darkTextColor
+        mathLabel.textAlignment = .center
+        mathLabel.frame = CGRect(x: 0, y: 0, width: width, height: 60)
+        mathLabel.sizeToFit()
+        
+        let size = mathLabel.bounds.size
+        guard size.width > 0, size.height > 0 else { return y + 30 }
+        
+        // Масштабируем если формула шире контента
+        let scale = min(1.0, width / size.width)
+        let renderSize = CGSize(width: size.width * scale, height: size.height * scale)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 2.0)
+        if let ctx = UIGraphicsGetCurrentContext() {
+            ctx.translateBy(x: 0, y: size.height)
+            ctx.scaleBy(x: 1.0, y: -1.0)
+            mathLabel.layer.render(in: ctx)
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        if let image {
+            let drawX = x + (width - renderSize.width) / 2
+            image.draw(in: CGRect(x: drawX, y: y, width: renderSize.width, height: renderSize.height))
+            return y + renderSize.height + 8
+        }
+        return y + 30
     }
 }
 
@@ -248,6 +263,30 @@ struct PDFKitView: UIViewRepresentable {
     }
 }
 
+// MARK: - Share через отдельный UIWindow (работает с Telegram, WhatsApp и др.)
+enum ShareHelper {
+    /// Открывает UIActivityViewController в отдельном UIWindow, независимом от SwiftUI lifecycle
+    static func share(items: [Any]) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        
+        let shareWindow = UIWindow(windowScene: windowScene)
+        let hostVC = UIViewController()
+        hostVC.view.backgroundColor = .clear
+        shareWindow.rootViewController = hostVC
+        shareWindow.windowLevel = .alert + 1
+        shareWindow.makeKeyAndVisible()
+        
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { _, _, _, _ in
+            shareWindow.isHidden = true
+        }
+        activityVC.popoverPresentationController?.sourceView = hostVC.view
+        activityVC.popoverPresentationController?.sourceRect = CGRect(x: hostVC.view.bounds.midX, y: hostVC.view.bounds.midY, width: 0, height: 0)
+        
+        hostVC.present(activityVC, animated: true)
+    }
+}
+
 // MARK: - UIActivityViewController wrapper (for sharing files)
 struct ActivityView: UIViewControllerRepresentable {
     let items: [Any]
@@ -257,4 +296,43 @@ struct ActivityView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+// MARK: - Share wrapper that hosts UIActivityViewController inside its own VC
+/// Решает проблему с мессенджерами (Telegram, WhatsApp), которые не отправляют текст
+/// при прямом UIActivityViewController из SwiftUI
+struct ShareActivityView: UIViewControllerRepresentable {
+    let text: String
+    @Environment(\.dismiss) private var dismiss
+    
+    func makeUIViewController(context: Context) -> ShareHostController {
+        let controller = ShareHostController()
+        controller.text = text
+        controller.onDismiss = { dismiss() }
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: ShareHostController, context: Context) {}
+}
+
+class ShareHostController: UIViewController {
+    var text: String = ""
+    var onDismiss: (() -> Void)?
+    private var didPresent = false
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard !didPresent else { return }
+        didPresent = true
+        
+        let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { [weak self] _, _, _, _ in
+            self?.onDismiss?()
+        }
+        // Для iPad
+        activityVC.popoverPresentationController?.sourceView = view
+        activityVC.popoverPresentationController?.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        
+        present(activityVC, animated: true)
+    }
 }

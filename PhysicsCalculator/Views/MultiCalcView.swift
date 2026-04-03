@@ -43,13 +43,13 @@ struct MultiCalcView: View {
                                 .font(.caption.weight(.semibold))
                             
                             ForEach(inputVariables) { variable in
-                                Text("\(variable.symbol), \(variable.unit_si)")
+                                Text(variable.unit_si == "—" ? variable.displaySymbol : "\(variable.displaySymbol), \(variable.unit_si)")
                                     .frame(width: 100)
                                     .font(.caption.weight(.semibold))
                             }
                             
                             if let rv = resultVariable {
-                                Text("\(rv.symbol), \(rv.unit_si)")
+                                Text(rv.unit_si == "—" ? rv.displaySymbol : "\(rv.displaySymbol), \(rv.unit_si)")
                                     .frame(width: 120)
                                     .font(.caption.weight(.bold))
                                     .foregroundColor(.accentColor)
@@ -81,7 +81,7 @@ struct MultiCalcView: View {
                                 }
                                 
                                 if let result = results[rowIndex] {
-                                    Text(String(format: "%.4g", result))
+                                    Text(CalculationService.formatNumber(result))
                                         .frame(width: 120)
                                         .font(.system(size: 14, weight: .semibold))
                                         .foregroundColor(.accentColor)
@@ -159,11 +159,11 @@ struct MultiCalcView: View {
                             .font(.headline)
                         
                         HStack {
-                            StatItem(label: L10n.statMin, value: validResults.min()!, unit: rv.unit_si)
+                            StatItem(label: L10n.statMin, value: validResults.min()!, unit: CalculationService.displayUnit(rv.unit_si))
                             Spacer()
-                            StatItem(label: L10n.statMax, value: validResults.max()!, unit: rv.unit_si)
+                            StatItem(label: L10n.statMax, value: validResults.max()!, unit: CalculationService.displayUnit(rv.unit_si))
                             Spacer()
-                            StatItem(label: L10n.statAvg, value: validResults.reduce(0, +) / Double(validResults.count), unit: rv.unit_si)
+                            StatItem(label: L10n.statAvg, value: validResults.reduce(0, +) / Double(validResults.count), unit: CalculationService.displayUnit(rv.unit_si))
                         }
                     }
                     .padding()
@@ -244,7 +244,7 @@ struct StatItem: View {
             Text(label)
                 .font(.caption)
                 .foregroundColor(.secondary)
-            Text(String(format: "%.4g", value))
+            Text(CalculationService.formatNumber(value))
                 .font(.system(.body, weight: .semibold))
                 .foregroundColor(.accentColor)
             Text(unit)

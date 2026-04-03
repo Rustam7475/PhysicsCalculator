@@ -78,6 +78,8 @@ enum L10n {
     static var errorPlaceholder: String { t(["ru": "Погрешность", "en": "Error", "de": "Fehler", "es": "Error", "fr": "Erreur", "zh": "误差"]) }
     static var errorConstant: String { t(["ru": "Точное значение", "en": "Exact value", "de": "Exakter Wert", "es": "Valor exacto", "fr": "Valeur exacte", "zh": "精确值"]) }
     static var calculateError: String { t(["ru": "Рассчитать погрешность", "en": "Calculate error", "de": "Fehler berechnen", "es": "Calcular error", "fr": "Calculer l'erreur", "zh": "计算误差"]) }
+    static var recalculate: String { t(["ru": "Пересчитать", "en": "Recalculate", "de": "Neu berechnen", "es": "Recalcular", "fr": "Recalculer", "zh": "重新计算"]) }
+    static var errorInputTitle: String { t(["ru": "Погрешности измерений", "en": "Measurement errors", "de": "Messfehler", "es": "Errores de medición", "fr": "Erreurs de mesure", "zh": "测量误差"]) }
     static var errorResults: String { t(["ru": "Результаты анализа погрешностей", "en": "Error analysis results", "de": "Ergebnisse der Fehleranalyse", "es": "Resultados del análisis de errores", "fr": "Résultats de l'analyse d'erreurs", "zh": "误差分析结果"]) }
     static var absoluteError: String { t(["ru": "Абс. погрешность", "en": "Absolute error", "de": "Absoluter Fehler", "es": "Error absoluto", "fr": "Erreur absolue", "zh": "绝对误差"]) }
     static var relativeError: String { t(["ru": "Отн. погрешность", "en": "Relative error", "de": "Relativer Fehler", "es": "Error relativo", "fr": "Erreur relative", "zh": "相对误差"]) }
@@ -361,6 +363,26 @@ enum L10n {
     
     static var constantsTitle: String { t(["ru": "Константы", "en": "Constants", "de": "Konstanten", "es": "Constantes", "fr": "Constantes", "zh": "常数"]) }
     static var searchConstants: String { t(["ru": "Поиск констант", "en": "Search constants", "de": "Konstanten suchen", "es": "Buscar constantes", "fr": "Rechercher des constantes", "zh": "搜索常数"]) }
+    
+    // SI unit abbreviations (Russian uses Cyrillic, others use international)
+    static var unitMS: String { t(["ru": "м/с", "en": "m/s", "de": "m/s", "es": "m/s", "fr": "m/s", "zh": "m/s"]) }
+    static var unitMS2: String { t(["ru": "м/с²", "en": "m/s²", "de": "m/s²", "es": "m/s²", "fr": "m/s²", "zh": "m/s²"]) }
+    static var unitM: String { t(["ru": "м", "en": "m", "de": "m", "es": "m", "fr": "m", "zh": "m"]) }
+    static var unitMInv: String { t(["ru": "м⁻¹", "en": "m⁻¹", "de": "m⁻¹", "es": "m⁻¹", "fr": "m⁻¹", "zh": "m⁻¹"]) }
+    static var unitMK: String { t(["ru": "м·К", "en": "m·K", "de": "m·K", "es": "m·K", "fr": "m·K", "zh": "m·K"]) }
+    static var unitKg: String { t(["ru": "кг", "en": "kg", "de": "kg", "es": "kg", "fr": "kg", "zh": "kg"]) }
+    static var unitJS: String { t(["ru": "Дж·с", "en": "J·s", "de": "J·s", "es": "J·s", "fr": "J·s", "zh": "J·s"]) }
+    static var unitJK: String { t(["ru": "Дж/К", "en": "J/K", "de": "J/K", "es": "J/K", "fr": "J/K", "zh": "J/K"]) }
+    static var unitC: String { t(["ru": "Кл", "en": "C", "de": "C", "es": "C", "fr": "C", "zh": "C"]) }
+    static var unitPa: String { t(["ru": "Па", "en": "Pa", "de": "Pa", "es": "Pa", "fr": "Pa", "zh": "Pa"]) }
+    static var unitFM: String { t(["ru": "Ф/м", "en": "F/m", "de": "F/m", "es": "F/m", "fr": "F/m", "zh": "F/m"]) }
+    static var unitHM: String { t(["ru": "Гн/м", "en": "H/m", "de": "H/m", "es": "H/m", "fr": "H/m", "zh": "H/m"]) }
+    static var unitWb: String { t(["ru": "Вб", "en": "Wb", "de": "Wb", "es": "Wb", "fr": "Wb", "zh": "Wb"]) }
+    static var unitMolInv: String { t(["ru": "моль⁻¹", "en": "mol⁻¹", "de": "mol⁻¹", "es": "mol⁻¹", "fr": "mol⁻¹", "zh": "mol⁻¹"]) }
+    static var unitGasConst: String { t(["ru": "Дж/(моль·К)", "en": "J/(mol·K)", "de": "J/(mol·K)", "es": "J/(mol·K)", "fr": "J/(mol·K)", "zh": "J/(mol·K)"]) }
+    static var unitGravConst: String { t(["ru": "м³/(кг·с²)", "en": "m³/(kg·s²)", "de": "m³/(kg·s²)", "es": "m³/(kg·s²)", "fr": "m³/(kg·s²)", "zh": "m³/(kg·s²)"]) }
+    static var unitStefan: String { t(["ru": "Вт/(м²·К⁴)", "en": "W/(m²·K⁴)", "de": "W/(m²·K⁴)", "es": "W/(m²·K⁴)", "fr": "W/(m²·K⁴)", "zh": "W/(m²·K⁴)"]) }
+    static var unitCoulomb: String { t(["ru": "Н·м²/Кл²", "en": "N·m²/C²", "de": "N·m²/C²", "es": "N·m²/C²", "fr": "N·m²/C²", "zh": "N·m²/C²"]) }
     
     // Category names
     static var catUniversal: String { t(["ru": "Фундаментальные", "en": "Fundamental", "de": "Fundamentale", "es": "Fundamentales", "fr": "Fondamentales", "zh": "基本常数"]) }

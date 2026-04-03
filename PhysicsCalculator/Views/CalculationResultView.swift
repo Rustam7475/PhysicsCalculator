@@ -68,9 +68,9 @@ struct CalculationResultView: View {
         if let unitId = unitSelections[variable.symbol],
            let units = UnitConverter.units(forSI: variable.unit_si),
            let selectedUnit = units.first(where: { $0.id == unitId }) {
-            return selectedUnit.symbol
+            return CalculationService.displayUnit(selectedUnit.symbol)
         }
-        return variable.unit_si
+        return CalculationService.displayUnit(variable.unit_si)
     }
     
     /// Конвертирует введённое значение в СИ с учётом выбранных единиц
@@ -106,6 +106,11 @@ struct CalculationResultView: View {
     
     private func getFormulaWithValues() -> String {
         formula.getFormulaWithValues(calculatedSymbol: calculatedSymbol, inputValues: inputValues)
+    }
+    
+    /// Форматирует входное значение: если число — через formatNumber, иначе как есть
+    private static func formatInputValue(_ value: String) -> String {
+        CalculationService.formatInputValue(value)
     }
     
     var body: some View {
@@ -157,17 +162,22 @@ struct CalculationResultView: View {
                         .foregroundColor(.secondary)
                     
                     if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
-                        HStack(spacing: 4) {
+                        VStack(spacing: 6) {
                             Text(resultVariable.localizedName)
-                                .font(.title3)
-                            Text("=")
-                                .font(.title3)
-                            Text(String(format: "%.4g", displayResult))
-                                .font(.title.weight(.bold))
-                                .foregroundColor(.accentColor)
-                            Text(resultUnit)
-                                .font(.title3)
+                                .font(.subheadline)
                                 .foregroundColor(.secondary)
+                            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                Text("=")
+                                    .font(.title3)
+                                Text(CalculationService.formatNumber(displayResult))
+                                    .font(.title2.weight(.bold))
+                                    .foregroundColor(.accentColor)
+                                    .minimumScaleFactor(0.5)
+                                    .lineLimit(1)
+                                Text(resultUnit)
+                                    .font(.callout)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
@@ -184,12 +194,13 @@ struct CalculationResultView: View {
                     
                     ForEach(formula.variables) { variable in
                         if variable.symbol != calculatedSymbol {
-                            HStack {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text(variable.localizedName)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Text("\(Self.formatInputValue(inputValues[variable.symbol, default: ""])) \(displayUnit(for: variable))")
+                                    .font(.body.weight(.medium))
                                     .foregroundColor(.primary)
-                                Spacer()
-                                Text("\(inputValues[variable.symbol, default: ""]) \(displayUnit(for: variable))")
-                                    .fontWeight(.medium)
                             }
                             if variable.id != formula.variables.filter({ $0.symbol != calculatedSymbol }).last?.id {
                                 Divider()
@@ -252,8 +263,8 @@ struct CalculationResultView: View {
                         }
                     }
                     
-                    ShareLink(item: generateShareText()) {
-                        ActionButtonLabel(icon: "square.and.arrow.up", label: L10n.share, color: .accentColor)
+                    ActionButton(icon: "square.and.arrow.up", label: L10n.share, color: .accentColor) {
+                        shareAsImage()
                     }
                     
                     ActionButton(icon: isFavorite ? "star.fill" : "star",
@@ -337,6 +348,137 @@ struct CalculationResultView: View {
         }
     }
     
+    /// Создаёт изображение-карточку с результатом и открывает UIActivityViewController
+    private func shareAsImage() {
+        let image = renderShareCard()
+        let text = generateShareText()
+        ShareHelper.share(items: [image, text])
+    }
+    
+    /// Рендерит красивую карточку результата как UIImage
+    private func renderShareCard() -> UIImage {
+        let width: CGFloat = 600
+        let padding: CGFloat = 30
+        let contentWidth = width - 2 * padding
+        
+        // Шрифты
+        let titleFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+        let labelFont = UIFont.systemFont(ofSize: 14)
+        let valueFont = UIFont.systemFont(ofSize: 18, weight: .medium)
+        let resultFont = UIFont.systemFont(ofSize: 22, weight: .bold)
+        let captionFont = UIFont.systemFont(ofSize: 13)
+        
+        // Цвета
+        let bgColor = UIColor(red: 28/255, green: 28/255, blue: 30/255, alpha: 1)
+        let cardColor = UIColor(red: 44/255, green: 44/255, blue: 46/255, alpha: 1)
+        let textColor = UIColor.white
+        let secondaryText = UIColor(white: 0.6, alpha: 1)
+        let accentColor = UIColor(red: 52/255, green: 120/255, blue: 246/255, alpha: 1)
+        
+        // Подготовка данных
+        let inputVars = formula.variables.filter { $0.symbol != calculatedSymbol }
+        let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol })
+        
+        // Вычисляем высоту
+        var totalHeight: CGFloat = padding  // верхний отступ
+        totalHeight += 30  // заголовок
+        totalHeight += 20  // отступ
+        // Формула LaTeX — примерно
+        totalHeight += 50
+        totalHeight += 20  // отступ
+        // Введённые значения
+        totalHeight += CGFloat(inputVars.count) * 50
+        totalHeight += 20  // отступ
+        // Результат
+        totalHeight += 70
+        totalHeight += 20  // отступ
+        // Дата
+        totalHeight += 20
+        totalHeight += padding  // нижний отступ
+        
+        let size = CGSize(width: width, height: totalHeight)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        
+        return renderer.image { ctx in
+            // Фон
+            bgColor.setFill()
+            ctx.fill(CGRect(origin: .zero, size: size))
+            
+            var y: CGFloat = padding
+            
+            // Заголовок
+            let titleStr = formula.localizedName as NSString
+            let titleRect = titleStr.boundingRect(with: CGSize(width: contentWidth, height: 100),
+                                                    options: .usesLineFragmentOrigin,
+                                                    attributes: [.font: titleFont, .foregroundColor: textColor], context: nil)
+            titleStr.draw(in: CGRect(x: padding, y: y, width: contentWidth, height: titleRect.height),
+                         withAttributes: [.font: titleFont, .foregroundColor: textColor])
+            y += titleRect.height + 20
+            
+            // Формула (текстовая, т.к. LaTeX рендер сложен)
+            let formulaStr = formula.equation_latex
+                .replacingOccurrences(of: "\\frac{", with: "(")
+                .replacingOccurrences(of: "}{", with: ")/(")
+                .replacingOccurrences(of: "}", with: ")")
+                .replacingOccurrences(of: "\\cdot", with: "·")
+                .replacingOccurrences(of: "\\times", with: "×")
+                .replacingOccurrences(of: "\\sqrt{", with: "√(")
+                .replacingOccurrences(of: "\\", with: "")
+            let formulaNS = formulaStr as NSString
+            formulaNS.draw(at: CGPoint(x: padding, y: y),
+                          withAttributes: [.font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: secondaryText])
+            y += 36 + 16
+            
+            // Карточка: введённые значения
+            let inputCardHeight = CGFloat(inputVars.count) * 48 + 16
+            let inputCardRect = CGRect(x: padding, y: y, width: contentWidth, height: inputCardHeight)
+            let inputPath = UIBezierPath(roundedRect: inputCardRect, cornerRadius: 12)
+            cardColor.setFill()
+            inputPath.fill()
+            
+            var innerY = y + 8
+            for variable in inputVars {
+                let rawValue = inputValues[variable.symbol, default: ""]
+                let formattedVal = CalculationService.formatInputValue(rawValue)
+                let unit = displayUnit(for: variable)
+                
+                // Название
+                let nameLbl = variable.localizedName as NSString
+                nameLbl.draw(at: CGPoint(x: padding + 16, y: innerY),
+                            withAttributes: [.font: labelFont, .foregroundColor: secondaryText])
+                innerY += 18
+                // Значение
+                let valLbl = "\(formattedVal) \(unit)".trimmingCharacters(in: .whitespaces) as NSString
+                valLbl.draw(at: CGPoint(x: padding + 16, y: innerY),
+                           withAttributes: [.font: valueFont, .foregroundColor: textColor])
+                innerY += 30
+            }
+            y += inputCardHeight + 16
+            
+            // Карточка: результат
+            if let resultVar {
+                let resultCardRect = CGRect(x: padding, y: y, width: contentWidth, height: 64)
+                let resultPath = UIBezierPath(roundedRect: resultCardRect, cornerRadius: 12)
+                UIColor(red: 30/255, green: 60/255, blue: 120/255, alpha: 1).setFill()
+                resultPath.fill()
+                
+                let resultName = resultVar.localizedName as NSString
+                resultName.draw(at: CGPoint(x: padding + 16, y: y + 8),
+                               withAttributes: [.font: labelFont, .foregroundColor: secondaryText])
+                
+                let resultVal = "= \(CalculationService.formatNumber(displayResult)) \(resultUnit)".trimmingCharacters(in: .whitespaces) as NSString
+                resultVal.draw(at: CGPoint(x: padding + 16, y: y + 30),
+                              withAttributes: [.font: resultFont, .foregroundColor: accentColor])
+                y += 64 + 16
+            }
+            
+            // Дата
+            let dateLbl = formattedDate as NSString
+            dateLbl.draw(at: CGPoint(x: padding, y: y),
+                        withAttributes: [.font: captionFont, .foregroundColor: secondaryText])
+        }
+    }
+    
     @ViewBuilder
     private func premiumBadge(visible: Bool) -> some View {
         if visible {
@@ -374,13 +516,13 @@ struct CalculationResultView: View {
         
         text += L10n.shareInputValues + "\n"
         for variable in formula.variables where variable.symbol != calculatedSymbol {
-            let value = inputValues[variable.symbol, default: ""]
+            let value = Self.formatInputValue(inputValues[variable.symbol, default: ""])
             text += "  • \(variable.localizedName) = \(value) \(displayUnit(for: variable))\n"
         }
         
         if let resultVariable = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
             text += "\n" + L10n.shareResult + "\n"
-            text += "  ▸ \(resultVariable.localizedName) = \(String(format: "%.4g", displayResult)) \(resultUnit)\n"
+            text += "  ▸ \(resultVariable.localizedName) = \(CalculationService.formatNumber(displayResult)) \(resultUnit)\n"
         }
         
         text += "\n📅 \(formattedDate)"
@@ -469,9 +611,9 @@ struct StepByStepSection: View {
         if let unitId = unitSelections[variable.symbol],
            let units = UnitConverter.units(forSI: variable.unit_si),
            let selectedUnit = units.first(where: { $0.id == unitId }) {
-            return selectedUnit.symbol
+            return CalculationService.displayUnit(selectedUnit.symbol)
         }
-        return variable.unit_si
+        return CalculationService.displayUnit(variable.unit_si)
     }
     
     private func displayResultValue(for variable: Variable) -> Double {
@@ -539,14 +681,11 @@ struct StepByStepSection: View {
                     StepRow(number: stepNumber, title: L10n.stepSubstitute) {
                         VStack(alignment: .leading, spacing: 6) {
                             ForEach(formula.variables.filter { $0.symbol != calculatedSymbol }, id: \.symbol) { variable in
-                                HStack(spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     Text(variable.localizedName)
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
-                                    Text("=")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                    Text("\(inputValues[variable.symbol, default: ""]) \(displayUnit(for: variable))")
+                                    Text("\(CalculationService.formatInputValue(inputValues[variable.symbol, default: ""])) \(displayUnit(for: variable))")
                                         .font(.subheadline.weight(.medium))
                                 }
                             }
@@ -564,17 +703,20 @@ struct StepByStepSection: View {
                     StepRow(number: stepNumber + 1, title: L10n.stepCalculate) {
                         if let resultVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
                             let resultDisplay = displayResultValue(for: resultVar)
-                            HStack(spacing: 4) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text(resultVar.localizedName)
-                                    .font(.headline)
-                                Text("=")
-                                    .font(.headline)
-                                Text(String(format: "%.4g", resultDisplay))
-                                    .font(.headline.weight(.bold))
-                                    .foregroundColor(.accentColor)
-                                Text(displayUnit(for: resultVar))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
+                                HStack(spacing: 4) {
+                                    Text("=")
+                                        .font(.headline)
+                                    Text(CalculationService.formatNumber(resultDisplay))
+                                        .font(.headline.weight(.bold))
+                                        .foregroundColor(.accentColor)
+                                    Text(displayUnit(for: resultVar))
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }

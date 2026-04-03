@@ -108,8 +108,55 @@ final class CalculationService: CalculationServiceProtocol {
         return !cleaned.isEmpty && Double(cleaned) != nil
     }
     
-    /// Форматирует результат для отображения
+    /// Форматирует результат для отображения (6 знач. цифр, красивая науч. нотация, локаль)
     func formatResult(_ result: Double) -> String {
-        String(format: "%.4g", result)
+        Self.formatNumber(result)
+    }
+    
+    /// Единый форматтер чисел для всего приложения
+    /// - 6 значащих цифр
+    /// - Научная нотация: `1.23 × 10⁵` вместо `1.23e+05`
+    /// - Десятичный разделитель по текущей локали
+    static func formatNumber(_ value: Double) -> String {
+        let raw = String(format: "%.6g", value)
+        // Конвертируем научную нотацию e+/-N в × 10ˣ
+        let result: String
+        if let eRange = raw.range(of: "e", options: .caseInsensitive) {
+            let mantissa = String(raw[raw.startIndex..<eRange.lowerBound])
+            let expPart = String(raw[raw.index(after: eRange.lowerBound)..<raw.endIndex])
+            let exponent = Int(expPart) ?? 0
+            let superscript = Self.toSuperscript(exponent)
+            result = "\(mantissa) × 10\(superscript)"
+        } else {
+            result = raw
+        }
+        // Десятичный разделитель по локали
+        let lang = AppSettings.shared.currentLanguageCode
+        let useComma = ["ru", "de", "es", "fr"].contains(lang)
+        return useComma ? result.replacingOccurrences(of: ".", with: ",") : result
+    }
+    
+    /// Конвертирует целое число в Unicode-суперскрипт: -23 → ⁻²³
+    private static func toSuperscript(_ n: Int) -> String {
+        let superMap: [Character: Character] = [
+            "0": "\u{2070}", "1": "\u{00B9}", "2": "\u{00B2}", "3": "\u{00B3}",
+            "4": "\u{2074}", "5": "\u{2075}", "6": "\u{2076}", "7": "\u{2077}",
+            "8": "\u{2078}", "9": "\u{2079}", "-": "\u{207B}"
+        ]
+        return String(n).compactMap { superMap[$0] }.map(String.init).joined()
+    }
+    
+    /// Фильтрует единицу "—" для безразмерных величин (возвращает "")
+    static func displayUnit(_ unit: String) -> String {
+        unit == "—" ? "" : unit
+    }
+    
+    /// Форматирует входное значение: если число — через formatNumber, иначе как есть
+    static func formatInputValue(_ value: String) -> String {
+        let cleaned = value.replacingOccurrences(of: ",", with: ".")
+        if let num = Double(cleaned) {
+            return formatNumber(num)
+        }
+        return value
     }
 }
