@@ -1,0 +1,69 @@
+{
+  "identifier" : "3F8C90B7-E879-4D3F-B654-A1D4C9C0E236",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "premium_001",
+      "localizations" : [
+        {
+          "description" : "Все 126 формул, графики, PDF, погрешности, избранное",
+          "displayName" : "Premium — Полный доступ",
+          "locale" : "ru"
+        },
+        {
+          "description" : "All 126 formulas, graphs, PDF, error calculator, favorites",
+          "displayName" : "Premium — Full Access",
+          "locale" : "en"
+        },
+        {
+          "description" : "Alle 126 Formeln, Diagramme, PDF, Fehlerrechner, Favoriten",
+          "displayName" : "Premium — Vollzugriff",
+          "locale" : "de"
+        },
+        {
+          "description" : "Las 126 fórmulas, gráficos, PDF, calculadora de errores, favoritos",
+          "displayName" : "Premium — Acceso completo",
+          "locale" : "es"
+        },
+        {
+          "description" : "Les 126 formules, graphiques, PDF, calculateur d'erreurs, favoris",
+          "displayName" : "Premium — Accès complet",
+          "locale" : "fr"
+        },
+        {
+          "description" : "全部126个公式、图表、PDF导出、误差计算器、收藏夹",
+          "displayName" : "高级版 — 完整访问",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "com.elmuradov.physicscalculator.premium",
+      "referenceName" : "Premium Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6761487165",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_lastVerificationError" : "",
+    "_locale" : "en",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "setting" : "com.elmuradov.physicscalculator.premium"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

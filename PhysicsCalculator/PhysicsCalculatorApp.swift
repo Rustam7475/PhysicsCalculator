@@ -22,6 +22,9 @@ struct PhysicsCalculatorApp: App {
                     .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                     .environmentObject(settings)
                     .preferredColorScheme(settings.theme.colorScheme)
+                    .task {
+                        StoreManager.shared.startBackgroundVerification()
+                    }
             }
         }
     }

@@ -1,0 +1,48 @@
+========================================
+ИЗМЕНЕНИЯ ПРОМО-ТЕКСТОВ (App Store Connect)
+Лимит: 170 символов
+========================================
+
+
+🇩🇪 DEUTSCH — Promotional Text
+--------------------------------
+БЫЛО (178 символов):
+126 Physik-Formeln in der Hosentasche! Mechanik, Thermodynamik, Optik, Elektromagnetismus — schrittweise Lösungen, Diagramme, Einheitenumrechner. Ideal für Studium und Prüfungen.
+
+СТАЛО (169 символов):
+126 Physik-Formeln in der Hosentasche! Mechanik, Thermodynamik, Optik, Elektromagnetismus — schrittweise Lösungen, Diagramme, Umrechner. Ideal für Studium und Prüfungen.
+
+Изменение: «Einheitenumrechner» → «Umrechner» (−9 символов)
+
+
+🇪🇸 ESPAÑOL — Promotional Text
+--------------------------------
+БЫЛО (190 символов):
+¡126 fórmulas de física en tu bolsillo! Mecánica, termodinámica, óptica, electromagnetismo — soluciones paso a paso, gráficos, conversor de unidades. Ideal para estudiar y preparar exámenes.
+
+СТАЛО (170 символов):
+¡126 fórmulas de física en tu bolsillo! Mecánica, termodinámica, óptica, electromagnetismo — soluciones paso a paso, gráficos, conversor de unidades. Ideal para estudiar.
+
+Изменение: удалено « y preparar exámenes» (−20 символов)
+
+
+🇫🇷 FRANÇAIS — Promotional Text
+---------------------------------
+БЫЛО (201 символ):
+126 formules de physique dans votre poche ! Mécanique, thermodynamique, optique, électromagnétisme — solutions pas à pas, graphiques, convertisseur d'unités. Idéal pour les études et les examens.
+
+СТАЛО (160 символов):
+126 formules de physique ! Mécanique, thermodynamique, optique, électromagnétisme — solutions pas à pas, graphiques, convertisseur d'unités. Idéal pour étudier.
+
+Изменение: «dans votre poche» удалено, «les études et les examens» → «étudier» (−41 символ)
+
+
+========================================
+ИТОГО:
+  RU: 158 ✅ (без изменений)
+  EN: 170 ✅ (без изменений)
+  DE: 169 ✅ (было 178)
+  ES: 170 ✅ (было 190)
+  FR: 160 ✅ (было 201)
+  ZH:  51 ✅ (без изменений)
+========================================

@@ -5,6 +5,7 @@ import Foundation
 struct SectionsView: View {
     let allData: PhysicsData
     @EnvironmentObject private var settings: AppSettings
+    private let premium = PremiumManager.shared
     @State private var selectedSection: PhysicsSection? = nil
     @State private var selectedSubsection: PhysicsSubsection? = nil
     @State private var selectedLevel: String = "school"
@@ -12,6 +13,7 @@ struct SectionsView: View {
 
     // Состояние для поиска
     @State private var searchText: String = ""
+    @State private var showingPaywall = false
 
     // --- Вычисляемые свойства с фильтрацией по уровню И ПОИСКУ ---
 
@@ -199,32 +201,19 @@ struct SectionsView: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(filteredFormulas) { formula in
-                        NavigationLink(destination: CalculationView(formula: formula)) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "function")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(.accentColor)
-                                    .frame(width: 28, height: 28)
-                                    .background(Color.accentColor.opacity(0.12))
-                                    .cornerRadius(6)
-                                
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(formula.localizedName)
-                                        .font(.body)
-                                    if isSearching {
-                                        if let subsection = allData.subsections.first(where: { $0.id == formula.subsectionId }) {
-                                            Text(subsection.localizedName)
-                                                .font(.caption)
-                                                .foregroundColor(.accentColor)
-                                        }
-                                        Text(formula.localizedDescription)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .lineLimit(2)
-                                    }
-                                }
+                        let isAccessible = premium.isFormulaAccessible(formula, allFormulas: allData.formulas)
+                        
+                        if isAccessible {
+                            NavigationLink(destination: CalculationView(formula: formula)) {
+                                formulaRow(formula: formula, locked: false)
                             }
-                            .padding(.vertical, 4)
+                        } else {
+                            Button {
+                                showingPaywall = true
+                            } label: {
+                                formulaRow(formula: formula, locked: true)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -236,6 +225,50 @@ struct SectionsView: View {
         .id(settings.currentLanguageCode)
         .navigationTitle(L10n.sectionsTitle)
         .oledBackground()
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
+    }
+    
+    @ViewBuilder
+    private func formulaRow(formula: Formula, locked: Bool) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: locked ? "lock.fill" : "function")
+                .font(.system(size: 14))
+                .foregroundColor(locked ? .secondary : .accentColor)
+                .frame(width: 28, height: 28)
+                .background((locked ? Color.secondary : Color.accentColor).opacity(0.12))
+                .cornerRadius(6)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(formula.localizedName)
+                    .font(.body)
+                    .foregroundColor(locked ? .secondary : .primary)
+                if isSearching {
+                    if let subsection = allData.subsections.first(where: { $0.id == formula.subsectionId }) {
+                        Text(subsection.localizedName)
+                            .font(.caption)
+                            .foregroundColor(.accentColor)
+                    }
+                    Text(formula.localizedDescription)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+            }
+            
+            if locked {
+                Spacer()
+                Text("Premium")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.orange.opacity(0.15))
+                    .cornerRadius(6)
+            }
+        }
+        .padding(.vertical, 4)
     }
 
      // --- Вспомогательные свойства для текста в списке ---

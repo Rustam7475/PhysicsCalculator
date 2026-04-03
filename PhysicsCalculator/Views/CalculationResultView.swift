@@ -15,6 +15,8 @@ struct CalculationResultView: View {
     @State private var showingPDFPreview = false
     @State private var copiedToClipboard = false
     @State private var showSteps = false
+    @State private var showingPaywall = false
+    private let premium = PremiumManager.shared
     
     // FetchRequest для проверки избранного
     @FetchRequest private var savedItems: FetchedResults<SavedCalculation>
@@ -27,8 +29,11 @@ struct CalculationResultView: View {
         self.unitSelections = unitSelections
         self.calculationDate = calculationDate
         
-        // Инициализация FetchRequest — только избранное для этой формулы
-        let predicate = NSPredicate(format: "formulaId == %@ AND isFavorite == YES", formula.id)
+        // Инициализация FetchRequest — только избранное для этого конкретного расчёта
+        let predicate = NSPredicate(
+            format: "formulaId == %@ AND calculatedSymbol == %@ AND calculatedValue == %lf AND isFavorite == YES",
+            formula.id, calculatedSymbol, calculatedValue
+        )
         _savedItems = FetchRequest<SavedCalculation>(
             sortDescriptors: [NSSortDescriptor(keyPath: \SavedCalculation.timestamp, ascending: true)],
             predicate: predicate,
@@ -209,27 +214,41 @@ struct CalculationResultView: View {
                         copyResult()
                     }
                     
-                    ActionButton(icon: "arrow.down.doc", label: "PDF", color: .accentColor) {
-                        showingPDFPreview = true
+                    ActionButton(icon: "arrow.down.doc", label: "PDF", color: premium.isPDFAvailable ? .accentColor : .secondary) {
+                        if premium.isPDFAvailable {
+                            showingPDFPreview = true
+                        } else {
+                            showingPaywall = true
+                        }
                     }
+                    .overlay(premiumBadge(visible: !premium.isPDFAvailable))
                     
                     if canShowGraph,
                        let xVar = formula.variables.first(where: { $0.symbol != calculatedSymbol }),
                        let yVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
-                        NavigationLink {
-                            FormulaGraphView(
-                                formula: formula,
-                                xVariable: xVar,
-                                yVariable: yVar,
-                                otherValues: formula.variables.reduce(into: [:]) { result, variable in
-                                    if variable.symbol != calculatedSymbol,
-                                       let converted = siValue(for: variable) {
-                                        result[variable.symbol] = converted
+                        if premium.isGraphAvailable {
+                            NavigationLink {
+                                FormulaGraphView(
+                                    formula: formula,
+                                    xVariable: xVar,
+                                    yVariable: yVar,
+                                    otherValues: formula.variables.reduce(into: [:]) { result, variable in
+                                        if variable.symbol != calculatedSymbol,
+                                           let converted = siValue(for: variable) {
+                                            result[variable.symbol] = converted
+                                        }
                                     }
-                                }
-                            )
-                        } label: {
-                            ActionButtonLabel(icon: "chart.line.uptrend.xyaxis", label: L10n.graph, color: .accentColor)
+                                )
+                            } label: {
+                                ActionButtonLabel(icon: "chart.line.uptrend.xyaxis", label: L10n.graph, color: .accentColor)
+                            }
+                        } else {
+                            Button {
+                                showingPaywall = true
+                            } label: {
+                                ActionButtonLabel(icon: "chart.line.uptrend.xyaxis", label: L10n.graph, color: .secondary)
+                            }
+                            .overlay(premiumBadge(visible: true))
                         }
                     }
                     
@@ -239,9 +258,14 @@ struct CalculationResultView: View {
                     
                     ActionButton(icon: isFavorite ? "star.fill" : "star",
                                 label: L10n.favorite,
-                                color: isFavorite ? .yellow : .accentColor) {
-                        toggleFavorite()
+                                color: !premium.isFavoritesAvailable ? .secondary : (isFavorite ? .yellow : .accentColor)) {
+                        if premium.isFavoritesAvailable {
+                            toggleFavorite()
+                        } else {
+                            showingPaywall = true
+                        }
                     }
+                    .overlay(premiumBadge(visible: !premium.isFavoritesAvailable))
                     
                     NavigationLink {
                         MultiCalcView(formula: formula, unknownSymbol: calculatedSymbol)
@@ -249,15 +273,24 @@ struct CalculationResultView: View {
                         ActionButtonLabel(icon: "tablecells", label: L10n.multi, color: .accentColor)
                     }
                     
-                    NavigationLink {
-                        ErrorCalculatorView(
-                            formula: formula,
-                            calculatedSymbol: calculatedSymbol,
-                            calculatedValue: calculatedValue,
-                            inputValues: inputValues
-                        )
-                    } label: {
-                        ActionButtonLabel(icon: "plusminus", label: L10n.errorCalc, color: .accentColor)
+                    if premium.isErrorCalcAvailable {
+                        NavigationLink {
+                            ErrorCalculatorView(
+                                formula: formula,
+                                calculatedSymbol: calculatedSymbol,
+                                calculatedValue: calculatedValue,
+                                inputValues: inputValues
+                            )
+                        } label: {
+                            ActionButtonLabel(icon: "plusminus", label: L10n.errorCalc, color: .accentColor)
+                        }
+                    } else {
+                        Button {
+                            showingPaywall = true
+                        } label: {
+                            ActionButtonLabel(icon: "plusminus", label: L10n.errorCalc, color: .secondary)
+                        }
+                        .overlay(premiumBadge(visible: true))
                     }
                 }
                 
@@ -298,6 +331,28 @@ struct CalculationResultView: View {
                 inputValues: inputValues,
                 calculationDate: calculationDate
             )
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
+    }
+    
+    @ViewBuilder
+    private func premiumBadge(visible: Bool) -> some View {
+        if visible {
+            VStack {
+                HStack {
+                    Spacer()
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(.white)
+                        .padding(4)
+                        .background(Color.orange)
+                        .clipShape(Circle())
+                        .offset(x: 4, y: -4)
+                }
+                Spacer()
+            }
         }
     }
     

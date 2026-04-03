@@ -5,6 +5,8 @@ struct FavoritesView: View {
     // Доступ к контексту Core Data
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
+    private let premium = PremiumManager.shared
+    @State private var showingPaywall = false
 
     // Запрос для получения ВСЕХ сохраненных расчетов,
     // отсортированных по убыванию даты (сначала новые)
@@ -16,7 +18,34 @@ struct FavoritesView: View {
 
     var body: some View {
         VStack {
-            if savedItems.isEmpty {
+            if !premium.isFavoritesAvailable {
+                // Premium заглушка
+                VStack(spacing: 16) {
+                    Spacer()
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.orange)
+                    Text(L10n.premiumRequired)
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                    Text(L10n.premiumDescription)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button {
+                        showingPaywall = true
+                    } label: {
+                        Text(L10n.premiumUnlock)
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 40)
+                    Spacer()
+                }
+                .padding()
+            } else if savedItems.isEmpty {
                 VStack(spacing: 16) {
                     Spacer()
                     Image(systemName: "star")
@@ -51,6 +80,9 @@ struct FavoritesView: View {
         }
         .navigationTitle(L10n.favoritesTitle)
         .oledBackground()
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
     }
 
     // Функция для удаления элементов

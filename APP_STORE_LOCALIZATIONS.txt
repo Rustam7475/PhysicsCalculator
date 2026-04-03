@@ -1,0 +1,428 @@
+========================================
+APP STORE CONNECT — ЛОКАЛИЗАЦИИ
+========================================
+
+
+========== 🇷🇺 РУССКИЙ ==========
+
+Название (30):
+Калькулятор формул - физика
+
+Подзаголовок (30):
+Формулы, графики и расчёты
+
+Рекламный текст (170):
+126 формул физики в кармане! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, графики, конвертер единиц. Идеально для учёбы и экзаменов.
+
+Описание (4000):
+Калькулятор формул — ваш карманный помощник по физике. 126 формул из 6 разделов: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.
+
+ОСНОВНЫЕ ВОЗМОЖНОСТИ:
+
+• 126 формул — от школьного до университетского уровня
+• Умный расчёт — выберите неизвестную переменную, введите остальные значения и получите мгновенный результат
+• Пошаговое решение — подробный разбор каждого вычисления
+• Графики зависимостей — визуализируйте, как одна величина зависит от другой
+• Конвертер единиц — 13 категорий, более 80 единиц измерения
+• Калькулятор погрешностей — расчёт ошибок методом распространения
+• Физические константы — скорость света, постоянная Планка и другие
+• Избранное — сохраняйте важные расчёты
+• История — все ваши вычисления под рукой
+• Экспорт PDF — делитесь результатами
+• 6 языков — русский, английский, немецкий, испанский, французский, китайский
+• Тёмная тема — комфортная работа в любых условиях
+
+РАЗДЕЛЫ ФИЗИКИ:
+
+▸ Механика — кинематика, динамика, законы сохранения, статика
+▸ Термодинамика — газовые законы, теплопередача, молекулярная физика
+▸ Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция
+▸ Оптика — преломление, линзы, дифракция
+▸ Колебания и волны — маятник, волновое уравнение, звук
+▸ Современная физика — фотоэффект, атомная физика, ядерные реакции
+
+Приложение полностью офлайновое — не требует интернета и не собирает данные.
+
+Идеально для школьников, студентов и преподавателей физики.
+
+Ключевые слова (100):
+физика,калькулятор,формулы,расчёт,механика,термодинамика,оптика,графики,конвертер,единицы,студент
+
+Что нового:
+Версия 1.0 — первый релиз!
+• 126 физических формул
+• 6 разделов физики
+• Конвертер единиц (80+ единиц)
+• Графики зависимостей
+• Калькулятор погрешностей
+• Пошаговое решение
+• 6 языков интерфейса
+
+
+========== 🇺🇸 ENGLISH ==========
+
+Name (Название):
+Physics Calculator
+
+Subtitle (Подзаголовок):
+Formulas, Graphs & Solutions
+(Формулы, графики и решения)
+
+Promotional Text (Рекламный текст):
+126 physics formulas in your pocket! Mechanics, thermodynamics, optics, electromagnetism — step-by-step solutions, graphs, unit converter. Perfect for studying and exams.
+(126 формул физики в кармане! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, графики, конвертер единиц. Идеально для учёбы и экзаменов.)
+
+Description (Описание):
+Physics Calculator is your pocket physics assistant. 126 formulas across 6 sections: mechanics, thermodynamics, electromagnetism, optics, oscillations & waves, and modern physics.
+(PhysicsCalculator — ваш карманный помощник по физике. 126 формул из 6 разделов: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.)
+
+KEY FEATURES: (ОСНОВНЫЕ ВОЗМОЖНОСТИ:)
+
+• 126 formulas — from high school to university level (126 формул — от школьного до университетского уровня)
+• Smart calculation — select the unknown variable, enter the rest, get instant results (Умный расчёт — выберите неизвестную, введите значения, мгновенный результат)
+• Step-by-step solutions — detailed breakdown of every calculation (Пошаговое решение — подробный разбор каждого вычисления)
+• Dependency graphs — visualize how one quantity depends on another (Графики зависимостей — визуализация связей между величинами)
+• Unit converter — 13 categories, 80+ units of measurement (Конвертер единиц — 13 категорий, 80+ единиц)
+• Error calculator — error propagation using partial derivatives (Калькулятор погрешностей — метод распространения ошибок)
+• Physical constants — speed of light, Planck's constant, and more (Физические константы — скорость света, постоянная Планка и др.)
+• Favorites — save important calculations (Избранное — сохраняйте важные расчёты)
+• History — all your calculations at your fingertips (История — все вычисления под рукой)
+• PDF export — share your results (Экспорт PDF — делитесь результатами)
+• 6 languages — English, Russian, German, Spanish, French, Chinese (6 языков)
+• Dark mode — comfortable work in any environment (Тёмная тема — комфортная работа)
+
+PHYSICS SECTIONS: (РАЗДЕЛЫ ФИЗИКИ:)
+
+▸ Mechanics — kinematics, dynamics, conservation laws, statics (Механика — кинематика, динамика, законы сохранения, статика)
+▸ Thermodynamics — gas laws, heat transfer, molecular physics (Термодинамика — газовые законы, теплопередача, молекулярная физика)
+▸ Electromagnetism — Coulomb's law, Ohm's law, electromagnetic induction (Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция)
+▸ Optics — refraction, lenses, diffraction (Оптика — преломление, линзы, дифракция)
+▸ Oscillations & Waves — pendulum, wave equation, sound (Колебания и волны — маятник, волновое уравнение, звук)
+▸ Modern Physics — photoelectric effect, atomic physics, nuclear reactions (Современная физика — фотоэффект, атомная физика, ядерные реакции)
+
+The app is fully offline — no internet required, no data collected.
+(Приложение полностью офлайновое — не требует интернета и не собирает данные.)
+
+Perfect for students, teachers, and physics enthusiasts.
+(Идеально для студентов, преподавателей и любителей физики.)
+
+Keywords (Ключевые слова):
+physics,calculator,formulas,equations,mechanics,thermodynamics,optics,graphs,converter,units,study
+(физика, калькулятор, формулы, уравнения, механика, термодинамика, оптика, графики, конвертер, единицы, учёба)
+
+What's New (Что нового):
+Version 1.0 — first release! (Версия 1.0 — первый релиз!)
+• 126 physics formulas (126 физических формул)
+• 6 physics sections (6 разделов физики)
+• Unit converter (80+ units) (Конвертер единиц, 80+ единиц)
+• Dependency graphs (Графики зависимостей)
+• Error calculator (Калькулятор погрешностей)
+• Step-by-step solutions (Пошаговое решение)
+• 6 interface languages (6 языков интерфейса)
+
+
+========== 🇩🇪 DEUTSCH ==========
+
+Name (Название):
+Physik Rechner
+
+Subtitle (Подзаголовок):
+Formeln, Diagramme & Lösungen
+(Формулы, диаграммы и решения)
+
+Promotional Text (Рекламный текст):
+126 Physik-Formeln in der Hosentasche! Mechanik, Thermodynamik, Optik, Elektromagnetismus — schrittweise Lösungen, Diagramme, Umrechner. Ideal für Studium und Prüfungen.
+(126 формул физики в кармане! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, диаграммы, конвертер. Идеально для учёбы и экзаменов.)
+
+Description (Описание):
+Physik Rechner ist Ihr Physik-Assistent für die Hosentasche. 126 Formeln in 6 Bereichen: Mechanik, Thermodynamik, Elektromagnetismus, Optik, Schwingungen & Wellen und moderne Physik.
+(PhysicsCalculator — ваш карманный физический помощник. 126 формул в 6 разделах: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.)
+
+HAUPTFUNKTIONEN: (ОСНОВНЫЕ ВОЗМОЖНОСТИ:)
+
+• 126 Formeln — von der Schule bis zur Universität (126 формул — от школьного до университетского уровня)
+• Intelligente Berechnung — wählen Sie die Unbekannte, geben Sie die Werte ein, erhalten Sie sofort das Ergebnis (Умный расчёт — выберите неизвестную, введите значения, мгновенный результат)
+• Schrittweise Lösung — detaillierte Aufschlüsselung jeder Berechnung (Пошаговое решение — подробный разбор каждого вычисления)
+• Abhängigkeitsdiagramme — visualisieren Sie Zusammenhänge zwischen Größen (Графики зависимостей — визуализация связей между величинами)
+• Einheitenumrechner — 13 Kategorien, über 80 Maßeinheiten (Конвертер единиц — 13 категорий, 80+ единиц)
+• Fehlerrechner — Fehlerfortpflanzung mit partiellen Ableitungen (Калькулятор погрешностей — метод распространения ошибок)
+• Physikalische Konstanten — Lichtgeschwindigkeit, Planck-Konstante u.v.m. (Физические константы — скорость света, постоянная Планка и др.)
+• Favoriten — speichern Sie wichtige Berechnungen (Избранное — сохраняйте важные расчёты)
+• Verlauf — alle Berechnungen griffbereit (История — все вычисления под рукой)
+• PDF-Export — teilen Sie Ihre Ergebnisse (Экспорт PDF — делитесь результатами)
+• 6 Sprachen — Deutsch, Englisch, Russisch, Spanisch, Französisch, Chinesisch (6 языков)
+• Dunkelmodus — komfortables Arbeiten unter allen Bedingungen (Тёмная тема — комфортная работа)
+
+PHYSIK-BEREICHE: (РАЗДЕЛЫ ФИЗИКИ:)
+
+▸ Mechanik — Kinematik, Dynamik, Erhaltungssätze, Statik (Механика — кинематика, динамика, законы сохранения, статика)
+▸ Thermodynamik — Gasgesetze, Wärmeübertragung, Molekularphysik (Термодинамика — газовые законы, теплопередача, молекулярная физика)
+▸ Elektromagnetismus — Coulomb-Gesetz, Ohm-Gesetz, elektromagnetische Induktion (Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция)
+▸ Optik — Brechung, Linsen, Beugung (Оптика — преломление, линзы, дифракция)
+▸ Schwingungen & Wellen — Pendel, Wellengleichung, Schall (Колебания и волны — маятник, волновое уравнение, звук)
+▸ Moderne Physik — Photoeffekt, Atomphysik, Kernreaktionen (Современная физика — фотоэффект, атомная физика, ядерные реакции)
+
+Vollständig offline — kein Internet erforderlich, keine Datenerfassung.
+(Полностью офлайн — без интернета, без сбора данных.)
+
+Ideal für Schüler, Studenten und Physiklehrer.
+(Идеально для школьников, студентов и преподавателей физики.)
+
+Keywords (Ключевые слова):
+Physik,Rechner,Formeln,Berechnung,Mechanik,Thermodynamik,Optik,Diagramme,Umrechner,Einheiten,Studie
+(физика, калькулятор, формулы, расчёт, механика, термодинамика, оптика, диаграммы, конвертер, единицы, учёба)
+
+What's New (Что нового):
+Version 1.0 — Erstveröffentlichung! (Версия 1.0 — первый релиз!)
+• 126 physikalische Formeln (126 физических формул)
+• 6 Physik-Bereiche (6 разделов физики)
+• Einheitenumrechner (80+ Einheiten) (Конвертер единиц, 80+ единиц)
+• Abhängigkeitsdiagramme (Графики зависимостей)
+• Fehlerrechner (Калькулятор погрешностей)
+• Schrittweise Lösungen (Пошаговое решение)
+• 6 Oberflächensprachen (6 языков интерфейса)
+
+
+========== 🇪🇸 ESPAÑOL ==========
+
+Name (Название):
+Calculadora Física
+
+Subtitle (Подзаголовок):
+Fórmulas, gráficos y cálculos
+(Формулы, графики и расчёты)
+
+Promotional Text (Рекламный текст):
+¡126 fórmulas de física en tu bolsillo! Mecánica, termodinámica, óptica, electromagnetismo — soluciones paso a paso, gráficos, conversor de unidades. Ideal para estudiar.
+(126 формул физики в кармане! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, графики, конвертер единиц. Идеально для учёбы.)
+
+Description (Описание):
+Calculadora Física es tu asistente de física de bolsillo. 126 fórmulas en 6 secciones: mecánica, termodinámica, electromagnetismo, óptica, oscilaciones y ondas, y física moderna.
+(PhysicsCalculator — ваш карманный помощник по физике. 126 формул в 6 разделах: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.)
+
+CARACTERÍSTICAS PRINCIPALES: (ОСНОВНЫЕ ВОЗМОЖНОСТИ:)
+
+• 126 fórmulas — desde nivel escolar hasta universitario (126 формул — от школьного до университетского уровня)
+• Cálculo inteligente — selecciona la incógnita, introduce los valores y obtén el resultado al instante (Умный расчёт — выберите неизвестную, введите значения, мгновенный результат)
+• Solución paso a paso — desglose detallado de cada cálculo (Пошаговое решение — подробный разбор каждого вычисления)
+• Gráficos de dependencia — visualiza cómo una magnitud depende de otra (Графики зависимостей — визуализация связей между величинами)
+• Conversor de unidades — 13 categorías, más de 80 unidades de medida (Конвертер единиц — 13 категорий, 80+ единиц)
+• Calculadora de errores — propagación de errores con derivadas parciales (Калькулятор погрешностей — метод распространения ошибок)
+• Constantes físicas — velocidad de la luz, constante de Planck y más (Физические константы — скорость света, постоянная Планка и др.)
+• Favoritos — guarda cálculos importantes (Избранное — сохраняйте важные расчёты)
+• Historial — todos tus cálculos a mano (История — все вычисления под рукой)
+• Exportación PDF — comparte tus resultados (Экспорт PDF — делитесь результатами)
+• 6 idiomas — español, inglés, ruso, alemán, francés, chino (6 языков)
+• Modo oscuro — trabajo cómodo en cualquier entorno (Тёмная тема — комфортная работа)
+
+SECCIONES DE FÍSICA: (РАЗДЕЛЫ ФИЗИКИ:)
+
+▸ Mecánica — cinemática, dinámica, leyes de conservación, estática (Механика — кинематика, динамика, законы сохранения, статика)
+▸ Termodinámica — leyes de los gases, transferencia de calor, física molecular (Термодинамика — газовые законы, теплопередача, молекулярная физика)
+▸ Electromagnetismo — ley de Coulomb, ley de Ohm, inducción electromagnética (Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция)
+▸ Óptica — refracción, lentes, difracción (Оптика — преломление, линзы, дифракция)
+▸ Oscilaciones y ondas — péndulo, ecuación de onda, sonido (Колебания и волны — маятник, волновое уравнение, звук)
+▸ Física moderna — efecto fotoeléctrico, física atómica, reacciones nucleares (Современная физика — фотоэффект, атомная физика, ядерные реакции)
+
+La app funciona completamente sin conexión — no requiere internet ni recopila datos.
+(Приложение полностью офлайновое — не требует интернета и не собирает данные.)
+
+Ideal para estudiantes y profesores de física.
+(Идеально для студентов и преподавателей физики.)
+
+Keywords (Ключевые слова):
+física,calculadora,fórmulas,ecuaciones,mecánica,termodinámica,óptica,gráficos,conversor,unidades
+(физика, калькулятор, формулы, уравнения, механика, термодинамика, оптика, графики, конвертер, единицы)
+
+What's New (Что нового):
+Versión 1.0 — ¡primer lanzamiento! (Версия 1.0 — первый релиз!)
+• 126 fórmulas de física (126 физических формул)
+• 6 secciones de física (6 разделов физики)
+• Conversor de unidades (80+ unidades) (Конвертер единиц, 80+ единиц)
+• Gráficos de dependencia (Графики зависимостей)
+• Calculadora de errores (Калькулятор погрешностей)
+• Solución paso a paso (Пошаговое решение)
+• 6 idiomas de interfaz (6 языков интерфейса)
+
+
+========== 🇫🇷 FRANÇAIS ==========
+
+Name (Название):
+Calculateur Physique
+
+Subtitle (Подзаголовок):
+Formules, graphiques et calculs
+(Формулы, графики и расчёты)
+
+Promotional Text (Рекламный текст):
+126 formules de physique ! Mécanique, thermodynamique, optique, électromagnétisme — solutions pas à pas, graphiques, convertisseur d'unités. Idéal pour étudier.
+(126 формул физики! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, графики, конвертер единиц. Идеально для учёбы.)
+
+Description (Описание):
+Calculateur Physique est votre assistant de physique de poche. 126 formules dans 6 sections : mécanique, thermodynamique, électromagnétisme, optique, oscillations et ondes, physique moderne.
+(PhysicsCalculator — ваш карманный помощник по физике. 126 формул в 6 разделах: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.)
+
+FONCTIONNALITÉS PRINCIPALES : (ОСНОВНЫЕ ВОЗМОЖНОСТИ:)
+
+• 126 formules — du lycée à l'université (126 формул — от школьного до университетского уровня)
+• Calcul intelligent — sélectionnez l'inconnue, entrez les valeurs, obtenez le résultat instantanément (Умный расчёт — выберите неизвестную, введите значения, мгновенный результат)
+• Solution étape par étape — décomposition détaillée de chaque calcul (Пошаговое решение — подробный разбор каждого вычисления)
+• Graphiques de dépendance — visualisez les relations entre les grandeurs (Графики зависимостей — визуализация связей между величинами)
+• Convertisseur d'unités — 13 catégories, plus de 80 unités de mesure (Конвертер единиц — 13 категорий, 80+ единиц)
+• Calculateur d'erreurs — propagation des erreurs par dérivées partielles (Калькулятор погрешностей — метод распространения ошибок)
+• Constantes physiques — vitesse de la lumière, constante de Planck et plus (Физические константы — скорость света, постоянная Планка и др.)
+• Favoris — enregistrez vos calculs importants (Избранное — сохраняйте важные расчёты)
+• Historique — tous vos calculs à portée de main (История — все вычисления под рукой)
+• Export PDF — partagez vos résultats (Экспорт PDF — делитесь результатами)
+• 6 langues — français, anglais, russe, allemand, espagnol, chinois (6 языков)
+• Mode sombre — travail confortable en toute circonstance (Тёмная тема — комфортная работа)
+
+SECTIONS DE PHYSIQUE : (РАЗДЕЛЫ ФИЗИКИ:)
+
+▸ Mécanique — cinématique, dynamique, lois de conservation, statique (Механика — кинематика, динамика, законы сохранения, статика)
+▸ Thermodynamique — lois des gaz, transfert de chaleur, physique moléculaire (Термодинамика — газовые законы, теплопередача, молекулярная физика)
+▸ Électromagnétisme — loi de Coulomb, loi d'Ohm, induction électromagnétique (Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция)
+▸ Optique — réfraction, lentilles, diffraction (Оптика — преломление, линзы, дифракция)
+▸ Oscillations et ondes — pendule, équation d'onde, son (Колебания и волны — маятник, волновое уравнение, звук)
+▸ Physique moderne — effet photoélectrique, physique atomique, réactions nucléaires (Современная физика — фотоэффект, атомная физика, ядерные реакции)
+
+L'application fonctionne entièrement hors ligne — pas d'internet requis, aucune donnée collectée.
+(Приложение полностью офлайновое — не требует интернета и не собирает данные.)
+
+Idéal pour les étudiants et les enseignants de physique.
+(Идеально для студентов и преподавателей физики.)
+
+Keywords (Ключевые слова):
+physique,calculatrice,formules,équations,mécanique,thermodynamique,optique,graphiques,convertisseur
+(физика, калькулятор, формулы, уравнения, механика, термодинамика, оптика, графики, конвертер)
+
+What's New (Что нового):
+Version 1.0 — première sortie ! (Версия 1.0 — первый релиз!)
+• 126 formules de physique (126 физических формул)
+• 6 sections de physique (6 разделов физики)
+• Convertisseur d'unités (80+ unités) (Конвертер единиц, 80+ единиц)
+• Graphiques de dépendance (Графики зависимостей)
+• Calculateur d'erreurs (Калькулятор погрешностей)
+• Solutions étape par étape (Пошаговое решение)
+• 6 langues d'interface (6 языков интерфейса)
+
+
+========== 🇨🇳 中文 (CHINESE SIMPLIFIED) ==========
+
+Name (Название):
+公式计算器 - 物理
+
+Subtitle (Подзаголовок):
+物理公式、图表与计算 (Физические формулы, графики и расчёты)
+
+Promotional Text (Рекламный текст):
+126个物理公式随身携带！力学、热力学、光学、电磁学 — 逐步求解、图表、单位换算。考试复习必备神器。
+(126 физических формул с собой! Механика, термодинамика, оптика, электромагнетизм — пошаговые решения, графики, конвертер. Незаменимый помощник для экзаменов.)
+
+Для копирования — только китайский:
+126个物理公式随身携带！力学、热力学、光学、电磁学 — 逐步求解、图表、单位换算。考试复习必备神器。
+
+Description (Описание):
+物理计算器 — 您的口袋物理助手。涵盖6大板块共126个公式：力学、热力学、电磁学、光学、振动与波、现代物理。
+(PhysicsCalculator — ваш карманный физический помощник. 126 формул в 6 разделах: механика, термодинамика, электромагнетизм, оптика, колебания и волны, современная физика.)
+
+主要功能：(Основные возможности:)
+
+• 126个公式 — 从中学到大学水平 (126 формул — от школьного до университетского уровня)
+• 智能计算 — 选择未知变量，输入其余数值，即时获得结果 (Умный расчёт — выберите неизвестную, введите значения, мгновенный результат)
+• 逐步求解 — 每一步计算的详细解析 (Пошаговое решение — подробный разбор каждого вычисления)
+• 依赖关系图表 — 可视化物理量之间的关系 (Графики зависимостей — визуализация связей между величинами)
+• 单位换算器 — 13个类别，80多种计量单位 (Конвертер единиц — 13 категорий, 80+ единиц)
+• 误差计算器 — 利用偏导数进行误差传播计算 (Калькулятор погрешностей — метод распространения ошибок)
+• 物理常数 — 光速、普朗克常数等 (Физические константы — скорость света, постоянная Планка и др.)
+• 收藏夹 — 保存重要计算 (Избранное — сохраняйте важные расчёты)
+• 历史记录 — 所有计算触手可及 (История — все вычисления под рукой)
+• PDF导出 — 分享您的计算结果 (Экспорт PDF — делитесь результатами)
+• 6种语言 — 中文、英语、俄语、德语、西班牙语、法语 (6 языков — китайский, английский, русский, немецкий, испанский, французский)
+• 深色模式 — 任何环境下都舒适使用 (Тёмная тема — комфортная работа в любых условиях)
+
+物理板块：(Разделы физики:)
+
+▸ 力学 — 运动学、动力学、守恒定律、静力学 (Механика — кинематика, динамика, законы сохранения, статика)
+▸ 热力学 — 气体定律、热传导、分子物理 (Термодинамика — газовые законы, теплопередача, молекулярная физика)
+▸ 电磁学 — 库仑定律、欧姆定律、电磁感应 (Электромагнетизм — закон Кулона, закон Ома, электромагнитная индукция)
+▸ 光学 — 折射、透镜、衍射 (Оптика — преломление, линзы, дифракция)
+▸ 振动与波 — 摆、波动方程、声学 (Колебания и волны — маятник, волновое уравнение, звук)
+▸ 现代物理 — 光电效应、原子物理、核反应 (Современная физика — фотоэффект, атомная физика, ядерные реакции)
+
+完全离线运行 — 无需网络，不收集任何数据。(Полностью офлайн — без интернета, без сбора данных.)
+
+适合中学生、大学生和物理教师。(Идеально для школьников, студентов и преподавателей.)
+
+ВАЖНО: В App Store вставлять ТОЛЬКО китайский текст (без русских скобок).
+Для копирования — только китайский:
+
+物理公式、图表与计算
+
+物理计算器 — 您的口袋物理助手。涵盖6大板块共126个公式：力学、热力学、电磁学、光学、振动与波、现代物理。
+
+主要功能：
+
+• 126个公式 — 从中学到大学水平
+• 智能计算 — 选择未知变量，输入其余数值，即时获得结果
+• 逐步求解 — 每一步计算的详细解析
+• 依赖关系图表 — 可视化物理量之间的关系
+• 单位换算器 — 13个类别，80多种计量单位
+• 误差计算器 — 利用偏导数进行误差传播计算
+• 物理常数 — 光速、普朗克常数等
+• 收藏夹 — 保存重要计算
+• 历史记录 — 所有计算触手可及
+• PDF导出 — 分享您的计算结果
+• 6种语言 — 中文、英语、俄语、德语、西班牙语、法语
+• 深色模式 — 任何环境下都舒适使用
+
+物理板块：
+
+▸ 力学 — 运动学、动力学、守恒定律、静力学
+▸ 热力学 — 气体定律、热传导、分子物理
+▸ 电磁学 — 库仑定律、欧姆定律、电磁感应
+▸ 光学 — 折射、透镜、衍射
+▸ 振动与波 — 摆、波动方程、声学
+▸ 现代物理 — 光电效应、原子物理、核反应
+
+完全离线运行 — 无需网络，不收集任何数据。
+
+适合中学生、大学生和物理教师。
+
+Keywords (Ключевые слова):
+物理,计算器,公式,方程,力学,热力学,光学,图表,换算,单位,学习,考试,大学
+(физика, калькулятор, формула, уравнение, механика, термодинамика, оптика, график, конвертер, единицы, учёба, экзамен, университет)
+
+What's New (Что нового):
+版本 1.0 — 首次发布！(Версия 1.0 — первый релиз!)
+• 126个物理公式 (126 физических формул)
+• 6大物理板块 (6 разделов физики)
+• 单位换算器（80+单位）(Конвертер единиц, 80+ единиц)
+• 依赖关系图表 (Графики зависимостей)
+• 误差计算器 (Калькулятор погрешностей)
+• 逐步求解 (Пошаговое решение)
+• 6种界面语言 (6 языков интерфейса)
+
+Для копирования — только китайский:
+版本 1.0 — 首次发布！
+• 126个物理公式
+• 6大物理板块
+• 单位换算器（80+单位）
+• 依赖关系图表
+• 误差计算器
+• 逐步求解
+• 6种界面语言
+
+
+========================================
+URL-АДРЕСА (для всех языков одинаковые):
+
+Privacy Policy URL:
+https://rustam7475.github.io/PhysicsCalculator/privacy-policy.html
+
+Support URL:
+https://rustam7475.github.io/PhysicsCalculator/support.html
+
+Marketing URL:
+https://rustam7475.github.io/PhysicsCalculator/
+========================================
