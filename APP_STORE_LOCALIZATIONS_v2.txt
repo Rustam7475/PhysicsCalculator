@@ -56,29 +56,19 @@ PREMIUM — ОДНА ПОКУПКА НАВСЕГДА:
 Ключевые слова (100):
 физика,калькулятор,формулы,расчёт,механика,термодинамика,оптика,графики,конвертер,единицы,студент
 
-Что нового:
-Версия 1.0 — первый релиз!
-• 126 физических формул
-• 6 разделов физики
-• Конвертер единиц (80+ единиц)
-• Графики зависимостей
-• Калькулятор погрешностей
-• Пошаговое решение
-• 6 языков интерфейса
-
 
 ========== 🇺🇸 ENGLISH ==========
 
-Name:
+Name (Название):
 Physics Calculator
 
-Subtitle:
-Formulas, Graphs & Solutions
+Subtitle (Подзаголовок):
 
-Promotional Text (170):
+
+Promotional Text (Рекламный текст, 170):
 126 physics formulas in your pocket! Mechanics, thermodynamics, optics, electromagnetism — step-by-step solutions, graphs, unit converter. Perfect for studying and exams.
 
-Description (4000):
+Description (Описание, 4000):
 Physics Calculator is your pocket physics assistant. 126 formulas across 6 sections: mechanics, thermodynamics, electromagnetism, optics, oscillations & waves, and modern physics.
 
 FREE:
@@ -113,32 +103,22 @@ The app is fully offline — no internet required, no data collected.
 
 Perfect for students, teachers, and physics enthusiasts.
 
-Keywords (100):
+Keywords (Ключевые слова, 100):
 physics,calculator,formulas,equations,mechanics,thermodynamics,optics,graphs,converter,units,study
-
-What's New:
-Version 1.0 — first release!
-• 126 physics formulas
-• 6 physics sections
-• Unit converter (80+ units)
-• Dependency graphs
-• Error calculator
-• Step-by-step solutions
-• 6 interface languages
 
 
 ========== 🇩🇪 DEUTSCH ==========
 
-Name:
+Name (Название):
 Physik Rechner
 
-Subtitle:
+Subtitle (Подзаголовок):
 Formeln, Diagramme & Lösungen
 
-Promotional Text (170):
+Promotional Text (Рекламный текст, 170):
 126 Physik-Formeln in der Hosentasche! Mechanik, Thermodynamik, Optik, Elektromagnetismus — schrittweise Lösungen, Diagramme, Umrechner. Ideal für Studium und Prüfungen.
 
-Description (4000):
+Description (Описание, 4000):
 Physik Rechner ist Ihr Physik-Assistent für die Hosentasche. 126 Formeln in 6 Bereichen: Mechanik, Thermodynamik, Elektromagnetismus, Optik, Schwingungen & Wellen und moderne Physik.
 
 KOSTENLOS:
@@ -173,32 +153,22 @@ Vollständig offline — kein Internet erforderlich, keine Datenerfassung.
 
 Ideal für Schüler, Studenten und Physiklehrer.
 
-Keywords (100):
+Keywords (Ключевые слова, 100):
 Physik,Rechner,Formeln,Berechnung,Mechanik,Thermodynamik,Optik,Diagramme,Umrechner,Einheiten,Studie
-
-What's New:
-Version 1.0 — Erstveröffentlichung!
-• 126 physikalische Formeln
-• 6 Physik-Bereiche
-• Einheitenumrechner (80+ Einheiten)
-• Abhängigkeitsdiagramme
-• Fehlerrechner
-• Schrittweise Lösungen
-• 6 Oberflächensprachen
 
 
 ========== 🇪🇸 ESPAÑOL ==========
 
-Name:
+Name (Название):
 Calculadora Física
 
-Subtitle:
+Subtitle (Подзаголовок):
 Fórmulas, gráficos y cálculos
 
-Promotional Text (170):
+Promotional Text (Рекламный текст, 170):
 ¡126 fórmulas de física en tu bolsillo! Mecánica, termodinámica, óptica, electromagnetismo — soluciones paso a paso, gráficos, conversor de unidades. Ideal para estudiar.
 
-Description (4000):
+Description (Описание, 4000):
 Calculadora Física es tu asistente de física de bolsillo. 126 fórmulas en 6 secciones: mecánica, termodinámica, electromagnetismo, óptica, oscilaciones y ondas, y física moderna.
 
 GRATIS:
@@ -233,32 +203,22 @@ La app funciona completamente sin conexión — no requiere internet ni recopila
 
 Ideal para estudiantes y profesores de física.
 
-Keywords (100):
+Keywords (Ключевые слова, 100):
 física,calculadora,fórmulas,ecuaciones,mecánica,termodinámica,óptica,gráficos,conversor,unidades
-
-What's New:
-Versión 1.0 — ¡primer lanzamiento!
-• 126 fórmulas de física
-• 6 secciones de física
-• Conversor de unidades (80+ unidades)
-• Gráficos de dependencia
-• Calculadora de errores
-• Solución paso a paso
-• 6 idiomas de interfaz
 
 
 ========== 🇫🇷 FRANÇAIS ==========
 
-Name:
+Name (Название):
 Calculateur Physique
 
-Subtitle:
-Formules, graphiques et calculs
+Subtitle (Подзаголовок):
+Formules, graphiques & calculs
 
-Promotional Text (170):
+Promotional Text (Рекламный текст, 170):
 126 formules de physique ! Mécanique, thermodynamique, optique, électromagnétisme — solutions pas à pas, graphiques, convertisseur d'unités. Idéal pour étudier.
 
-Description (4000):
+Description (Описание, 4000):
 Calculateur Physique est votre assistant de physique de poche. 126 formules dans 6 sections : mécanique, thermodynamique, électromagnétisme, optique, oscillations et ondes, physique moderne.
 
 GRATUIT :
@@ -293,32 +253,22 @@ L'application fonctionne entièrement hors ligne — pas d'internet requis, aucu
 
 Idéal pour les étudiants et les enseignants de physique.
 
-Keywords (100):
+Keywords (Ключевые слова, 100):
 physique,calculatrice,formules,équations,mécanique,thermodynamique,optique,graphiques,convertisseur
-
-What's New:
-Version 1.0 — première sortie !
-• 126 formules de physique
-• 6 sections de physique
-• Convertisseur d'unités (80+ unités)
-• Graphiques de dépendance
-• Calculateur d'erreurs
-• Solutions étape par étape
-• 6 langues d'interface
 
 
 ========== 🇨🇳 中文 (CHINESE SIMPLIFIED) ==========
 
-Name:
+Name (Название):
 公式计算器 - 物理
 
-Subtitle:
+Subtitle (Подзаголовок):
 物理公式、图表与计算
 
-Promotional Text (170):
+Promotional Text (Рекламный текст, 170):
 126个物理公式随身携带！力学、热力学、光学、电磁学 — 逐步求解、图表、单位换算。考试复习必备神器。
 
-Description (4000):
+Description (Описание, 4000):
 物理计算器 — 您的口袋物理助手。涵盖6大板块共126个公式：力学、热力学、电磁学、光学、振动与波、现代物理。
 
 免费功能：
@@ -353,98 +303,56 @@ Description (4000):
 
 适合中学生、大学生和物理教师。
 
-Для копирования — только китайский:
+>>> Для копирования — только китайский (вставляйте в Description из текста ниже) <<<
 
-物理计算器 — 您的口袋物理助手。涵盖6大板块共126个公式：力学、热力学、电磁学、光学、振动与波、现代物理。
 
-免费功能：
 
-• 56+ 公式 — 每个子板块2个
-• 智能计算 — 选择未知变量，输入其余数值，即时获得结果
-• 逐步求解 — 每一步计算的详细解析
-• 单位换算器 — 13个类别，80多种计量单位
-• 物理常数 — 光速、普朗克常数等
-• 历史记录 — 所有计算触手可及
-• 6种语言 — 中文、英语、俄语、德语、西班牙语、法语
-• 深色模式 — 任何环境下都舒适使用
-
-高级版 — 一次购买，永久使用：
-
-• 全部126个公式 — 从中学到大学水平
-• 依赖关系图表 — 可视化物理量之间的关系
-• 误差计算器 — 利用偏导数进行误差传播计算
-• 收藏夹 — 保存重要计算
-• PDF导出 — 分享您的计算结果
-
-物理板块：
-
-▸ 力学 — 运动学、动力学、守恒定律、静力学
-▸ 热力学 — 气体定律、热传导、分子物理
-▸ 电磁学 — 库仑定律、欧姆定律、电磁感应
-▸ 光学 — 折射、透镜、衍射
-▸ 振动与波 — 摆、波动方程、声学
-▸ 现代物理 — 光电效应、原子物理、核反应
-
-完全离线运行 — 无需网络，不收集任何数据。
-
-适合中学生、大学生和物理教师。
-
-Keywords (100):
+Keywords (Ключевые слова, 100):
 物理,计算器,公式,方程,力学,热力学,光学,图表,换算,单位,学习,考试,大学
-
-What's New:
-版本 1.0 — 首次发布！
-• 126个物理公式
-• 6大物理板块
-• 单位换算器（80+单位）
-• 依赖关系图表
-• 误差计算器
-• 逐步求解
-• 6种界面语言
 
 
 ========================================
-IN-APP PURCHASE ЛОКАЛИЗАЦИИ
+IN-APP PURCHASE ЛОКАЛИЗАЦИИ (Встроенные покупки)
 ========================================
 
 Product ID: com.elmuradov.physicscalculator.premium
-Тип: Non-Consumable
+Тип: Non-Consumable (Непотребляемая — одна покупка навсегда)
 Цена: $1.99 (Tier 2)
 
 🇷🇺 RU:
-  Display Name: Все формулы
-  Description: Все 126 формул, графики, PDF, погрешности, избранное
+  Display Name (Отображаемое имя): Все формулы
+  Description (Описание): Все 126 формул, графики, PDF, погрешности, избранное
 
 🇺🇸 EN:
-  Display Name: All Formulas
-  Description: All 126 formulas, graphs, PDF export, favorites, error calculator
+  Display Name (Отображаемое имя): All Formulas
+  Description (Описание): All 126 formulas, graphs, PDF, error calc, favorites
 
 🇩🇪 DE:
-  Display Name: Alle Formeln
-  Description: Alle 126 Formeln, Grafiken, PDF-Export, Favoriten, Fehlerrechner
+  Display Name (Отображаемое имя): Alle Formeln
+  Description (Описание): Alle 126 Formeln, Grafiken, PDF, Fehlerrechner
 
 🇪🇸 ES:
-  Display Name: Todas las fórmulas
-  Description: Las 126 fórmulas, gráficos, exportación PDF, favoritos, calculadora de errores
+  Display Name (Отображаемое имя): Todas las fórmulas
+  Description (Описание): Las 126 fórmulas, gráficos, PDF, favoritos, errores
 
 🇫🇷 FR:
-  Display Name: Toutes les formules
-  Description: Les 126 formules, graphiques, export PDF, favoris, calculateur d'erreurs
+  Display Name (Отображаемое имя): Toutes les formules
+  Description (Описание): Les 126 formules, graphiques, PDF, favoris, erreurs
 
 🇨🇳 ZH:
-  Display Name: 所有公式
-  Description: 全部126个公式、图表、PDF导出、收藏夹、误差计算器
+  Display Name (Отображаемое имя): 所有公式
+  Description (Описание): 全部126个公式、图表、PDF导出、收藏夹、误差计算器
 
 
 ========================================
 URL-АДРЕСА (для всех языков одинаковые):
 
-Privacy Policy URL:
+Privacy Policy URL (Политика конфиденциальности):
 https://rustam7475.github.io/PhysicsCalculator/privacy-policy.html
 
-Support URL:
+Support URL (Ссылка на поддержку):
 https://rustam7475.github.io/PhysicsCalculator/support.html
 
-Marketing URL:
+Marketing URL (Маркетинговая ссылка — необязательно):
 https://rustam7475.github.io/PhysicsCalculator/
 ========================================
