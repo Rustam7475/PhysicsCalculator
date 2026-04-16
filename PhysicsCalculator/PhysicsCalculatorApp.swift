@@ -9,22 +9,24 @@ struct PhysicsCalculatorApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if !hasChosenLanguage {
-                LanguagePickerView(hasChosenLanguage: $hasChosenLanguage)
-                    .environmentObject(settings)
-                    .preferredColorScheme(settings.theme.colorScheme)
-            } else if !hasSeenOnboarding {
-                OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
-                    .environmentObject(settings)
-                    .preferredColorScheme(settings.theme.colorScheme)
-            } else {
-                ContentView()
-                    .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
-                    .environmentObject(settings)
-                    .preferredColorScheme(settings.theme.colorScheme)
-                    .task {
-                        StoreManager.shared.startBackgroundVerification()
-                    }
+            Group {
+                if !hasChosenLanguage {
+                    LanguagePickerView(hasChosenLanguage: $hasChosenLanguage)
+                        .environmentObject(settings)
+                        .preferredColorScheme(settings.theme.colorScheme)
+                } else if !hasSeenOnboarding {
+                    OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
+                        .environmentObject(settings)
+                        .preferredColorScheme(settings.theme.colorScheme)
+                } else {
+                    ContentView()
+                        .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+                        .environmentObject(settings)
+                        .preferredColorScheme(settings.theme.colorScheme)
+                }
+            }
+            .task {
+                StoreManager.shared.startBackgroundVerification()
             }
         }
     }

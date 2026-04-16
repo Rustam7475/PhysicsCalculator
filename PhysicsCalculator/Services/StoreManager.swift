@@ -37,13 +37,13 @@ final class StoreManager: ObservableObject {
         guard !didStartListening else { return }
         didStartListening = true
         
-        #if !targetEnvironment(simulator)
         updateListenerTask = listenForTransactions()
         
-        Task.detached(priority: .background) { [weak self] in
-            await self?.verifyWithStoreKit()
+        Task {
+            async let products: () = loadProducts()
+            async let verify: () = verifyWithStoreKit()
+            _ = await (products, verify)
         }
-        #endif
     }
     
     // MARK: - Загрузка продуктов (только для PaywallView)
@@ -64,6 +64,10 @@ final class StoreManager: ObservableObject {
     // MARK: - Покупка
     
     func purchase() async throws -> Bool {
+        // Если продукты не загружены — пробуем загрузить
+        if premiumProduct == nil {
+            await loadProducts()
+        }
         guard let product = premiumProduct else { return false }
         
         let result = try await product.purchase()

@@ -325,19 +325,19 @@ Product ID: com.elmuradov.physicscalculator.premium
 
 🇺🇸 EN:
   Display Name (Отображаемое имя): All Formulas
-  Description (Описание): All 126 formulas, graphs, PDF, error calc, favorites
+  Description (Описание): All 126 formulas, graphs, PDF export, favorites, error calculator
 
 🇩🇪 DE:
   Display Name (Отображаемое имя): Alle Formeln
-  Description (Описание): Alle 126 Formeln, Grafiken, PDF, Fehlerrechner
+  Description (Описание): Alle 126 Formeln, Grafiken, PDF-Export, Favoriten, Fehlerrechner
 
 🇪🇸 ES:
   Display Name (Отображаемое имя): Todas las fórmulas
-  Description (Описание): Las 126 fórmulas, gráficos, PDF, favoritos, errores
+  Description (Описание): Las 126 fórmulas, gráficos, exportación PDF, favoritos, calculadora de errores
 
 🇫🇷 FR:
   Display Name (Отображаемое имя): Toutes les formules
-  Description (Описание): Les 126 formules, graphiques, PDF, favoris, erreurs
+  Description (Описание): Les 126 formules, graphiques, export PDF, favoris, calculateur d'erreurs
 
 🇨🇳 ZH:
   Display Name (Отображаемое имя): 所有公式

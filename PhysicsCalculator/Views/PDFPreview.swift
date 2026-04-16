@@ -23,7 +23,7 @@ struct PDFPreview: View {
     private let lightTextColor = UIColor(red: 134/255, green: 134/255, blue: 139/255, alpha: 1) // #86868B
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Group {
                 if let url = pdfURL {
                     PDFKitView(url: url)

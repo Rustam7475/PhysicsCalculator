@@ -5,6 +5,7 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var isPurchasing = false
     @State private var showError = false
+    @State private var errorMessage = ""
     
     private let features: [(icon: String, text: () -> String)] = [
         ("function", { L10n.premiumFeatureFormulas }),
@@ -15,7 +16,7 @@ struct PaywallView: View {
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     // Иконка
@@ -65,7 +66,10 @@ struct PaywallView: View {
                                 .font(.headline)
                                 .foregroundColor(.green)
                                 .padding()
-                        } else if let product = storeManager.premiumProduct {
+                        } else if storeManager.isLoading && storeManager.premiumProduct == nil {
+                            ProgressView()
+                                .padding()
+                        } else {
                             Button {
                                 Task { await makePurchase() }
                             } label: {
@@ -74,7 +78,7 @@ struct PaywallView: View {
                                         ProgressView()
                                             .tint(.white)
                                     } else {
-                                        Text("\(L10n.premiumUnlock) — \(product.displayPrice)")
+                                        Text(storeManager.premiumProduct.map { "\(L10n.premiumUnlock) — \($0.displayPrice)" } ?? "\(L10n.premiumUnlock) — $1.99")
                                             .font(.headline)
                                     }
                                 }
@@ -85,32 +89,6 @@ struct PaywallView: View {
                                 .cornerRadius(16)
                             }
                             .disabled(isPurchasing)
-                            .padding(.horizontal)
-                            
-                            Text(L10n.premiumBuyOnce)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        } else if storeManager.isLoading {
-                            ProgressView()
-                                .padding()
-                        } else {
-                            // Продукт не загрузился — кнопка с фиксированной ценой
-                            Button {
-                                Task {
-                                    await storeManager.loadProducts()
-                                    if storeManager.premiumProduct != nil {
-                                        await makePurchase()
-                                    }
-                                }
-                            } label: {
-                                Text("\(L10n.premiumUnlock) — $1.99")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 54)
-                                    .background(Color.accentColor)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(16)
-                            }
                             .padding(.horizontal)
                             
                             Text(L10n.premiumBuyOnce)
@@ -143,6 +121,10 @@ struct PaywallView: View {
             }
             .alert(L10n.premiumPurchaseError, isPresented: $showError) {
                 Button("OK") { }
+            } message: {
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                }
             }
             .task {
                 if storeManager.products.isEmpty {
@@ -160,8 +142,13 @@ struct PaywallView: View {
             let success = try await storeManager.purchase()
             if success {
                 dismiss()
+            } else if storeManager.premiumProduct == nil {
+                errorMessage = L10n.premiumPurchaseError
+                showError = true
             }
+            // else: пользователь отменил — ничего не делаем
         } catch {
+            errorMessage = error.localizedDescription
             showError = true
         }
     }
