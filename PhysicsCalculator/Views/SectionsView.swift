@@ -3,57 +3,13 @@ import CoreData
 import Foundation
 
 struct SectionsView: View {
-    let allData: PhysicsData
+    @StateObject private var viewModel: SectionsViewModel
     @EnvironmentObject private var settings: AppSettings
-    @State private var selectedSection: PhysicsSection? = nil
-    @State private var selectedSubsection: PhysicsSubsection? = nil
-    @State private var selectedLevel: String = "school"
-    private let levels = ["school", "university"]
-
-    // Состояние для поиска
-    @State private var searchText: String = ""
-
-    // --- Вычисляемые свойства с фильтрацией по уровню И ПОИСКУ ---
-
-    // Поиск активен, если searchText не пуст
-    var isSearching: Bool { !searchText.isEmpty }
-
-    // Разделы: Фильтруются по уровню. Поиск на них пока не влияет.
-    var availableSections: [PhysicsSection] {
-        allData.sections.filter { $0.levels.contains(selectedLevel) }
-    }
-
-    // Подразделы: Фильтруются по разделу и уровню. Поиск не влияет.
-    var availableSubsections: [PhysicsSubsection] {
-        guard let sectionId = selectedSection?.id else { return [] }
-        return allData.subsections.filter { $0.sectionId == sectionId && $0.levels.contains(selectedLevel) }
-    }
-
-    // Формулы: Фильтруются по подразделу и уровню ИЛИ по поиску
-    var filteredFormulas: [Formula] {
-        if isSearching {
-            // При поиске ищем по ВСЕМ формулам без фильтра по уровню
-            let T = searchText.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-             if T.isEmpty { return [] }
-            
-            return allData.formulas.filter { formula in
-                let nameMatch = formula.localizedName.lowercased().contains(T)
-                let descMatch = formula.localizedDescription.lowercased().contains(T)
-                let varMatch = formula.variables.contains(where: { $0.symbol.lowercased() == T || $0.localizedName.lowercased().contains(T) })
-                let subsectionMatch = allData.subsections.first(where: { $0.id == formula.subsectionId })
-                    .map { $0.localizedName.lowercased().contains(T) } ?? false
-                return nameMatch || descMatch || varMatch || subsectionMatch
-            }
-        } else {
-            // Если не ищем, фильтруем по выбранному подразделу и уровню
-            guard let subsectionId = selectedSubsection?.id else { return [] }
-            return allData.formulas.filter { $0.subsectionId == subsectionId && $0.levels.contains(selectedLevel) }
-        }
-    }
-
-    // Отображение имени уровня - ОПРЕДЕЛЕНО В EXTENSION НИЖЕ
-
     @FocusState private var isSearchFocused: Bool
+
+    init(allData: PhysicsData) {
+        _viewModel = StateObject(wrappedValue: SectionsViewModel(allData: allData))
+    }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -62,12 +18,12 @@ struct SectionsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.secondary)
-                    TextField(L10n.searchPlaceholder, text: $searchText)
+                    TextField(L10n.searchPlaceholder, text: $viewModel.searchText)
                         .focused($isSearchFocused)
                         .autocorrectionDisabled()
-                    if !searchText.isEmpty {
+                    if !viewModel.searchText.isEmpty {
                         Button {
-                            searchText = ""
+                            viewModel.searchText = ""
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.secondary)
@@ -82,7 +38,7 @@ struct SectionsView: View {
 
                 if isSearchFocused {
                     Button(L10n.cancel) {
-                        searchText = ""
+                        viewModel.searchText = ""
                         isSearchFocused = false
                     }
                     .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -92,16 +48,16 @@ struct SectionsView: View {
 
             // Picker уровня
             HStack(spacing: 8) {
-                ForEach(levels, id: \.self) { level in
+                ForEach(viewModel.levels, id: \.self) { level in
                     Button {
-                        selectedLevel = level
+                        viewModel.selectedLevel = level
                     } label: {
-                        Text(levelDisplayName(level))
-                            .font(.subheadline.weight(selectedLevel == level ? .semibold : .regular))
+                        Text(viewModel.levelDisplayName(level))
+                            .font(.subheadline.weight(viewModel.selectedLevel == level ? .semibold : .regular))
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
-                            .background(selectedLevel == level ? Color.accentColor : Color(.secondarySystemBackground))
-                            .foregroundColor(selectedLevel == level ? .white : .primary)
+                            .background(viewModel.selectedLevel == level ? Color.accentColor : Color(.secondarySystemBackground))
+                            .foregroundColor(viewModel.selectedLevel == level ? .white : .primary)
                             .cornerRadius(10)
                     }
                     .buttonStyle(.plain)
@@ -109,32 +65,27 @@ struct SectionsView: View {
             }
             .padding(.bottom, 4)
             .onAppear {
-                selectedSection = nil
-                selectedSubsection = nil
+                viewModel.resetSelection()
             }
-            .onChange(of: selectedLevel) { _ in
-                selectedSection = nil
-                selectedSubsection = nil
+            .onChange(of: viewModel.selectedLevel) { _ in
+                viewModel.resetSelection()
             }
 
-            if !isSearching {
+            if !viewModel.isSearching {
                 // Меню Разделов
                 Menu {
-                     Button(L10n.reset, role: .destructive) { selectedSection = nil; selectedSubsection = nil }
-                     ForEach(availableSections) { section in
+                     Button(L10n.reset, role: .destructive) { viewModel.resetSelection() }
+                     ForEach(viewModel.availableSections) { section in
                          Button(section.localizedName) {
-                             if selectedSection != section {
-                                 selectedSection = section
-                                 selectedSubsection = nil
-                             }
+                             viewModel.selectSection(section)
                          }
                      }
                  } label: {
                      HStack {
                          Image(systemName: "folder")
                              .foregroundColor(.accentColor)
-                         Text(selectedSection?.localizedName ?? L10n.selectSection)
-                             .foregroundColor(selectedSection != nil ? .primary : .secondary)
+                         Text(viewModel.selectedSection?.localizedName ?? L10n.selectSection)
+                             .foregroundColor(viewModel.selectedSection != nil ? .primary : .secondary)
                          Spacer()
                          Image(systemName: "chevron.up.chevron.down")
                              .font(.caption)
@@ -145,21 +96,21 @@ struct SectionsView: View {
                      .background(Color(.secondarySystemBackground))
                      .cornerRadius(12)
                  }
-                .disabled(availableSections.isEmpty)
+                .disabled(viewModel.availableSections.isEmpty)
                 .id("section_menu_" + settings.currentLanguageCode)
 
                 // Меню Подразделов
                 Menu {
-                     Button(L10n.reset, role: .destructive) { selectedSubsection = nil }
-                     ForEach(availableSubsections) { subsection in
-                         Button(subsection.localizedName) { selectedSubsection = subsection }
+                     Button(L10n.reset, role: .destructive) { viewModel.selectedSubsection = nil }
+                     ForEach(viewModel.availableSubsections) { subsection in
+                         Button(subsection.localizedName) { viewModel.selectSubsection(subsection) }
                      }
                  } label: {
                      HStack {
                          Image(systemName: "doc.text")
                              .foregroundColor(.accentColor)
-                         Text(selectedSubsection?.localizedName ?? L10n.selectSubsection)
-                             .foregroundColor(selectedSubsection != nil ? .primary : .secondary)
+                         Text(viewModel.selectedSubsection?.localizedName ?? L10n.selectSubsection)
+                             .foregroundColor(viewModel.selectedSubsection != nil ? .primary : .secondary)
                          Spacer()
                          Image(systemName: "chevron.up.chevron.down")
                              .font(.caption)
@@ -170,25 +121,25 @@ struct SectionsView: View {
                      .background(Color(.secondarySystemBackground))
                      .cornerRadius(12)
                  }
-                .disabled(selectedSection == nil || availableSubsections.isEmpty)
+                .disabled(viewModel.selectedSection == nil || viewModel.availableSubsections.isEmpty)
                 .id("subsection_menu_" + settings.currentLanguageCode)
             }
 
             // Список Формул
             List {
-                if !filteredFormulas.isEmpty && isSearching {
+                if !viewModel.filteredFormulas.isEmpty && viewModel.isSearching {
                     Text(L10n.searchResults)
                         .font(.headline)
                         .padding(.vertical, 4)
                         .listRowBackground(Color.clear)
                 }
-                
-                if filteredFormulas.isEmpty {
+
+                if viewModel.filteredFormulas.isEmpty {
                     VStack(spacing: 12) {
-                        Image(systemName: isSearching ? "magnifyingglass" : "atom")
+                        Image(systemName: viewModel.isSearching ? "magnifyingglass" : "atom")
                             .font(.system(size: 44))
                             .foregroundColor(.secondary)
-                        Text(emptyListMessage)
+                        Text(viewModel.emptyListMessage)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                             .font(.subheadline)
@@ -198,7 +149,7 @@ struct SectionsView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 } else {
-                    ForEach(filteredFormulas) { formula in
+                    ForEach(viewModel.filteredFormulas) { formula in
                         NavigationLink(destination: CalculationView(formula: formula)) {
                             HStack(spacing: 12) {
                                 Image(systemName: "function")
@@ -207,12 +158,12 @@ struct SectionsView: View {
                                     .frame(width: 28, height: 28)
                                     .background(Color.accentColor.opacity(0.12))
                                     .cornerRadius(6)
-                                
+
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(formula.localizedName)
                                         .font(.body)
-                                    if isSearching {
-                                        if let subsection = allData.subsections.first(where: { $0.id == formula.subsectionId }) {
+                                    if viewModel.isSearching {
+                                        if let subsection = viewModel.allData.subsections.first(where: { $0.id == formula.subsectionId }) {
                                             Text(subsection.localizedName)
                                                 .font(.caption)
                                                 .foregroundColor(.accentColor)
@@ -238,48 +189,11 @@ struct SectionsView: View {
         .oledBackground()
     }
 
-     // --- Вспомогательные свойства для текста в списке ---
-     private var listHeaderTitle: String {
-         if isSearching {
-             return filteredFormulas.isEmpty ? "" : L10n.searchResults
-         } else if let subsection = selectedSubsection {
-             return subsection.localizedName
-         } else if selectedSection != nil {
-             return L10n.selectSubsection
-         } else {
-             return "" // Не показываем заголовок, если ничего не выбрано
-         }
-     }
-
-     private var emptyListMessage: String {
-         if isSearching {
-             return L10n.nothingFound
-         } else if selectedSection == nil {
-              return L10n.selectPhysicsSection
-         } else if selectedSubsection == nil {
-             return L10n.selectPhysicsSubsection
-         } else {
-              return L10n.noFormulasInSection
-         }
-     }
-
-} // Конец struct SectionsView
-
-
-// --- Функция для отображения имени уровня (В EXTENSION) ---
-extension SectionsView {
-    private func levelDisplayName(_ levelKey: String) -> String {
-        switch levelKey {
-        case "school": return L10n.levelSchool
-        case "university": return L10n.levelUniversity
-        default: return levelKey
-        }
-    }
 }
 
 // --- Предпросмотр ---
 #Preview {
-    if let previewData = loadPhysicsData() {
+    if let previewData = DataLoader.loadPhysicsData() {
         SectionsView(allData: previewData)
             .environment(\.managedObjectContext, PersistenceController(inMemory: true).container.viewContext)
     } else {
