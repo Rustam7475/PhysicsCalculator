@@ -150,32 +150,19 @@ struct SectionsView: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(viewModel.filteredFormulas) { formula in
-                        NavigationLink(destination: CalculationView(formula: formula)) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "function")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(.accentColor)
-                                    .frame(width: 28, height: 28)
-                                    .background(Color.accentColor.opacity(0.12))
-                                    .cornerRadius(6)
+                        let isAccessible = viewModel.isFormulaAccessible(formula)
 
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(formula.localizedName)
-                                        .font(.body)
-                                    if viewModel.isSearching {
-                                        if let subsection = viewModel.allData.subsections.first(where: { $0.id == formula.subsectionId }) {
-                                            Text(subsection.localizedName)
-                                                .font(.caption)
-                                                .foregroundColor(.accentColor)
-                                        }
-                                        Text(formula.localizedDescription)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .lineLimit(2)
-                                    }
-                                }
+                        if isAccessible {
+                            NavigationLink(destination: CalculationView(formula: formula)) {
+                                formulaRow(formula: formula, locked: false)
                             }
-                            .padding(.vertical, 4)
+                        } else {
+                            Button {
+                                viewModel.showingPaywall = true
+                            } label: {
+                                formulaRow(formula: formula, locked: true)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -187,9 +174,51 @@ struct SectionsView: View {
         .id(settings.currentLanguageCode)
         .navigationTitle(L10n.sectionsTitle)
         .oledBackground()
+        .sheet(isPresented: $viewModel.showingPaywall) {
+            PaywallView()
+        }
     }
 
-}
+    @ViewBuilder
+    private func formulaRow(formula: Formula, locked: Bool) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: locked ? "lock.fill" : "function")
+                .font(.system(size: 14))
+                .foregroundColor(locked ? .secondary : .accentColor)
+                .frame(width: 28, height: 28)
+                .background((locked ? Color.secondary : Color.accentColor).opacity(0.12))
+                .cornerRadius(6)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(formula.localizedName)
+                    .font(.body)
+                    .foregroundColor(locked ? .secondary : .primary)
+                if viewModel.isSearching {
+                    if let subsection = viewModel.allData.subsections.first(where: { $0.id == formula.subsectionId }) {
+                        Text(subsection.localizedName)
+                            .font(.caption)
+                            .foregroundColor(.accentColor)
+                    }
+                    Text(formula.localizedDescription)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+            }
+
+            if locked {
+                Spacer()
+                Text("Premium")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.orange.opacity(0.15))
+                    .cornerRadius(6)
+            }
+        }
+        .padding(.vertical, 4)
+    }
 
 // --- Предпросмотр ---
 #Preview {
