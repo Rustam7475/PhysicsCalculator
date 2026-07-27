@@ -95,7 +95,7 @@ struct ResultActionButtons: View {
     let onToggleFavorite: () -> Void
 
     @State private var showingPaywall = false
-    private let premium = PremiumManager.shared
+    private var store: StoreManager { StoreManager.shared }
 
     var body: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: canShowGraph ? 3 : 2), spacing: 12) {
@@ -105,19 +105,19 @@ struct ResultActionButtons: View {
                 onCopy()
             }
 
-            ActionButton(icon: "arrow.down.doc", label: "PDF", color: premium.isPDFAvailable ? .accentColor : .secondary) {
-                if premium.isPDFAvailable {
+            ActionButton(icon: "arrow.down.doc", label: "PDF", color: store.isPremium ? .accentColor : .secondary) {
+                if store.isPremium {
                     onPDF()
                 } else {
                     showingPaywall = true
                 }
             }
-            .overlay(premiumBadge(visible: !premium.isPDFAvailable))
+            .overlay(premiumBadge(visible: !store.isPremium))
 
             if canShowGraph,
                let xVar = formula.variables.first(where: { $0.symbol != calculatedSymbol }),
                let yVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
-                if premium.isGraphAvailable {
+                if store.isPremium {
                     NavigationLink {
                         FormulaGraphView(
                             formula: formula,
@@ -149,14 +149,14 @@ struct ResultActionButtons: View {
 
             ActionButton(icon: isFavorite ? "star.fill" : "star",
                         label: L10n.favorite,
-                        color: !premium.isFavoritesAvailable ? .secondary : (isFavorite ? .yellow : .accentColor)) {
-                if premium.isFavoritesAvailable {
+                        color: !store.isPremium ? .secondary : (isFavorite ? .yellow : .accentColor)) {
+                if store.isPremium {
                     onToggleFavorite()
                 } else {
                     showingPaywall = true
                 }
             }
-            .overlay(premiumBadge(visible: !premium.isFavoritesAvailable))
+            .overlay(premiumBadge(visible: !store.isPremium))
 
             NavigationLink {
                 MultiCalcView(formula: formula, unknownSymbol: calculatedSymbol)
@@ -164,7 +164,7 @@ struct ResultActionButtons: View {
                 ActionButtonLabel(icon: "tablecells", label: L10n.multi, color: .accentColor)
             }
 
-            if premium.isErrorCalcAvailable {
+            if store.isPremium {
                 NavigationLink {
                     ErrorCalculatorView(
                         formula: formula,

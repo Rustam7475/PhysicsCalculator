@@ -4,7 +4,6 @@ import SwiftUI
 @MainActor
 final class SectionsViewModel: ObservableObject {
     let allData: PhysicsData
-    private let premium: PremiumManager
 
     @Published var selectedSection: PhysicsSection?
     @Published var selectedSubsection: PhysicsSubsection?
@@ -14,9 +13,8 @@ final class SectionsViewModel: ObservableObject {
 
     let levels = ["school", "university"]
 
-    init(allData: PhysicsData, premium: PremiumManager? = nil) {
+    init(allData: PhysicsData) {
         self.allData = allData
-        self.premium = premium ?? PremiumManager.shared
     }
 
     // MARK: - Вычисляемые свойства
@@ -81,7 +79,7 @@ final class SectionsViewModel: ObservableObject {
     }
 
     func isFormulaAccessible(_ formula: Formula) -> Bool {
-        premium.isFormulaAccessible(formula, allFormulas: allData.formulas)
+        return true
     }
 
     func levelDisplayName(_ levelKey: String) -> String {
