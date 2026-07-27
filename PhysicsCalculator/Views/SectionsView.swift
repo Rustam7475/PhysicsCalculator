@@ -219,6 +219,7 @@ struct SectionsView: View {
         }
         .padding(.vertical, 4)
     }
+}
 
 // --- Предпросмотр ---
 #Preview {
