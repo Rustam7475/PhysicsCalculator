@@ -52,7 +52,7 @@ struct ResultInputValuesCard: View {
                         Text(variable.localizedName)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        Text("\(CalculationService.formatInputValue(inputValues[variable.symbol, default: ""])) \(displayUnit(for: variable))")
+                        Text("\(inputValues[variable.symbol, default: ""]) \(displayUnit(for: variable))")
                             .font(.body.weight(.medium))
                             .foregroundColor(.primary)
                     }
@@ -71,9 +71,9 @@ struct ResultInputValuesCard: View {
         if let unitId = unitSelections[variable.symbol],
            let units = UnitConverter.units(forSI: variable.unit_si),
            let selectedUnit = units.first(where: { $0.id == unitId }) {
-            return CalculationService.displayUnit(selectedUnit.symbol)
+            return selectedUnit.symbol
         }
-        return CalculationService.displayUnit(variable.unit_si)
+        return variable.unit_si
     }
 }
 
