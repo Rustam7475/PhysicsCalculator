@@ -1,5 +1,8 @@
 import Foundation
 import StoreKit
+import os
+
+private let logger = Logger(subsystem: AppConfiguration.appName, category: "Store")
 
 /// Менеджер покупок через StoreKit 2
 @MainActor
@@ -54,10 +57,10 @@ final class StoreManager: ObservableObject {
         
         do {
             let loaded = try await Product.products(for: [Self.premiumProductID])
-            print("StoreManager: Loaded \(loaded.count) products")
+            logger.info("Loaded \(loaded.count) products")
             products = loaded
         } catch {
-            print("StoreManager: Failed to load products: \(error)")
+            logger.error("Failed to load products: \(error.localizedDescription)")
         }
     }
     

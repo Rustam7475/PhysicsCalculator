@@ -1,5 +1,8 @@
 import SwiftUI
 import CoreData
+import os
+
+private let logger = Logger(subsystem: AppConfiguration.appName, category: "Favorites")
 
 struct FavoritesView: View {
     // Доступ к контексту Core Data
@@ -181,7 +184,7 @@ struct FavoriteRow: View {
     } catch {
         // Не падаем в превью: выводим ошибку и продолжаем с текущим состоянием контекста.
         let nsError = error as NSError
-        print("Preview save error: \(nsError), \(nsError.userInfo)")
+        logger.error("Preview save error: \(nsError.localizedDescription), \(nsError.userInfo)")
     }
 
     // Возвращаем FavoritesView с предзаполненным контекстом
