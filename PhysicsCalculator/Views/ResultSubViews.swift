@@ -95,7 +95,7 @@ struct ResultActionButtons: View {
     let onToggleFavorite: () -> Void
 
     @State private var showingPaywall = false
-    private var store: StoreManager { StoreManager.shared }
+    private let premium = PremiumManager.shared
 
     var body: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: canShowGraph ? 3 : 2), spacing: 12) {
@@ -105,19 +105,19 @@ struct ResultActionButtons: View {
                 onCopy()
             }
 
-            ActionButton(icon: "arrow.down.doc", label: "PDF", color: store.isPremium ? .accentColor : .secondary) {
-                if store.isPremium {
+            ActionButton(icon: "arrow.down.doc", label: "PDF", color: premium.isPDFAvailable ? .accentColor : .secondary) {
+                if premium.isPDFAvailable {
                     onPDF()
                 } else {
                     showingPaywall = true
                 }
             }
-            .overlay(premiumBadge(visible: !store.isPremium))
+            .overlay(premiumBadge(visible: !premium.isPDFAvailable))
 
             if canShowGraph,
                let xVar = formula.variables.first(where: { $0.symbol != calculatedSymbol }),
                let yVar = formula.variables.first(where: { $0.symbol == calculatedSymbol }) {
-                if store.isPremium {
+                if premium.isGraphAvailable {
                     NavigationLink {
                         FormulaGraphView(
                             formula: formula,
@@ -134,9 +134,7 @@ struct ResultActionButtons: View {
                         ActionButtonLabel(icon: "chart.line.uptrend.xyaxis", label: L10n.graph, color: .accentColor)
                     }
                 } else {
-                    Button {
-                        showingPaywall = true
-                    } label: {
+                    Button { showingPaywall = true } label: {
                         ActionButtonLabel(icon: "chart.line.uptrend.xyaxis", label: L10n.graph, color: .secondary)
                     }
                     .overlay(premiumBadge(visible: true))
@@ -149,14 +147,14 @@ struct ResultActionButtons: View {
 
             ActionButton(icon: isFavorite ? "star.fill" : "star",
                         label: L10n.favorite,
-                        color: !store.isPremium ? .secondary : (isFavorite ? .yellow : .accentColor)) {
-                if store.isPremium {
+                        color: !premium.isFavoritesAvailable ? .secondary : (isFavorite ? .yellow : .accentColor)) {
+                if premium.isFavoritesAvailable {
                     onToggleFavorite()
                 } else {
                     showingPaywall = true
                 }
             }
-            .overlay(premiumBadge(visible: !store.isPremium))
+            .overlay(premiumBadge(visible: !premium.isFavoritesAvailable))
 
             NavigationLink {
                 MultiCalcView(formula: formula, unknownSymbol: calculatedSymbol)
@@ -164,7 +162,7 @@ struct ResultActionButtons: View {
                 ActionButtonLabel(icon: "tablecells", label: L10n.multi, color: .accentColor)
             }
 
-            if store.isPremium {
+            if premium.isErrorCalcAvailable {
                 NavigationLink {
                     ErrorCalculatorView(
                         formula: formula,
@@ -176,9 +174,7 @@ struct ResultActionButtons: View {
                     ActionButtonLabel(icon: "plusminus", label: L10n.errorCalc, color: .accentColor)
                 }
             } else {
-                Button {
-                    showingPaywall = true
-                } label: {
+                Button { showingPaywall = true } label: {
                     ActionButtonLabel(icon: "plusminus", label: L10n.errorCalc, color: .secondary)
                 }
                 .overlay(premiumBadge(visible: true))
@@ -187,17 +183,6 @@ struct ResultActionButtons: View {
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }
-    }
-
-    private func siValue(for variable: Variable) -> Double? {
-        guard let raw = inputValues[variable.symbol],
-              let value = Double(raw.replacingOccurrences(of: ",", with: ".")) else { return nil }
-        if let unitId = unitSelections[variable.symbol],
-           let units = UnitConverter.units(forSI: variable.unit_si),
-           let selectedUnit = units.first(where: { $0.id == unitId }) {
-            return selectedUnit.toSI(value)
-        }
-        return value
     }
 
     @ViewBuilder
@@ -217,5 +202,16 @@ struct ResultActionButtons: View {
                 Spacer()
             }
         }
+    }
+
+    private func siValue(for variable: Variable) -> Double? {
+        guard let raw = inputValues[variable.symbol],
+              let value = Double(raw.replacingOccurrences(of: ",", with: ".")) else { return nil }
+        if let unitId = unitSelections[variable.symbol],
+           let units = UnitConverter.units(forSI: variable.unit_si),
+           let selectedUnit = units.first(where: { $0.id == unitId }) {
+            return selectedUnit.toSI(value)
+        }
+        return value
     }
 }
