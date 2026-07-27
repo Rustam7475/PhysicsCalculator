@@ -14,9 +14,9 @@ final class SectionsViewModel: ObservableObject {
 
     let levels = ["school", "university"]
 
-    init(allData: PhysicsData, premium: PremiumManager = PremiumManager.shared) {
+    init(allData: PhysicsData, premium: PremiumManager? = nil) {
         self.allData = allData
-        self.premium = premium
+        self.premium = premium ?? PremiumManager.shared
     }
 
     // MARK: - Вычисляемые свойства
