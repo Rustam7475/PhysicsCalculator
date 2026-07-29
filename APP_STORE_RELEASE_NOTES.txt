@@ -1,0 +1,106 @@
+APP STORE CONNECT — "What's New" / "Release Notes"
+Готовые тексты по локалям. Просто скопировать в соответствующее поле в App Store Connect.
+Без Markdown-разметки — эмодзи поддерживаются, форматирование текста (жирный, заголовки) — нет.
+Лимит: 4000 символов на локаль (все варианты ниже значительно короче).
+
+============================================================
+LOCALE: ru (Russian)
+============================================================
+Что нового:
+
+🔓 Premium-версия
+Теперь доступна Premium-версия — единоразовая покупка, навсегда, без подписки:
+• Все 126 формул по 6 разделам физики
+• Графики зависимостей величин
+• Экспорт решений в PDF
+• Калькулятор погрешностей измерений
+• Неограниченное избранное
+
+✨ Улучшено отображение формул — более чёткий рендеринг математических выражений.
+
+🛠 Общие улучшения стабильности и производительности.
+
+============================================================
+LOCALE: en-US (English)
+============================================================
+What's New:
+
+🔓 Premium Version
+A one-time purchase, forever — no subscription:
+• All 126 formulas across 6 physics sections
+• Dependency graphs
+• PDF export of solutions
+• Error calculator for measurements
+• Unlimited favorites
+
+✨ Improved formula rendering — sharper, cleaner math display.
+
+🛠 General stability and performance improvements.
+
+============================================================
+LOCALE: de-DE (German)
+============================================================
+Neuigkeiten:
+
+🔓 Premium-Version
+Einmaliger Kauf, für immer — kein Abo:
+• Alle 126 Formeln aus 6 Physikbereichen
+• Abhängigkeitsdiagramme
+• PDF-Export von Lösungen
+• Fehlerrechner für Messungen
+• Unbegrenzte Favoriten
+
+✨ Verbesserte Formeldarstellung — schärfere, klarere mathematische Anzeige.
+
+🛠 Allgemeine Verbesserungen der Stabilität und Leistung.
+
+============================================================
+LOCALE: es-ES (Spanish)
+============================================================
+Novedades:
+
+🔓 Versión Premium
+Compra única, para siempre — sin suscripción:
+• Las 126 fórmulas de las 6 secciones de física
+• Gráficos de dependencia
+• Exportación de soluciones a PDF
+• Calculadora de errores de medición
+• Favoritos ilimitados
+
+✨ Renderizado de fórmulas mejorado — visualización matemática más nítida y clara.
+
+🛠 Mejoras generales de estabilidad y rendimiento.
+
+============================================================
+LOCALE: fr-FR (French)
+============================================================
+Nouveautés :
+
+🔓 Version Premium
+Achat unique, pour toujours — sans abonnement :
+• Les 126 formules des 6 sections de physique
+• Graphiques de dépendance
+• Export des solutions en PDF
+• Calculateur d'erreurs de mesure
+• Favoris illimités
+
+✨ Rendu des formules amélioré — affichage mathématique plus net et plus clair.
+
+🛠 Améliorations générales de la stabilité et des performances.
+
+============================================================
+LOCALE: zh-Hans (Simplified Chinese)
+============================================================
+更新内容：
+
+🔓 高级版
+一次性购买，永久使用 — 无需订阅：
+• 全部126个公式，覆盖6大物理分类
+• 依赖关系图表
+• 将解题过程导出为PDF
+• 测量误差计算器
+• 无限收藏
+
+✨ 改进了公式渲染效果 — 数学公式显示更清晰。
+
+🛠 整体稳定性与性能优化。
